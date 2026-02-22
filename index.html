@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sam's Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <div class="datapad-wrapper">
+        <div class="datapad-screen">
+            
+            <div class="sys-header">
+                <div class="status-light"></div>
+                <span>KITTPAD_OS v1.MEOW</span>
+                <span><i class="fa-solid fa-battery-full"></i></span>
+            </div>
+
+            <div class="profile">
+                <img src="https://f2.toyhou.se/file/f2-toyhou-se/images/113402324_irRXncxlu389pbc.png?1768418401" alt="Profile" class="avatar">
+                <h1>Sam</h1>
+                <p>Genius, billionaire, playboy, philanthropist, cat</p>
+            </div>
+
+            <div class="links-grid">
+                <a href="https://www.instagram.com/vyphir" class="link-btn"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="https://x.com/Vyphirr" class="link-btn"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="https://bsky.app/profile/samisaderp.bsky.social" class="link-btn"><i class="fa-brands fa-bluesky"></i> Bluesky</a>
+                <a href="https://t.me/Samisaderp#" class="link-btn"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                <a href="https://toyhou.se/samisaderp/characters" class="link-btn"><i class="fa-solid fa-box-open"></i> Toyhouse</a>
+                <a href="https://steamcommunity.com/profiles/76561199191219060/" class="link-btn"><i class="fa-brands fa-steam"></i> Steam</a>
+                <a href="#" class="link-btn full-width"><i class="fa-brands fa-discord"></i> Discord: @samisaderp</a>
+            </div>
+
+            <div>
+                <h2 class="section-title"><i class="fa-solid fa-image"></i> Character Archives</h2>
+                <div class="gallery-container" id="character-gallery"></div>
+            </div>
+
+            <div>
+                <h2 class="section-title"><i class="fa-solid fa-satellite-dish"></i> Comms Feed</h2>
+                <h3 style="font-size: 0.8rem; color: var(--hot-pink); margin-bottom: 10px; font-family: 'Space Mono', monospace;">> INITIALIZING BLUESKY LINK...</h3>
+                <div class="feed-container" id="bsky-feed">
+                    <p style="text-align: center; color: var(--text-muted); font-family: 'Space Mono', monospace;">Loading data packets...</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
