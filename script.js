@@ -106,6 +106,84 @@ async function loadBlueskyFeed() {
 
 loadBlueskyFeed();
 
+// ── Flicker Bot Stats ──────────────────────────────────────────────────────
+const FLICKER_URL = 'https://flicker-bot-production.up.railway.app/stats';
+
+function formatUptime(seconds) {
+    const d = Math.floor(seconds / 86400);
+    const h = Math.floor((seconds % 86400) / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    if (d > 0) return `${d}d ${h}h ${m}m`;
+    if (h > 0) return `${h}h ${m}m`;
+    return `${m}m`;
+}
+
+async function loadFlickerStats() {
+    const statsDiv = document.getElementById('flicker-stats');
+    const dot = document.getElementById('flicker-dot');
+    if (!statsDiv) return;
+
+    try {
+        const res = await fetch(FLICKER_URL);
+        const d = await res.json();
+
+        if (dot) { dot.className = 'flicker-dot online'; }
+
+        const ratio = d.chips_wagered > 0
+            ? ((d.chips_earnt / d.chips_wagered) * 100).toFixed(1) + '%'
+            : 'No data';
+
+        statsDiv.innerHTML = `
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Uptime</span>
+                    <span class="stat-value">${formatUptime(d.uptime_seconds)}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">🐾 Times Pet</span>
+                    <span class="stat-value">${d.pet_count.toLocaleString()}</span>
+                </div>
+                <div class="stat-card stat-full">
+                    <span class="stat-label">Last Commit</span>
+                    <span class="stat-value"><a href="https://github.com/SamMcAulay/Flicker-bot/commit/${d.last_commit.hash}" target="_blank">${d.last_commit.hash}</a> — ${d.last_commit.message}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">✨ Stardust</span>
+                    <span class="stat-value">${d.stardust_earned.toLocaleString()}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">🎮 Games W / L</span>
+                    <span class="stat-value">${d.games_correct.toLocaleString()} / ${d.games_wrong.toLocaleString()}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">🎰 Chips Wagered</span>
+                    <span class="stat-value">${d.chips_wagered.toLocaleString()}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">📈 Return Rate</span>
+                    <span class="stat-value">${ratio}</span>
+                </div>
+            </div>`;
+    } catch {
+        if (dot) { dot.className = 'flicker-dot offline'; }
+        statsDiv.innerHTML = `<p class="flicker-loading">⚠️ Flicker is offline.</p>`;
+    }
+}
+
+const flickerToggle = document.getElementById('flicker-toggle');
+const flickerPanel  = document.getElementById('flicker-panel');
+const flickerChevron = document.getElementById('flicker-chevron');
+
+if (flickerToggle && flickerPanel) {
+    flickerToggle.addEventListener('click', () => {
+        flickerPanel.classList.toggle('open');
+        if (flickerChevron) flickerChevron.classList.toggle('open');
+    });
+}
+
+loadFlickerStats();
+// ────────────────────────────────────────────────────────────────────────────
+
 const canvas = document.querySelector('#webgl-canvas');
 const scene = new THREE.Scene();
 

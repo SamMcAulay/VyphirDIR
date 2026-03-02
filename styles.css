@@ -232,6 +232,102 @@ body {
     text-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
 }
 
+/* ── Flicker Bot ─────────────────────────────────────────────── */
+.flicker-toggle {
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 0;
+}
+
+.flicker-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    display: inline-block;
+    flex-shrink: 0;
+    opacity: 0.4;
+    transition: background 0.3s, box-shadow 0.3s, opacity 0.3s;
+}
+.flicker-dot.online {
+    background: #50fa7b;
+    box-shadow: 0 0 8px #50fa7b;
+    opacity: 1;
+}
+.flicker-dot.offline {
+    background: var(--red);
+    box-shadow: 0 0 6px var(--red);
+    opacity: 1;
+}
+
+.section-title .flicker-chevron {
+    color: var(--text-muted);
+    text-shadow: none;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+.flicker-chevron.open {
+    transform: rotate(180deg);
+}
+
+.flicker-panel {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease, margin-top 0.3s ease;
+}
+.flicker-panel.open {
+    max-height: 600px;
+    margin-top: 10px;
+}
+
+.flicker-loading {
+    text-align: center;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    padding: 12px;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.stat-card {
+    background: var(--bg-element);
+    border: 1px solid rgba(255, 105, 180, 0.15);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.stat-card.stat-full {
+    grid-column: span 2;
+}
+.stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.stat-value {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-light);
+    word-break: break-word;
+}
+.stat-value a {
+    color: var(--hot-pink);
+    text-decoration: none;
+}
+.stat-value a:hover {
+    text-decoration: underline;
+}
+/* ─────────────────────────────────────────────────────────────── */
+
 .feed-container {
     background: var(--bg-element);
     border: 1px solid rgba(255, 255, 255, 0.1);
