@@ -16,6 +16,17 @@
     padding: 0;
 }
 
+input, select, textarea, button {
+    font-family: 'Space Mono', monospace;
+    font-size: inherit;
+    color: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
 body {
     font-family: 'Quicksand', sans-serif;
     color: var(--text-light);
@@ -282,17 +293,13 @@ body {
     text-align: center;
     padding: 7px 10px;
     border-radius: 8px;
-    background: rgba(255, 105, 180, 0.1);
+    background: #2a1020;
     border: 1px solid rgba(255, 105, 180, 0.35);
     color: var(--hot-pink);
-    font-family: 'Space Mono', monospace;
     font-size: 0.7rem;
     font-weight: 700;
-    text-decoration: none;
     cursor: pointer;
     transition: background 0.2s, border-color 0.2s, color 0.2s;
-    -webkit-appearance: none;
-    appearance: none;
 }
 
 .commission-btn:hover {
@@ -401,19 +408,15 @@ body {
 .enquiry-form select,
 .enquiry-form input,
 .enquiry-form textarea {
-    background: rgba(255, 255, 255, 0.05);
+    background: #1e0f16;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
     color: var(--text-light);
-    font-family: 'Space Mono', monospace;
     font-size: 0.8rem;
     padding: 10px 12px;
     width: 100%;
-    outline: none;
     transition: border-color 0.2s, background 0.2s;
     resize: none;
-    -webkit-appearance: none;
-    appearance: none;
 }
 
 /* custom dropdown arrow for select */
@@ -442,7 +445,7 @@ body {
 }
 
 .enquiry-submit {
-    background: rgba(255, 105, 180, 0.15);
+    background: #2a1020;
     border: 1px solid rgba(255, 105, 180, 0.5);
     border-radius: 8px;
     color: var(--white);
