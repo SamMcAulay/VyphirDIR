@@ -106,83 +106,105 @@ async function loadBlueskyFeed() {
 
 loadBlueskyFeed();
 
-// ── Flicker Bot Stats ──────────────────────────────────────────────────────
-const FLICKER_URL = 'https://flicker-bot-production.up.railway.app/stats';
+// ── Enquiry Form ──────────────────────────────────────────────────────────
+const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1480713135970320637/ISDghNvTFNr-XyuQDX84FIlSjuIlm1kvvAbg_jfLYG_aBNVCU1Zih-w5q1pFBel0Q_R1';
 
-function formatUptime(seconds) {
-    const d = Math.floor(seconds / 86400);
-    const h = Math.floor((seconds % 86400) / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    if (d > 0) return `${d}d ${h}h ${m}m`;
-    if (h > 0) return `${h}h ${m}m`;
-    return `${m}m`;
-}
+const enquiryToggle  = document.getElementById('enquiry-toggle');
+const enquiryPanel   = document.getElementById('enquiry-panel');
+const enquiryChevron = document.getElementById('enquiry-chevron');
 
-async function loadFlickerStats() {
-    const statsDiv = document.getElementById('flicker-stats');
-    const dot = document.getElementById('flicker-dot');
-    if (!statsDiv) return;
-
-    try {
-        const res = await fetch(FLICKER_URL);
-        const d = await res.json();
-
-        if (dot) { dot.className = 'flicker-dot online'; }
-
-        const ratio = d.chips_wagered > 0
-            ? ((d.chips_earnt / d.chips_wagered) * 100).toFixed(1) + '%'
-            : 'No data';
-
-        statsDiv.innerHTML = `
-            <div class="stat-grid">
-                <div class="stat-card">
-                    <span class="stat-label">Uptime</span>
-                    <span class="stat-value">${formatUptime(d.uptime_seconds)}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">🐾 Times Pet</span>
-                    <span class="stat-value">${d.pet_count.toLocaleString()}</span>
-                </div>
-                <div class="stat-card stat-full">
-                    <span class="stat-label">Last Commit</span>
-                    <span class="stat-value"><a href="https://github.com/SamMcAulay/Flicker-bot/commit/${d.last_commit.hash}" target="_blank">${d.last_commit.hash}</a> — ${d.last_commit.message}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">✨ Stardust</span>
-                    <span class="stat-value">${d.stardust_earned.toLocaleString()}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">🎮 Games W / L</span>
-                    <span class="stat-value">${d.games_correct.toLocaleString()} / ${d.games_wrong.toLocaleString()}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">🎰 Chips Wagered</span>
-                    <span class="stat-value">${d.chips_wagered.toLocaleString()}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">📈 Return Rate</span>
-                    <span class="stat-value">${ratio}</span>
-                </div>
-            </div>`;
-    } catch {
-        if (dot) { dot.className = 'flicker-dot offline'; }
-        statsDiv.innerHTML = `<p class="flicker-loading">⚠️ Flicker is offline.</p>`;
+function openEnquiry(subject) {
+    if (!enquiryPanel.classList.contains('open')) {
+        enquiryPanel.classList.add('open');
+        if (enquiryChevron) enquiryChevron.classList.add('open');
     }
+    const sel = document.getElementById('eq-subject');
+    if (sel && subject) sel.value = subject;
+    enquiryPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
+window.openEnquiry = openEnquiry;
 
-const flickerToggle = document.getElementById('flicker-toggle');
-const flickerPanel  = document.getElementById('flicker-panel');
-const flickerChevron = document.getElementById('flicker-chevron');
-
-if (flickerToggle && flickerPanel) {
-    flickerToggle.addEventListener('click', () => {
-        flickerPanel.classList.toggle('open');
-        if (flickerChevron) flickerChevron.classList.toggle('open');
+if (enquiryToggle && enquiryPanel) {
+    enquiryToggle.addEventListener('click', () => {
+        enquiryPanel.classList.toggle('open');
+        if (enquiryChevron) enquiryChevron.classList.toggle('open');
     });
 }
 
-loadFlickerStats();
-// ────────────────────────────────────────────────────────────────────────────
+const enquiryForm   = document.getElementById('enquiry-form');
+const enquiryStatus = document.getElementById('enquiry-status');
+
+const RATE_LIMIT_MS = 3 * 60 * 1000; // 3 minutes
+
+function isRateLimited() {
+    const last = parseInt(localStorage.getItem('enquiry_last_sent') || '0', 10);
+    return Date.now() - last < RATE_LIMIT_MS;
+}
+
+function getRemainingCooldown() {
+    const last = parseInt(localStorage.getItem('enquiry_last_sent') || '0', 10);
+    const remaining = Math.ceil((RATE_LIMIT_MS - (Date.now() - last)) / 60000);
+    return remaining;
+}
+
+if (enquiryForm) {
+    enquiryForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (isRateLimited()) {
+            enquiryStatus.className = 'enquiry-status error';
+            enquiryStatus.textContent = `> Please wait ${getRemainingCooldown()} more minute(s) before sending another enquiry.`;
+            return;
+        }
+
+        const subject = document.getElementById('eq-subject').value;
+        const body    = document.getElementById('eq-body').value;
+        const contact = document.getElementById('eq-contact').value;
+
+        const submitBtn = enquiryForm.querySelector('.enquiry-submit');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        enquiryStatus.className = 'enquiry-status';
+        enquiryStatus.textContent = '';
+
+        const payload = {
+            embeds: [{
+                title: '📬 New Commission Enquiry',
+                color: 16738740,
+                fields: [
+                    { name: 'Subject',  value: subject, inline: true },
+                    { name: 'Contact',  value: contact, inline: true },
+                    { name: 'Message',  value: body }
+                ],
+                footer: { text: 'Sent via vyphir.com' },
+                timestamp: new Date().toISOString()
+            }]
+        };
+
+        try {
+            const res = await fetch(DISCORD_WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                localStorage.setItem('enquiry_last_sent', Date.now().toString());
+                enquiryStatus.className = 'enquiry-status success';
+                enquiryStatus.textContent = "> Message sent! I'll be in touch.";
+                enquiryForm.reset();
+            } else {
+                throw new Error();
+            }
+        } catch {
+            enquiryStatus.className = 'enquiry-status error';
+            enquiryStatus.textContent = '> Failed to send. Try DMing me directly.';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Enquiry';
+        }
+    });
+}
+// ─────────────────────────────────────────────────────────────────────────
 
 const canvas = document.querySelector('#webgl-canvas');
 const scene = new THREE.Scene();

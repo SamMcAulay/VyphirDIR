@@ -42,7 +42,7 @@
                 <a href="https://t.me/Samisaderp#" class="link-btn"><i class="fa-brands fa-telegram"></i> Telegram</a>
                 <a href="https://toyhou.se/samisaderp/characters" class="link-btn"><i class="fa-solid fa-box-open"></i> Toyhouse</a>
                 <a href="https://steamcommunity.com/profiles/76561199191219060/" class="link-btn"><i class="fa-brands fa-steam"></i> Steam</a>
-                <a href="#" class="link-btn full-width"><i class="fa-brands fa-discord"></i> Discord: @samisaderp</a>
+                <a href="https://discord.gg/vuTNzwP75t" target="_blank" class="link-btn full-width"><i class="fa-brands fa-discord"></i> Join my Discord!</a>
             </div>
 
             <div>
@@ -51,17 +51,65 @@
             </div>
 
             <div>
-                <h2 class="section-title flicker-toggle" id="flicker-toggle">
-                    <i class="fa-solid fa-robot"></i> Flicker Status
+                <h2 class="section-title"><i class="fa-solid fa-briefcase"></i> Commissions</h2>
+                <div class="commission-grid">
+                    <div class="commission-card">
+                        <div class="commission-icon"><i class="fa-solid fa-globe"></i></div>
+                        <h3>Website Dev</h3>
+                        <p>Custom personal sites, link trees, portfolios & more. Built to your vision.</p>
+                        <button class="commission-btn" onclick="openEnquiry('Website Commission')">Get a Quote</button>
+                    </div>
+                    <div class="commission-card">
+                        <div class="commission-icon"><i class="fa-brands fa-discord"></i></div>
+                        <h3>Discord Bots</h3>
+                        <p>Custom bots for your server — moderation, games, utilities & whatever you need.</p>
+                        <button class="commission-btn" onclick="openEnquiry('Discord Bot Commission')">Get a Quote</button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="section-title"><i class="fa-solid fa-code"></i> Previous Work</h2>
+                <div class="works-grid">
+                    <a href="https://flicker-bot.com" target="_blank" class="work-card">
+                        <i class="fa-solid fa-robot"></i>
+                        <div>
+                            <span class="work-title">Flicker Bot</span>
+                            <span class="work-url">flicker-bot.com</span>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square work-external"></i>
+                    </a>
+                    <a href="https://thejantleman.com" target="_blank" class="work-card">
+                        <i class="fa-solid fa-hat-wizard"></i>
+                        <div>
+                            <span class="work-title">The Jantleman</span>
+                            <span class="work-url">thejantleman.com</span>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square work-external"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="section-title enquiry-toggle" id="enquiry-toggle">
+                    <i class="fa-solid fa-envelope"></i> Send an Enquiry
                     <span style="display:flex;align-items:center;gap:6px;margin-left:auto;">
-                        <span class="flicker-dot" id="flicker-dot"></span>
-                        <i class="fa-solid fa-chevron-down flicker-chevron open" id="flicker-chevron"></i>
+                        <i class="fa-solid fa-chevron-down enquiry-chevron" id="enquiry-chevron"></i>
                     </span>
                 </h2>
-                <div class="flicker-panel open" id="flicker-panel">
-                    <div id="flicker-stats">
-                        <p class="flicker-loading">Pinging Flicker...</p>
-                    </div>
+                <div class="enquiry-panel" id="enquiry-panel">
+                    <form class="enquiry-form" id="enquiry-form">
+                        <select id="eq-subject" required>
+                            <option value="" disabled selected>What are you enquiring about?</option>
+                            <option value="Website Commission">Website Commission</option>
+                            <option value="Discord Bot Commission">Discord Bot Commission</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <textarea id="eq-body" placeholder="Describe your project or question..." rows="4" required></textarea>
+                        <input type="text" id="eq-contact" placeholder="How can I reach you? (Discord handle, email, etc.)" required>
+                        <button type="submit" class="enquiry-submit">Send Enquiry</button>
+                    </form>
+                    <p class="enquiry-status" id="enquiry-status"></p>
                 </div>
             </div>
 
