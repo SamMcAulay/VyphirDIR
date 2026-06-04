@@ -206,6 +206,85 @@ if (enquiryForm) {
 }
 // ─────────────────────────────────────────────────────────────────────────
 
+// ── Discord Widget ────────────────────────────────────────────────────────
+const DISCORD_WIDGET_URL = 'https://discord.com/api/guilds/1473469805167247500/widget.json';
+
+const discordToggle      = document.getElementById('discord-widget-toggle');
+const discordPanel       = document.getElementById('discord-widget-panel');
+const discordChevron     = document.getElementById('discord-widget-chevron');
+const discordOnlineCount = document.getElementById('discord-online-count');
+const discordMembersList = document.getElementById('discord-members-list');
+const discordJoinBtn     = document.getElementById('discord-join-btn');
+
+let discordData    = null;
+let widgetRendered = false;
+
+async function loadDiscordWidget() {
+    try {
+        const res  = await fetch(DISCORD_WIDGET_URL);
+        discordData = await res.json();
+        const count = discordData.presence_count ?? 0;
+        discordOnlineCount.textContent = `${count} online`;
+        if (discordData.instant_invite && discordJoinBtn) {
+            discordJoinBtn.href = discordData.instant_invite;
+        }
+    } catch {
+        if (discordOnlineCount) discordOnlineCount.textContent = "see who's online";
+    }
+}
+
+function renderDiscordMembers() {
+    if (widgetRendered) return;
+    widgetRendered = true;
+
+    if (!discordData?.members?.length) {
+        const msg = document.createElement('p');
+        msg.style.cssText = "font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--text-muted);text-align:center;padding:8px 0;";
+        msg.textContent = '> No members currently visible.';
+        discordMembersList.appendChild(msg);
+        return;
+    }
+
+    discordData.members.forEach(member => {
+        const status     = ['online','idle','dnd'].includes(member.status) ? member.status : 'online';
+        const safeAvatar = member.avatar_url?.startsWith('https://') ? member.avatar_url : null;
+
+        const row = document.createElement('div');
+        row.className = 'discord-member';
+
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'discord-member-avatar';
+        if (safeAvatar) {
+            const img = document.createElement('img');
+            img.src = safeAvatar;
+            img.alt = member.username;
+            avatarDiv.appendChild(img);
+        } else {
+            avatarDiv.textContent = member.username.charAt(0).toUpperCase();
+        }
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = member.username;
+
+        const statusDot = document.createElement('span');
+        statusDot.className = `discord-status-dot ${status}`;
+
+        row.append(avatarDiv, nameSpan, statusDot);
+        discordMembersList.appendChild(row);
+    });
+}
+
+if (discordToggle && discordPanel) {
+    discordToggle.addEventListener('click', () => {
+        const isOpen = discordPanel.classList.toggle('open');
+        discordChevron.classList.toggle('open', isOpen);
+        if (isOpen) renderDiscordMembers();
+    });
+}
+
+loadDiscordWidget();
+// ─────────────────────────────────────────────────────────────────────────
+
 const canvas = document.querySelector('#webgl-canvas');
 const scene = new THREE.Scene();
 
