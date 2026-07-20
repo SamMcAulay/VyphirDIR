@@ -80,24 +80,38 @@ async function loadBlueskyFeed() {
     try {
         const response = await fetch(`https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${bskyHandle}&limit=3`);
         const data = await response.json();
-        
-        feedContainer.innerHTML = ''; 
+
+        feedContainer.innerHTML = '';
 
         data.feed.forEach(item => {
-            const post = item.post.record;
+            const post = item.post?.record;
+            if (!post) return;
             const date = new Date(post.createdAt).toLocaleDateString();
-            
-            feedContainer.innerHTML += `
-                <div style="border-bottom: 1px dashed rgba(255, 105, 180, 0.3); padding-bottom: 15px; margin-bottom: 15px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                        <span style="color: var(--hot-pink); font-weight: bold; font-family: 'Space Mono', monospace; font-size: 0.8rem;">@${bskyHandle}</span>
-                        <span style="color: var(--text-muted); font-size: 0.75rem; font-family: 'Space Mono', monospace;">${date}</span>
-                    </div>
-                    <p style="font-size: 0.9rem; line-height: 1.4;">${post.text}</p>
-                </div>
-            `;
+
+            const entry = document.createElement('div');
+            entry.style.cssText = 'border-bottom: 1px dashed rgba(255, 105, 180, 0.3); padding-bottom: 15px; margin-bottom: 15px;';
+
+            const header = document.createElement('div');
+            header.style.cssText = 'display: flex; justify-content: space-between; margin-bottom: 5px;';
+
+            const handle = document.createElement('span');
+            handle.style.cssText = "color: var(--hot-pink); font-weight: bold; font-family: 'Space Mono', monospace; font-size: 0.8rem;";
+            handle.textContent = `@${bskyHandle}`;
+
+            const dateSpan = document.createElement('span');
+            dateSpan.style.cssText = "color: var(--text-muted); font-size: 0.75rem; font-family: 'Space Mono', monospace;";
+            dateSpan.textContent = date;
+
+            header.append(handle, dateSpan);
+
+            const text = document.createElement('p');
+            text.style.cssText = 'font-size: 0.9rem; line-height: 1.4;';
+            text.textContent = post.text;
+
+            entry.append(header, text);
+            feedContainer.appendChild(entry);
         });
-        
+
     } catch (error) {
         console.error(error);
         feedContainer.innerHTML = `<p style="color: var(--red); font-family: 'Space Mono', monospace;">> UPLINK FAILED.</p>`;
