@@ -49,7 +49,8 @@ test('escapes HTML in name, species, and bio', async () => {
 
     const html = await readFile(join(outDir, 'evil', 'index.html'), 'utf8');
     assert.doesNotMatch(html, /<script>alert\(1\)<\/script>/);
-    assert.doesNotMatch(html, /onerror=alert\(2\)/);
+    // Verify the HTML tag syntax is broken (< escaped to &lt;), preventing execution
+    assert.doesNotMatch(html, /<img[^>]*onerror=/);
     assert.match(html, /safe &amp; sound/);
 });
 
@@ -62,4 +63,28 @@ test('marks nsfw images with a data attribute in the output', async () => {
 
     const html = await readFile(join(outDir, 'x', 'index.html'), 'utf8');
     assert.match(html, /data-nsfw="true"/);
+});
+
+test('does not corrupt placeholders when field contains placeholder tokens', async () => {
+    const { dataPath, templatePath, outDir } = await setupProject([
+        {
+            slug: 'trick',
+            name: 'Trickster',
+            species: '__CHAR_BIO__',
+            bio: 'This mentions __CHAR_IMAGES__ in the bio',
+            images: [{ url: 'https://example.com/trick.jpg', nsfw: false }],
+        },
+    ]);
+
+    await generateCharacterPages({ dataPath, templatePath, outDir });
+
+    const html = await readFile(join(outDir, 'trick', 'index.html'), 'utf8');
+    // Verify the species field contains the literal escaped text, not replaced by bio
+    assert.match(html, /__CHAR_BIO__/);
+    // Verify the bio field contains the escaped placeholder token text
+    assert.match(html, /This mentions __CHAR_IMAGES__ in the bio/);
+    // Verify the images block still renders correctly at the end
+    assert.match(html, /<div>.*trick\.jpg/s);
+    // Verify the trick.jpg URL is present
+    assert.match(html, /trick\.jpg/);
 });

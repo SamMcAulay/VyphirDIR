@@ -8,9 +8,7 @@ function escapeHtml(value) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
-        .replace(/\(/g, '&#40;')
-        .replace(/\)/g, '&#41;');
+        .replace(/'/g, '&#39;');
 }
 
 function renderImages(images) {
@@ -32,11 +30,15 @@ export async function generateCharacterPages({ dataPath, templatePath, outDir })
     const slugs = [];
 
     for (const char of characters) {
-        const html = template
-            .replaceAll('__CHAR_NAME__', escapeHtml(char.name))
-            .replaceAll('__CHAR_SPECIES__', escapeHtml(char.species))
-            .replaceAll('__CHAR_BIO__', escapeHtml(char.bio))
-            .replaceAll('__CHAR_IMAGES__', renderImages(char.images));
+        const html = template.replace(/__CHAR_NAME__|__CHAR_SPECIES__|__CHAR_BIO__|__CHAR_IMAGES__/g, (token) => {
+            switch (token) {
+                case '__CHAR_NAME__': return escapeHtml(char.name);
+                case '__CHAR_SPECIES__': return escapeHtml(char.species);
+                case '__CHAR_BIO__': return escapeHtml(char.bio);
+                case '__CHAR_IMAGES__': return renderImages(char.images);
+                default: return token;
+            }
+        });
 
         const charDir = join(outDir, char.slug);
         await mkdir(charDir, { recursive: true });
