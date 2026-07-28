@@ -35,41 +35,43 @@ function setupAutoScroll(containerId) {
     container.addEventListener('touchend', startScroll, {passive: true});
 }
 
-const myCharacters = [
-    { name: "Drasil", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/114501788_An1zRhJpnT1KfDI.png" },
-    { name: "Drasil", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/115580905_NBL6YfKIzkd6XZI.jpg" },
-    { name: "Vyphir", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/115580781_Q1AtdHKUvzZnfRC.jpg" },
-    { name: "Vyphir", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/113510752_bjYmJ8bKHdr6Ymr.jpg" },
-    { name: "Vyphir", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/113510577_7Otz2pVtdW225fd.jpg" }, // <-- Added comma
-    { name: "Vyphir", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/113402414_W2iZGLPUB9Y9NAQ.png?1768418555" },
-    { name: "Vyphir", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/114501540_J92Mhjj5cc0RPh9.jpg" },
-    { name: "Vyphir", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/115580648_o0vhA1hFCYbU2d5.jpg" },
-    { name: "Vyphir", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/114805781_a40Nr5n6LCjNm3S.jpg" },
-    { name: "Pharron", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/113403545_8YAXWPf3EA5vZRu.jpg" }, // <-- Added comma
-    { name: "Pharron", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/113402669_PT7d8aSIIRblxrq.png" },
-    { name: "Pharron", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/114805937_aCPrL1MRKi29BOa.jpg" },
-    { name: "Gritchin", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/114500900_GcturMytU5GGcAh.jpg" },
-    { name: "Gritchin", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/114618012_i4sAdr9UVqf6grr.png?1770326788" },
-    { name: "Gritchin", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/115464806_AWcpQFMevag3IGY.jpg" }, // <-- Added comma
-    { name: "Faeyren", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/113511381_vDXA8mHCKs4aN0x.png" },
-    { name: "Faeyren", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/113511365_ueyxm4mrv97V0zj.jpg" },
-    { name: "Faeyren", image: "https://f2.toyhou.se/file/f2-toyhou-se/images/113511334_1A5fiFw7HrEhSF8.png" }
-];
+async function loadCharacterGallery() {
+    const galleryDiv = document.getElementById('character-gallery');
+    if (!galleryDiv) return;
 
-shuffleArray(myCharacters);
+    try {
+        const response = await fetch('/data/characters.json');
+        const data = await response.json();
+        const characters = data.characters || [];
+        shuffleArray(characters);
 
-const galleryDiv = document.getElementById('character-gallery');
-if (galleryDiv) {
-    myCharacters.forEach(char => {
-        galleryDiv.innerHTML += `
-            <div class="gallery-card">
-                <img src="${char.image}" alt="${char.name}">
-                <p>${char.name}</p>
-            </div>
-        `;
-    });
-    setupAutoScroll('character-gallery'); 
+        characters.forEach((char) => {
+            const firstImage = (char.images || []).find((img) => !img.nsfw) || char.images?.[0];
+            if (!firstImage) return;
+
+            const card = document.createElement('a');
+            card.className = 'gallery-card';
+            card.href = `/gallery/${char.slug}/`;
+
+            const img = document.createElement('img');
+            img.src = firstImage.url;
+            img.alt = char.name;
+            img.loading = 'lazy';
+
+            const caption = document.createElement('p');
+            caption.textContent = char.name;
+
+            card.append(img, caption);
+            galleryDiv.appendChild(card);
+        });
+
+        setupAutoScroll('character-gallery');
+    } catch (error) {
+        console.error(error);
+    }
 }
+
+loadCharacterGallery();
 
 const bskyHandle = 'samisaderp.bsky.social'; 
 
@@ -89,23 +91,23 @@ async function loadBlueskyFeed() {
             const date = new Date(post.createdAt).toLocaleDateString();
 
             const entry = document.createElement('div');
-            entry.style.cssText = 'border-bottom: 1px dashed rgba(255, 105, 180, 0.3); padding-bottom: 15px; margin-bottom: 15px;';
+            entry.className = 'feed-entry';
 
             const header = document.createElement('div');
-            header.style.cssText = 'display: flex; justify-content: space-between; margin-bottom: 5px;';
+            header.className = 'feed-entry-header';
 
             const handle = document.createElement('span');
-            handle.style.cssText = "color: var(--hot-pink); font-weight: bold; font-family: 'Space Mono', monospace; font-size: 0.8rem;";
+            handle.className = 'feed-handle';
             handle.textContent = `@${bskyHandle}`;
 
             const dateSpan = document.createElement('span');
-            dateSpan.style.cssText = "color: var(--text-muted); font-size: 0.75rem; font-family: 'Space Mono', monospace;";
+            dateSpan.className = 'feed-date';
             dateSpan.textContent = date;
 
             header.append(handle, dateSpan);
 
             const text = document.createElement('p');
-            text.style.cssText = 'font-size: 0.9rem; line-height: 1.4;';
+            text.className = 'feed-text';
             text.textContent = post.text;
 
             entry.append(header, text);
@@ -114,7 +116,11 @@ async function loadBlueskyFeed() {
 
     } catch (error) {
         console.error(error);
-        feedContainer.innerHTML = `<p style="color: var(--red); font-family: 'Space Mono', monospace;">> UPLINK FAILED.</p>`;
+        const errorMsg = document.createElement('p');
+        errorMsg.className = 'feed-error';
+        errorMsg.textContent = '> UPLINK FAILED.';
+        feedContainer.innerHTML = '';
+        feedContainer.appendChild(errorMsg);
     }
 }
 

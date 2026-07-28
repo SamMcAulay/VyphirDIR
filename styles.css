@@ -248,3 +248,43 @@ body {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
+
+.feed-entry {
+    border-bottom: 1px dashed rgba(255, 105, 180, 0.3);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.feed-entry-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.feed-handle {
+    color: var(--hot-pink);
+    font-weight: bold;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+}
+
+.feed-date {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+}
+
+.feed-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.feed-error {
+    color: var(--red);
+    font-family: 'Space Mono', monospace;
+}
+
+a.gallery-card {
+    text-decoration: none;
+    display: block;
+}
