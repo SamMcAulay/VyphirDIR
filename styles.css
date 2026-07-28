@@ -301,3 +301,71 @@ a.gallery-card {
     color: var(--text-muted);
     font-family: 'Space Mono', monospace;
 }
+
+.back-link {
+    display: inline-block;
+    color: var(--hot-pink);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+}
+
+.char-species {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.char-bio {
+    line-height: 1.5;
+    margin: 15px 0;
+    white-space: pre-wrap;
+}
+
+.char-image-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.char-image-wrap {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-element);
+}
+
+.char-image-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.char-image-wrap.nsfw-blur img {
+    filter: blur(20px);
+    transition: filter 0.2s ease;
+}
+
+.char-image-wrap.nsfw-blur.revealed img {
+    filter: none;
+}
+
+.nsfw-warning {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    text-align: center;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.char-image-wrap.nsfw-blur.revealed .nsfw-warning {
+    display: none;
+}
