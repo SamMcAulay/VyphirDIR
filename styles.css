@@ -288,3 +288,16 @@ a.gallery-card {
     text-decoration: none;
     display: block;
 }
+
+.bsky-init-heading {
+    font-size: 0.8rem;
+    color: var(--hot-pink);
+    margin-bottom: 10px;
+    font-family: 'Space Mono', monospace;
+}
+
+.feed-loading-placeholder {
+    text-align: center;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+}
