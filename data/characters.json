@@ -111,18 +111,6 @@
           "nsfw": false
         }
       ]
-    },
-    {
-      "name": "Blair",
-      "species": "Calico cat",
-      "bio": "really cool",
-      "images": [
-        {
-          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785354001/vyphir/characters/2200c23b-5678-4744-b15b-ec813b0c8675.png",
-          "nsfw": false
-        }
-      ],
-      "slug": "blair"
     }
   ]
 }
