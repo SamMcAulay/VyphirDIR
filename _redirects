@@ -1,3 +1,8 @@
-/docs/*          /404.html  404
-/tests/*         /404.html  404
-/MANUAL_SETUP.md /404.html  404
+/docs/*          /  301
+/tests/*         /  301
+/scripts/*       /  301
+/templates/*     /  301
+/shared/*        /  301
+/MANUAL_SETUP.md /  301
+/package.json    /  301
+/wrangler.toml   /  301

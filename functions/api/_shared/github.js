@@ -1,5 +1,14 @@
 const API_BASE = 'https://api.github.com';
 
+function bytesToBinaryString(bytes) {
+    const CHUNK_SIZE = 0x8000;
+    let result = '';
+    for (let i = 0; i < bytes.length; i += CHUNK_SIZE) {
+        result += String.fromCharCode(...bytes.subarray(i, i + CHUNK_SIZE));
+    }
+    return result;
+}
+
 export async function getFile(path, { owner, repo, branch, token }) {
     const response = await fetch(
         `${API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`,
@@ -33,7 +42,7 @@ export async function putFile(path, content, sha, message, { owner, repo, branch
             },
             body: JSON.stringify({
                 message,
-                content: btoa(String.fromCharCode(...new TextEncoder().encode(content))),
+                content: btoa(bytesToBinaryString(new TextEncoder().encode(content))),
                 sha,
                 branch,
             }),

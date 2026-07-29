@@ -78,3 +78,33 @@ test('withRetryOn409 rethrows non-409 errors without retrying', async () => {
     );
     assert.equal(calls, 1);
 });
+
+test('putFile/getFile round-trip a large (~200KB) string without a stack overflow', async () => {
+    // Well past the 0x8000-byte chunk boundary used internally to avoid
+    // `String.fromCharCode(...bytes)` blowing the call stack on big files.
+    const base = "Café — don't forget the 🐱. ";
+    const large = base.repeat(Math.ceil(200_000 / base.length));
+
+    let capturedBody;
+    await withMockedFetch(
+        async (url, options) => {
+            capturedBody = JSON.parse(options.body);
+            return new Response(JSON.stringify({ ok: true }), { status: 200 });
+        },
+        async () => {
+            await putFile('data/x.json', large, 'sha1', 'msg', githubConfig);
+        }
+    );
+
+    await withMockedFetch(
+        async () =>
+            new Response(JSON.stringify({ content: capturedBody.content, sha: 'abc' }), {
+                status: 200,
+            }),
+        async () => {
+            const { content } = await getFile('data/x.json', githubConfig);
+            assert.equal(content, large);
+            assert.equal(content.length, large.length);
+        }
+    );
+});
