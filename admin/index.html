@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; object-src 'none'; base-uri 'self';">
+    <title>Admin | Vyphir</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+    <h1>Vyphir Admin</h1>
+
+    <section class="admin-panel">
+        <h2>Add Character</h2>
+        <form id="character-form">
+            <label for="char-name">Name</label>
+            <input type="text" id="char-name" required>
+
+            <label for="char-species">Species / Type</label>
+            <input type="text" id="char-species">
+
+            <label for="char-bio">Bio</label>
+            <textarea id="char-bio" rows="4"></textarea>
+
+            <label for="char-images">Images (select multiple)</label>
+            <input type="file" id="char-images" accept="image/png,image/jpeg,image/webp" multiple required>
+            <div id="char-nsfw-rows"></div>
+
+            <button type="submit">Publish Character</button>
+            <p class="admin-status" id="character-status"></p>
+        </form>
+    </section>
+
+    <section class="admin-panel">
+        <h2>Commission Info</h2>
+        <form id="commissions-info-form">
+            <label><input type="checkbox" id="comm-status" checked> Commissions open</label>
+
+            <label for="comm-intro">Intro text</label>
+            <textarea id="comm-intro" rows="3"></textarea>
+
+            <label for="comm-special-offer">Special offer (e.g. PWYW) — leave blank if none</label>
+            <input type="text" id="comm-special-offer">
+
+            <button type="submit">Save Commission Info</button>
+            <p class="admin-status" id="commissions-info-status"></p>
+        </form>
+    </section>
+
+    <section class="admin-panel">
+        <h2>Add Past Work</h2>
+        <form id="past-work-form">
+            <label for="past-work-image">Image</label>
+            <input type="file" id="past-work-image" accept="image/png,image/jpeg,image/webp" required>
+
+            <label for="past-work-caption">Caption</label>
+            <input type="text" id="past-work-caption">
+
+            <button type="submit">Publish Past Work</button>
+            <p class="admin-status" id="past-work-status"></p>
+        </form>
+    </section>
+
+    <script type="module" src="/admin/admin.js"></script>
+</body>
+</html>

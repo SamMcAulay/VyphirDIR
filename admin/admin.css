@@ -1,0 +1,61 @@
+body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg-dark, #120a0d);
+    color: var(--text-light, #f5f5f5);
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px 15px;
+}
+
+h1, h2 { margin-bottom: 15px; }
+
+.admin-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.admin-panel label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+    color: var(--text-muted, #b0b0b0);
+}
+
+.admin-panel input[type="text"],
+.admin-panel textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: inherit;
+}
+
+.admin-panel button {
+    margin-top: 15px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: var(--hot-pink, #ff69b4);
+    color: #120a0d;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.admin-status {
+    margin-top: 10px;
+    font-size: 0.85rem;
+}
+
+.admin-status.error { color: var(--red, #ff4d4d); }
+.admin-status.success { color: var(--hot-pink, #ff69b4); }
+
+.image-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+}
