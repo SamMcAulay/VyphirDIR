@@ -79,6 +79,12 @@ export async function onRequestPost(context) {
 
         if (meta.type === 'past-work') {
             const file = formData.get('image');
+            if (!file || file.size === 0) {
+                return new Response(JSON.stringify({ error: 'Image file is required' }), {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                });
+            }
             const url = await uploadImage(file, cloudinaryConfig);
             const entry = { url, caption: meta.caption || '' };
             const { valid, errors } = validatePastWorkEntry(entry);
