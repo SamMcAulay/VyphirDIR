@@ -6,8 +6,14 @@
       "species": "",
       "bio": "",
       "images": [
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114501788_An1zRhJpnT1KfDI.png", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/115580905_NBL6YfKIzkd6XZI.jpg", "nsfw": false }
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114501788_An1zRhJpnT1KfDI.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/115580905_NBL6YfKIzkd6XZI.jpg",
+          "nsfw": false
+        }
       ]
     },
     {
@@ -16,13 +22,34 @@
       "species": "",
       "bio": "",
       "images": [
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/115580781_Q1AtdHKUvzZnfRC.jpg", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113510752_bjYmJ8bKHdr6Ymr.jpg", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113510577_7Otz2pVtdW225fd.jpg", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113402414_W2iZGLPUB9Y9NAQ.png?1768418555", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114501540_J92Mhjj5cc0RPh9.jpg", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/115580648_o0vhA1hFCYbU2d5.jpg", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114805781_a40Nr5n6LCjNm3S.jpg", "nsfw": false }
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/115580781_Q1AtdHKUvzZnfRC.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113510752_bjYmJ8bKHdr6Ymr.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113510577_7Otz2pVtdW225fd.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113402414_W2iZGLPUB9Y9NAQ.png?1768418555",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114501540_J92Mhjj5cc0RPh9.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/115580648_o0vhA1hFCYbU2d5.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114805781_a40Nr5n6LCjNm3S.jpg",
+          "nsfw": false
+        }
       ]
     },
     {
@@ -31,9 +58,18 @@
       "species": "",
       "bio": "",
       "images": [
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113403545_8YAXWPf3EA5vZRu.jpg", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113402669_PT7d8aSIIRblxrq.png", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114805937_aCPrL1MRKi29BOa.jpg", "nsfw": false }
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113403545_8YAXWPf3EA5vZRu.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113402669_PT7d8aSIIRblxrq.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114805937_aCPrL1MRKi29BOa.jpg",
+          "nsfw": false
+        }
       ]
     },
     {
@@ -42,9 +78,18 @@
       "species": "",
       "bio": "",
       "images": [
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114500900_GcturMytU5GGcAh.jpg", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114618012_i4sAdr9UVqf6grr.png?1770326788", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/115464806_AWcpQFMevag3IGY.jpg", "nsfw": false }
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114500900_GcturMytU5GGcAh.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/114618012_i4sAdr9UVqf6grr.png?1770326788",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/115464806_AWcpQFMevag3IGY.jpg",
+          "nsfw": false
+        }
       ]
     },
     {
@@ -53,10 +98,31 @@
       "species": "",
       "bio": "",
       "images": [
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113511381_vDXA8mHCKs4aN0x.png", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113511365_ueyxm4mrv97V0zj.jpg", "nsfw": false },
-        { "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113511334_1A5fiFw7HrEhSF8.png", "nsfw": false }
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113511381_vDXA8mHCKs4aN0x.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113511365_ueyxm4mrv97V0zj.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://f2.toyhou.se/file/f2-toyhou-se/images/113511334_1A5fiFw7HrEhSF8.png",
+          "nsfw": false
+        }
       ]
+    },
+    {
+      "name": "Blair",
+      "species": "Calico cat",
+      "bio": "really cool",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785354001/vyphir/characters/2200c23b-5678-4744-b15b-ec813b0c8675.png",
+          "nsfw": false
+        }
+      ],
+      "slug": "blair"
     }
   ]
 }
