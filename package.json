@@ -1,0 +1,9 @@
+{
+  "name": "vyphir-directory",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/generate-characters.js",
+    "test": "node --test"
+  }
+}
