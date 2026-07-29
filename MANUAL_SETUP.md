@@ -26,7 +26,7 @@ You will need accounts with:
 - **GitHub** (you already have this — you're using it to read this file)
 
 Have the owner's email address ready (the one that should be allowed to log
-into `/admin`) — this guide uses `sammcaulay1@gmail.com` as the example, but
+into `/admin`) — this guide uses `you@example.com` as a placeholder, but
 substitute your own throughout.
 
 ---
@@ -111,7 +111,7 @@ request through.
    - **Action**: `Allow`
    - **Session duration**: same as above
    - **Include** rule: **Emails** → enter your own email address (e.g.
-     `sammcaulay1@gmail.com`)
+     `you@example.com`)
 6. Under **Login methods** (in your Zero Trust account settings, not the
    per-app config), make sure **One-time PIN** is enabled. This is the
    default and requires no setup — Cloudflare emails a 6-digit code to the

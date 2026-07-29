@@ -27,6 +27,17 @@ document.getElementById('char-images').addEventListener('change', (event) => {
     renderNsfwCheckboxes(event.target.files);
 });
 
+let currentCommissions = { tiers: [] };
+fetch('/data/commissions.json')
+    .then((r) => r.json())
+    .then((d) => {
+        currentCommissions = d;
+        document.getElementById('comm-status').checked = Boolean(d.status);
+        document.getElementById('comm-intro').value = d.intro || '';
+        document.getElementById('comm-special-offer').value = d.specialOffer || '';
+    })
+    .catch((error) => console.error('Failed to load current commissions data:', error));
+
 document.getElementById('character-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
@@ -71,7 +82,7 @@ document.getElementById('commissions-info-form').addEventListener('submit', asyn
         status: document.getElementById('comm-status').checked,
         intro: document.getElementById('comm-intro').value,
         specialOffer: document.getElementById('comm-special-offer').value,
-        tiers: [],
+        tiers: currentCommissions.tiers || [],
     };
 
     const formData = new FormData();

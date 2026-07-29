@@ -46,7 +46,7 @@ async function loadCharacterGallery() {
         shuffleArray(characters);
 
         characters.forEach((char) => {
-            const firstImage = (char.images || []).find((img) => !img.nsfw) || char.images?.[0];
+            const firstImage = (char.images || []).find((img) => !img.nsfw);
             if (!firstImage) return;
 
             const card = document.createElement('a');

@@ -15,7 +15,8 @@ export async function getFile(path, { owner, repo, branch, token }) {
         throw new Error(`GitHub getFile failed: ${response.status} ${await response.text()}`);
     }
     const data = await response.json();
-    const content = atob(data.content.replace(/\n/g, ''));
+    const bytes = Uint8Array.from(atob(data.content.replace(/\s/g, '')), (c) => c.charCodeAt(0));
+    const content = new TextDecoder().decode(bytes);
     return { content, sha: data.sha };
 }
 
@@ -28,10 +29,11 @@ export async function putFile(path, content, sha, message, { owner, repo, branch
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 message,
-                content: btoa(unescape(encodeURIComponent(content))),
+                content: btoa(String.fromCharCode(...new TextEncoder().encode(content))),
                 sha,
                 branch,
             }),
@@ -44,4 +46,13 @@ export async function putFile(path, content, sha, message, { owner, repo, branch
         throw error;
     }
     return response.json();
+}
+
+export async function withRetryOn409(attempt) {
+    try {
+        return await attempt();
+    } catch (error) {
+        if (error.status === 409) return attempt();
+        throw error;
+    }
 }

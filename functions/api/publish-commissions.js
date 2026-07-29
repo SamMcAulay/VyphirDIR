@@ -1,4 +1,4 @@
-import { getFile, putFile } from './_shared/github.js';
+import { getFile, putFile, withRetryOn409 } from './_shared/github.js';
 import { uploadImage } from './_shared/cloudinary.js';
 
 export function validateCommissionsInfo(payload) {
@@ -25,15 +25,6 @@ export function validatePastWorkEntry(entry) {
         errors.push('Caption must be a string');
     }
     return { valid: errors.length === 0, errors };
-}
-
-async function withRetryOn409(attempt) {
-    try {
-        return await attempt();
-    } catch (error) {
-        if (error.status === 409) return attempt();
-        throw error;
-    }
 }
 
 async function updateInfo(payload, githubConfig) {

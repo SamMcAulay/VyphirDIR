@@ -1,4 +1,4 @@
-import { getFile, putFile } from './_shared/github.js';
+import { getFile, putFile, withRetryOn409 } from './_shared/github.js';
 import { uploadImage } from './_shared/cloudinary.js';
 import { uniqueSlug } from '../../shared/slugify.js';
 
@@ -25,7 +25,7 @@ export function validateCharacterPayload(payload) {
 async function updateCharactersFile(payload, existingSlug, githubConfig) {
     const path = 'data/characters.json';
 
-    const attempt = async () => {
+    return withRetryOn409(async () => {
         const { content, sha } = await getFile(path, githubConfig);
         const data = JSON.parse(content);
 
@@ -48,14 +48,7 @@ async function updateCharactersFile(payload, existingSlug, githubConfig) {
             githubConfig
         );
         return { slug };
-    };
-
-    try {
-        return await attempt();
-    } catch (error) {
-        if (error.status === 409) return attempt();
-        throw error;
-    }
+    });
 }
 
 export async function onRequestPost(context) {
