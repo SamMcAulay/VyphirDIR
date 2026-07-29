@@ -203,7 +203,7 @@ they must match exactly, with no typos, extra spaces, or different casing:
 | `GITHUB_OWNER`             | Your GitHub username or org (the repo owner)   |
 | `GITHUB_REPO`              | This repository's name (without the owner prefix) |
 | `GITHUB_BRANCH`            | `main` (the branch the Functions commit to — must be a real, existing branch; the code defaults to `main` if unset, but set it explicitly) |
-| `CLOUDINARY_CLOUD_NAME`    | The Cloud Name from Step 4                     |
+| ``    | The Cloud Name from Step 4                     |
 | `CLOUDINARY_API_KEY`       | The API Key from Step 4                        |
 | `CLOUDINARY_API_SECRET`    | The API Secret from Step 4                     |
 

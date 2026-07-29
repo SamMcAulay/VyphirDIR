@@ -17,6 +17,7 @@ export async function getFile(path, { owner, repo, branch, token }) {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28',
+                'User-Agent': 'vyphir-directory-cms',
             },
         }
     );
@@ -39,6 +40,7 @@ export async function putFile(path, content, sha, message, { owner, repo, branch
                 Accept: 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28',
                 'Content-Type': 'application/json',
+                'User-Agent': 'vyphir-directory-cms',
             },
             body: JSON.stringify({
                 message,
