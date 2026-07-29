@@ -369,3 +369,50 @@ a.gallery-card {
 .char-image-wrap.nsfw-blur.revealed .nsfw-warning {
     display: none;
 }
+
+.commission-status {
+    font-family: 'Space Mono', monospace;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.commission-status.open {
+    background: rgba(255, 105, 180, 0.15);
+    color: var(--hot-pink);
+}
+
+.commission-status.closed {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+}
+
+.commission-special-offer {
+    background: var(--bg-element);
+    border: 1px solid rgba(255, 105, 180, 0.4);
+    border-radius: 12px;
+    padding: 12px 15px;
+    margin: 15px 0;
+    font-weight: bold;
+}
+
+.tier-card, .past-work-card {
+    background: var(--bg-element);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.tier-card img, .past-work-card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.tier-price {
+    color: var(--hot-pink);
+    font-family: 'Space Mono', monospace;
+}
