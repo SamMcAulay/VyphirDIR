@@ -27,6 +27,126 @@ document.getElementById('char-images').addEventListener('change', (event) => {
     renderNsfwCheckboxes(event.target.files);
 });
 
+let currentCharacters = [];
+let editingSlug = null;
+
+function renderExistingImages(images) {
+    const container = document.getElementById('char-existing-images');
+    container.innerHTML = '';
+    (images || []).forEach((img) => {
+        const row = document.createElement('div');
+        row.className = 'image-row existing-image-row';
+        row.dataset.url = img.url;
+
+        const thumb = document.createElement('img');
+        thumb.src = img.url;
+        thumb.alt = '';
+        thumb.className = 'existing-image-thumb';
+
+        const keepLabel = document.createElement('label');
+        const keepCheckbox = document.createElement('input');
+        keepCheckbox.type = 'checkbox';
+        keepCheckbox.className = 'existing-image-keep';
+        keepCheckbox.checked = true;
+        keepLabel.append(keepCheckbox, document.createTextNode(' Keep'));
+
+        const nsfwLabel = document.createElement('label');
+        const nsfwCheckbox = document.createElement('input');
+        nsfwCheckbox.type = 'checkbox';
+        nsfwCheckbox.className = 'existing-image-nsfw';
+        nsfwCheckbox.checked = Boolean(img.nsfw);
+        nsfwLabel.append(nsfwCheckbox, document.createTextNode(' NSFW'));
+
+        row.append(thumb, keepLabel, nsfwLabel);
+        container.appendChild(row);
+    });
+}
+
+function startEditingCharacter(character) {
+    editingSlug = character.slug;
+    document.getElementById('char-name').value = character.name || '';
+    document.getElementById('char-species').value = character.species || '';
+    document.getElementById('char-bio').value = character.bio || '';
+    document.getElementById('char-images').value = '';
+    document.getElementById('char-nsfw-rows').innerHTML = '';
+    renderExistingImages(character.images);
+    document.getElementById('character-form-heading').textContent = `Edit ${character.name}`;
+    document.getElementById('character-submit-button').textContent = 'Save Changes';
+    document.getElementById('character-cancel-edit').classList.remove('hidden');
+}
+
+function resetCharacterForm() {
+    editingSlug = null;
+    document.getElementById('character-form').reset();
+    document.getElementById('char-nsfw-rows').innerHTML = '';
+    document.getElementById('char-existing-images').innerHTML = '';
+    document.getElementById('character-form-heading').textContent = 'Add Character';
+    document.getElementById('character-submit-button').textContent = 'Publish Character';
+    document.getElementById('character-cancel-edit').classList.add('hidden');
+}
+
+document.getElementById('character-cancel-edit').addEventListener('click', resetCharacterForm);
+
+async function deleteCharacterFlow(character) {
+    const typed = window.prompt(`Type "${character.name}" to permanently delete this character:`);
+    if (typed !== character.name) return;
+
+    try {
+        const formData = new FormData();
+        formData.append('meta', JSON.stringify({ action: 'delete', slug: character.slug }));
+        const response = await fetch('/api/publish-character', { method: 'POST', body: formData });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unknown error');
+        currentCharacters = currentCharacters.filter((c) => c.slug !== character.slug);
+        renderCharacterList();
+        if (editingSlug === character.slug) resetCharacterForm();
+        setStatus('character-status', 'Deleted — live shortly', false);
+    } catch (error) {
+        setStatus('character-status', `Delete failed: ${error.message}`, true);
+    }
+}
+
+function renderCharacterList() {
+    const container = document.getElementById('character-list');
+    container.innerHTML = '';
+    currentCharacters.forEach((character) => {
+        const row = document.createElement('div');
+        row.className = 'character-list-row';
+
+        const firstImage = (character.images || [])[0];
+        const thumb = document.createElement('img');
+        thumb.className = 'character-list-thumb';
+        thumb.alt = '';
+        if (firstImage) thumb.src = firstImage.url;
+
+        const name = document.createElement('span');
+        name.className = 'character-list-name';
+        name.textContent = character.name;
+
+        const editButton = document.createElement('button');
+        editButton.type = 'button';
+        editButton.textContent = 'Edit';
+        editButton.addEventListener('click', () => startEditingCharacter(character));
+
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'danger-button';
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => deleteCharacterFlow(character));
+
+        row.append(thumb, name, editButton, deleteButton);
+        container.appendChild(row);
+    });
+}
+
+fetch('/data/characters.json')
+    .then((r) => r.json())
+    .then((d) => {
+        currentCharacters = d.characters || [];
+        renderCharacterList();
+    })
+    .catch((error) => console.error('Failed to load current characters:', error));
+
 let currentCommissions = { tiers: [] };
 fetch('/data/commissions.json')
     .then((r) => r.json())
@@ -45,27 +165,42 @@ document.getElementById('character-form').addEventListener('submit', async (even
     }
 
     const files = document.getElementById('char-images').files;
-    const nsfwFlags = Array.from(document.querySelectorAll('[data-nsfw-index]')).map((cb) => cb.checked);
+    const nsfwFlags = Array.from(document.querySelectorAll('#char-nsfw-rows [data-nsfw-index]')).map((cb) => cb.checked);
+    const existingImages = Array.from(document.querySelectorAll('#char-existing-images .existing-image-row'))
+        .filter((row) => row.querySelector('.existing-image-keep').checked)
+        .map((row) => ({
+            url: row.dataset.url,
+            nsfw: row.querySelector('.existing-image-nsfw').checked,
+        }));
 
     const meta = {
         name: document.getElementById('char-name').value,
         species: document.getElementById('char-species').value,
         bio: document.getElementById('char-bio').value,
         nsfwFlags,
+        existingImages,
     };
+    if (editingSlug) meta.slug = editingSlug;
 
     const formData = new FormData();
     formData.append('meta', JSON.stringify(meta));
     Array.from(files).forEach((file) => formData.append('images', file));
 
-    setStatus('character-status', 'Publishing...', false);
+    setStatus('character-status', editingSlug ? 'Saving...' : 'Publishing...', false);
     try {
         const response = await fetch('/api/publish-character', { method: 'POST', body: formData });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Unknown error');
         setStatus('character-status', `Published — live shortly at /gallery/${result.slug}/`, false);
-        event.target.reset();
-        document.getElementById('char-nsfw-rows').innerHTML = '';
+
+        const index = currentCharacters.findIndex((c) => c.slug === result.slug);
+        if (index === -1) {
+            currentCharacters.push(result.character);
+        } else {
+            currentCharacters[index] = result.character;
+        }
+        renderCharacterList();
+        resetCharacterForm();
     } catch (error) {
         setStatus('character-status', error.message, true);
     }

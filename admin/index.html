@@ -14,7 +14,12 @@
     <h1>Vyphir Admin</h1>
 
     <section class="admin-panel">
-        <h2>Add Character</h2>
+        <h2>Manage Characters</h2>
+        <div id="character-list"></div>
+    </section>
+
+    <section class="admin-panel">
+        <h2 id="character-form-heading">Add Character</h2>
         <form id="character-form">
             <label for="char-name">Name</label>
             <input type="text" id="char-name" required>
@@ -25,11 +30,14 @@
             <label for="char-bio">Bio</label>
             <textarea id="char-bio" rows="4"></textarea>
 
-            <label for="char-images">Images (select multiple)</label>
-            <input type="file" id="char-images" accept="image/png,image/jpeg,image/webp" multiple required>
+            <div id="char-existing-images"></div>
+
+            <label for="char-images">Add images (select multiple)</label>
+            <input type="file" id="char-images" accept="image/png,image/jpeg,image/webp" multiple>
             <div id="char-nsfw-rows"></div>
 
-            <button type="submit">Publish Character</button>
+            <button type="submit" id="character-submit-button">Publish Character</button>
+            <button type="button" id="character-cancel-edit" class="hidden">Cancel Edit</button>
             <p class="admin-status" id="character-status"></p>
         </form>
     </section>
