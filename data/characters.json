@@ -255,6 +255,18 @@
         }
       ],
       "slug": "drasil"
+    },
+    {
+      "name": "Blair",
+      "species": "Calico Cat",
+      "bio": "19 | she/her | Female\nA cocky, sassy dickhead, with an inflated, annoying popular girl ego. Legend has it that she does in fact have another eye under that lock of hair, maybe we will find out one day",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785423197/vyphir/characters/85f9b768-d172-45c5-a767-ee834066413c.png",
+          "nsfw": false
+        }
+      ],
+      "slug": "blair"
     }
   ]
 }
