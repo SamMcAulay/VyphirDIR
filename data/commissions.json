@@ -2,7 +2,14 @@
   "status": true,
   "intro": "If you Like what you see here, and want something of your own! Please reach out to me on discord or Insta! I check other socials but those will be the most reliable <3",
   "specialOffer": "Currently offering PWYW (Pay What You Want) commissions.",
-  "tiers": [],
+  "tiers": [
+    {
+      "name": "Pay What you want!",
+      "price": "€5+",
+      "description": "I start these price at 5 euro for a simpler flat shading headshot! the more you pay the more detail you get, as well as I can work on half bodies / full bodies too!\nI am open to taking pretty much any request, besides humans or complex backgrounds.\nI take payment Through PayPal, or Revolut!",
+      "example": ""
+    }
+  ],
   "pastWork": [
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421852/vyphir/commissions/f363ef72-8cde-46e0-8477-4296f9c9d279.png",
