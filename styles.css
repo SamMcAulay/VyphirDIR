@@ -98,6 +98,10 @@ body {
     z-index: 10;
 }
 
+.datapad-wrapper--wide {
+    max-width: 700px;
+}
+
 .datapad-screen {
     background: var(--bg-glass);
     backdrop-filter: blur(5px);
@@ -521,6 +525,9 @@ a.gallery-card {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 12px;
+}
+
+.tier-card {
     margin-bottom: 12px;
 }
 
@@ -528,6 +535,17 @@ a.gallery-card {
     width: 100%;
     border-radius: 8px;
     margin-bottom: 8px;
+}
+
+#commission-past-work {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+#commission-past-work .past-work-card p {
+    font-size: 0.85rem;
+    margin: 0;
 }
 
 .tier-price {

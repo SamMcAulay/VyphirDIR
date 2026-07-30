@@ -17,7 +17,16 @@ function renderNsfwCheckboxes(files) {
         checkbox.dataset.nsfwIndex = String(i);
 
         label.append(checkbox, document.createTextNode(` ${file.name}`));
-        row.append(label);
+
+        const thumbLabel = document.createElement('label');
+        const thumbRadio = document.createElement('input');
+        thumbRadio.type = 'radio';
+        thumbRadio.name = 'char-thumbnail';
+        thumbRadio.className = 'new-image-thumbnail';
+        thumbRadio.dataset.newIndex = String(i);
+        thumbLabel.append(thumbRadio, document.createTextNode(' Thumbnail'));
+
+        row.append(label, thumbLabel);
         container.appendChild(row);
     });
 }
@@ -56,7 +65,15 @@ function renderExistingImages(images) {
         nsfwCheckbox.checked = Boolean(img.nsfw);
         nsfwLabel.append(nsfwCheckbox, document.createTextNode(' NSFW'));
 
-        row.append(thumb, keepLabel, nsfwLabel);
+        const thumbLabel = document.createElement('label');
+        const thumbRadio = document.createElement('input');
+        thumbRadio.type = 'radio';
+        thumbRadio.name = 'char-thumbnail';
+        thumbRadio.className = 'existing-image-thumbnail';
+        thumbRadio.checked = Boolean(img.thumbnail);
+        thumbLabel.append(thumbRadio, document.createTextNode(' Thumbnail'));
+
+        row.append(thumb, keepLabel, nsfwLabel, thumbLabel);
         container.appendChild(row);
     });
 }
@@ -112,7 +129,8 @@ function renderCharacterList() {
         const row = document.createElement('div');
         row.className = 'character-list-row';
 
-        const firstImage = (character.images || [])[0];
+        const images = character.images || [];
+        const firstImage = images.find((img) => img.thumbnail) || images[0];
         const thumb = document.createElement('img');
         thumb.className = 'character-list-thumb';
         thumb.alt = '';
@@ -195,10 +213,62 @@ document.getElementById('comm-add-tier').addEventListener('click', () => renderT
 
 let currentPastWork = [];
 
+async function movePastWork(entry, direction) {
+    const index = currentPastWork.findIndex((e) => e.url === entry.url);
+    const targetIndex = index + direction;
+    if (index === -1 || targetIndex < 0 || targetIndex >= currentPastWork.length) return;
+    if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
+        return;
+    }
+
+    const reordered = [...currentPastWork];
+    [reordered[index], reordered[targetIndex]] = [reordered[targetIndex], reordered[index]];
+
+    try {
+        const formData = new FormData();
+        formData.append(
+            'meta',
+            JSON.stringify({ type: 'past-work', action: 'reorder', order: reordered.map((e) => e.url) })
+        );
+        const response = await fetch('/api/publish-commissions', { method: 'POST', body: formData });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unknown error');
+        currentPastWork = reordered;
+        renderPastWorkList();
+        setStatus('past-work-status', 'Reordered — live shortly', false);
+    } catch (error) {
+        setStatus('past-work-status', error.message, true);
+    }
+}
+
+async function toggleNsfwFlow(entry, checkbox) {
+    const newValue = checkbox.checked;
+    if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
+        checkbox.checked = Boolean(entry.nsfw);
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append(
+            'meta',
+            JSON.stringify({ type: 'past-work', action: 'edit', url: entry.url, caption: entry.caption, nsfw: newValue })
+        );
+        const response = await fetch('/api/publish-commissions', { method: 'POST', body: formData });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unknown error');
+        entry.nsfw = newValue;
+        setStatus('past-work-status', 'Updated — live shortly', false);
+    } catch (error) {
+        checkbox.checked = Boolean(entry.nsfw);
+        setStatus('past-work-status', error.message, true);
+    }
+}
+
 function renderPastWorkList() {
     const container = document.getElementById('past-work-list');
     container.innerHTML = '';
-    currentPastWork.forEach((entry) => {
+    currentPastWork.forEach((entry, index) => {
         const row = document.createElement('div');
         row.className = 'past-work-list-row';
 
@@ -211,6 +281,25 @@ function renderPastWorkList() {
         caption.className = 'past-work-list-caption';
         caption.textContent = entry.caption || '';
 
+        const nsfwLabel = document.createElement('label');
+        const nsfwCheckbox = document.createElement('input');
+        nsfwCheckbox.type = 'checkbox';
+        nsfwCheckbox.checked = Boolean(entry.nsfw);
+        nsfwCheckbox.addEventListener('change', () => toggleNsfwFlow(entry, nsfwCheckbox));
+        nsfwLabel.append(nsfwCheckbox, document.createTextNode(' NSFW'));
+
+        const upButton = document.createElement('button');
+        upButton.type = 'button';
+        upButton.textContent = '↑';
+        upButton.disabled = index === 0;
+        upButton.addEventListener('click', () => movePastWork(entry, -1));
+
+        const downButton = document.createElement('button');
+        downButton.type = 'button';
+        downButton.textContent = '↓';
+        downButton.disabled = index === currentPastWork.length - 1;
+        downButton.addEventListener('click', () => movePastWork(entry, 1));
+
         const editButton = document.createElement('button');
         editButton.type = 'button';
         editButton.textContent = 'Edit caption';
@@ -222,7 +311,7 @@ function renderPastWorkList() {
         deleteButton.textContent = 'Delete';
         deleteButton.addEventListener('click', () => deletePastWorkFlow(entry));
 
-        row.append(thumb, caption, editButton, deleteButton);
+        row.append(thumb, caption, nsfwLabel, upButton, downButton, editButton, deleteButton);
         container.appendChild(row);
     });
 }
@@ -300,12 +389,15 @@ document.getElementById('character-form').addEventListener('submit', async (even
 
     const files = document.getElementById('char-images').files;
     const nsfwFlags = Array.from(document.querySelectorAll('#char-nsfw-rows [data-nsfw-index]')).map((cb) => cb.checked);
+    const selectedExistingThumbRow = document.querySelector('.existing-image-thumbnail:checked')?.closest('.existing-image-row');
     const existingImages = Array.from(document.querySelectorAll('#char-existing-images .existing-image-row'))
         .filter((row) => row.querySelector('.existing-image-keep').checked)
         .map((row) => ({
             url: row.dataset.url,
             nsfw: row.querySelector('.existing-image-nsfw').checked,
+            thumbnail: row === selectedExistingThumbRow,
         }));
+    const selectedNewThumbIndex = document.querySelector('.new-image-thumbnail:checked')?.dataset.newIndex;
 
     const totalImageCount = existingImages.length + files.length;
     const allImagesNsfw =
@@ -319,6 +411,7 @@ document.getElementById('character-form').addEventListener('submit', async (even
         bio: document.getElementById('char-bio').value,
         nsfwFlags,
         existingImages,
+        thumbnailNewIndex: selectedNewThumbIndex !== undefined ? Number(selectedNewThumbIndex) : null,
     };
     if (editingSlug) meta.slug = editingSlug;
 
@@ -411,6 +504,7 @@ document.getElementById('past-work-form').addEventListener('submit', async (even
         type: 'past-work',
         action: 'add',
         caption: document.getElementById('past-work-caption').value,
+        nsfw: document.getElementById('past-work-nsfw').checked,
     };
 
     const formData = new FormData();

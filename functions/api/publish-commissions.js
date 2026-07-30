@@ -24,6 +24,9 @@ export function validatePastWorkEntry(entry) {
     if (entry.caption !== undefined && typeof entry.caption !== 'string') {
         errors.push('Caption must be a string');
     }
+    if (entry.nsfw !== undefined && typeof entry.nsfw !== 'boolean') {
+        errors.push('NSFW flag must be a boolean');
+    }
     return { valid: errors.length === 0, errors };
 }
 
@@ -35,6 +38,9 @@ export function validatePastWorkEdit(meta) {
     if (meta && meta.caption !== undefined && typeof meta.caption !== 'string') {
         errors.push('Caption must be a string');
     }
+    if (meta && meta.nsfw !== undefined && typeof meta.nsfw !== 'boolean') {
+        errors.push('NSFW flag must be a boolean');
+    }
     return { valid: errors.length === 0, errors };
 }
 
@@ -42,6 +48,14 @@ export function validatePastWorkDelete(meta) {
     const errors = [];
     if (!meta || !meta.url || typeof meta.url !== 'string') {
         errors.push('URL is required to identify the past-work entry');
+    }
+    return { valid: errors.length === 0, errors };
+}
+
+export function validatePastWorkReorder(meta) {
+    const errors = [];
+    if (!meta || !Array.isArray(meta.order) || meta.order.length === 0 || meta.order.some((u) => typeof u !== 'string')) {
+        errors.push('Order must be a non-empty array of URLs');
     }
     return { valid: errors.length === 0, errors };
 }
@@ -69,7 +83,7 @@ async function appendPastWork(entry, githubConfig) {
     });
 }
 
-export async function editPastWork(url, caption, githubConfig) {
+export async function editPastWork(url, updates, githubConfig) {
     const path = 'data/commissions.json';
     return withRetryOn409(async () => {
         const { content, sha } = await getFile(path, githubConfig);
@@ -80,8 +94,31 @@ export async function editPastWork(url, caption, githubConfig) {
             error.notFound = true;
             throw error;
         }
-        data.pastWork[index] = { ...data.pastWork[index], caption: caption || '' };
+        const existing = data.pastWork[index];
+        data.pastWork[index] = {
+            ...existing,
+            caption: updates.caption !== undefined ? updates.caption : existing.caption || '',
+            nsfw: updates.nsfw !== undefined ? Boolean(updates.nsfw) : Boolean(existing.nsfw),
+        };
         await putFile(path, JSON.stringify(data, null, 2), sha, 'content: edit past commission work', githubConfig);
+    });
+}
+
+export async function reorderPastWork(order, githubConfig) {
+    const path = 'data/commissions.json';
+    return withRetryOn409(async () => {
+        const { content, sha } = await getFile(path, githubConfig);
+        const data = JSON.parse(content);
+        const current = data.pastWork || [];
+        const byUrl = new Map(current.map((entry) => [entry.url, entry]));
+        const reordered = order.filter((url) => byUrl.has(url)).map((url) => byUrl.get(url));
+        if (reordered.length !== current.length) {
+            const error = new Error('Order must include exactly the current set of past-work entries');
+            error.notFound = true;
+            throw error;
+        }
+        data.pastWork = reordered;
+        await putFile(path, JSON.stringify(data, null, 2), sha, 'content: reorder past commission work', githubConfig);
     });
 }
 
@@ -128,7 +165,21 @@ export async function onRequestPost(context) {
                         headers: { 'Content-Type': 'application/json' },
                     });
                 }
-                await editPastWork(meta.url, meta.caption, githubConfig);
+                await editPastWork(meta.url, { caption: meta.caption, nsfw: meta.nsfw }, githubConfig);
+                return new Response(JSON.stringify({ ok: true }), {
+                    headers: { 'Content-Type': 'application/json' },
+                });
+            }
+
+            if (meta.action === 'reorder') {
+                const { valid, errors } = validatePastWorkReorder(meta);
+                if (!valid) {
+                    return new Response(JSON.stringify({ error: errors.join(', ') }), {
+                        status: 400,
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+                }
+                await reorderPastWork(meta.order, githubConfig);
                 return new Response(JSON.stringify({ ok: true }), {
                     headers: { 'Content-Type': 'application/json' },
                 });
@@ -156,7 +207,7 @@ export async function onRequestPost(context) {
                 });
             }
             const url = await uploadImage(file, cloudinaryConfig);
-            const entry = { url, caption: meta.caption || '' };
+            const entry = { url, caption: meta.caption || '', nsfw: Boolean(meta.nsfw) };
             const { valid, errors } = validatePastWorkEntry(entry);
             if (!valid) {
                 return new Response(JSON.stringify({ error: errors.join(', ') }), {

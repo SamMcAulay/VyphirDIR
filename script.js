@@ -55,7 +55,8 @@ async function loadCharacterGallery() {
         shuffleArray(characters);
 
         characters.forEach((char) => {
-            const firstImage = (char.images || []).find((img) => !img.nsfw);
+            const images = char.images || [];
+            const firstImage = images.find((img) => img.thumbnail && !img.nsfw) || images.find((img) => !img.nsfw);
             if (!firstImage) return;
 
             const card = document.createElement('a');
@@ -89,7 +90,7 @@ async function loadCommissionsPreview() {
     try {
         const response = await fetch('/data/commissions.json');
         const data = await response.json();
-        const recentPastWork = (data.pastWork || []).slice(-3).reverse();
+        const recentPastWork = (data.pastWork || []).filter((item) => !item.nsfw).slice(-3).reverse();
 
         if (recentPastWork.length === 0) {
             const empty = document.createElement('p');

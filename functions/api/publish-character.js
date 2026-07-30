@@ -33,8 +33,21 @@ export function validateDeleteRequest(meta) {
 export function mergeCharacterImages(existingImages, newImages) {
     const cleanExisting = (existingImages || [])
         .filter((img) => img && typeof img.url === 'string' && img.url)
-        .map((img) => ({ url: img.url, nsfw: Boolean(img.nsfw) }));
-    return [...cleanExisting, ...(newImages || [])];
+        .map((img) => ({ url: img.url, nsfw: Boolean(img.nsfw), ...(img.thumbnail ? { thumbnail: true } : {}) }));
+    return normalizeThumbnail([...cleanExisting, ...(newImages || [])]);
+}
+
+export function normalizeThumbnail(images) {
+    let found = false;
+    return images.map((img) => {
+        if (!img.thumbnail) return img;
+        if (found) {
+            const { thumbnail, ...rest } = img;
+            return rest;
+        }
+        found = true;
+        return img;
+    });
 }
 
 async function updateCharactersFile(payload, existingSlug, githubConfig) {
@@ -132,7 +145,11 @@ export async function onRequestPost(context) {
                 apiSecret: env.CLOUDINARY_API_SECRET,
                 folder: 'vyphir/characters',
             });
-            newImages.push({ url, nsfw: Boolean(meta.nsfwFlags && meta.nsfwFlags[i]) });
+            newImages.push({
+                url,
+                nsfw: Boolean(meta.nsfwFlags && meta.nsfwFlags[i]),
+                ...(i === meta.thumbnailNewIndex ? { thumbnail: true } : {}),
+            });
         }
 
         const payload = {

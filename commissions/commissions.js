@@ -1,3 +1,5 @@
+import { setupNsfwReveal } from '../nsfw-reveal.js';
+
 function renderTier(tier) {
     const card = document.createElement('div');
     card.className = 'tier-card';
@@ -27,10 +29,16 @@ function renderPastWork(item) {
     const card = document.createElement('div');
     card.className = 'past-work-card';
 
+    const wrap = document.createElement('div');
+    wrap.className = item.nsfw ? 'char-image-wrap nsfw-blur' : 'char-image-wrap';
+    if (item.nsfw) wrap.dataset.nsfw = 'true';
+
     const img = document.createElement('img');
     img.src = item.url;
     img.alt = item.caption || 'Past commission work';
-    card.appendChild(img);
+    img.loading = 'lazy';
+    wrap.appendChild(img);
+    card.appendChild(wrap);
 
     if (item.caption) {
         const caption = document.createElement('p');
@@ -63,6 +71,7 @@ async function loadCommissions() {
 
         const pastWorkEl = document.getElementById('commission-past-work');
         (data.pastWork || []).forEach((item) => pastWorkEl.appendChild(renderPastWork(item)));
+        setupNsfwReveal();
     } catch (error) {
         console.error(error);
         const intro = document.getElementById('commission-intro');

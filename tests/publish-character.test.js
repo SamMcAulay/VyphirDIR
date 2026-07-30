@@ -4,6 +4,7 @@ import {
     validateCharacterPayload,
     validateDeleteRequest,
     mergeCharacterImages,
+    normalizeThumbnail,
     deleteCharacter,
 } from '../functions/api/publish-character.js';
 
@@ -80,6 +81,40 @@ test('mergeCharacterImages drops existing entries with no url', () => {
 
 test('mergeCharacterImages returns an empty array when nothing is kept or added', () => {
     assert.deepEqual(mergeCharacterImages([], []), []);
+});
+
+test('mergeCharacterImages preserves a thumbnail flag on an existing image', () => {
+    const existing = [{ url: 'https://example.com/a.jpg', nsfw: false, thumbnail: true }];
+    const fresh = [{ url: 'https://example.com/b.jpg', nsfw: false }];
+    assert.deepEqual(mergeCharacterImages(existing, fresh), [
+        { url: 'https://example.com/a.jpg', nsfw: false, thumbnail: true },
+        { url: 'https://example.com/b.jpg', nsfw: false },
+    ]);
+});
+
+test('mergeCharacterImages strips a duplicate thumbnail flag, keeping only the first', () => {
+    const existing = [{ url: 'https://example.com/a.jpg', nsfw: false, thumbnail: true }];
+    const fresh = [{ url: 'https://example.com/b.jpg', nsfw: false, thumbnail: true }];
+    assert.deepEqual(mergeCharacterImages(existing, fresh), [
+        { url: 'https://example.com/a.jpg', nsfw: false, thumbnail: true },
+        { url: 'https://example.com/b.jpg', nsfw: false },
+    ]);
+});
+
+test('normalizeThumbnail leaves images unchanged when no thumbnail is flagged', () => {
+    const images = [{ url: 'a', nsfw: false }, { url: 'b', nsfw: true }];
+    assert.deepEqual(normalizeThumbnail(images), images);
+});
+
+test('normalizeThumbnail keeps only the first flagged thumbnail', () => {
+    const images = [
+        { url: 'a', nsfw: false, thumbnail: true },
+        { url: 'b', nsfw: false, thumbnail: true },
+    ];
+    assert.deepEqual(normalizeThumbnail(images), [
+        { url: 'a', nsfw: false, thumbnail: true },
+        { url: 'b', nsfw: false },
+    ]);
 });
 
 test('deleteCharacter throws a notFound error when the slug does not exist', async () => {
