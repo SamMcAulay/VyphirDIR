@@ -73,7 +73,30 @@ async function loadCharacterGallery() {
 
 loadCharacterGallery();
 
-const bskyHandle = 'samisaderp.bsky.social'; 
+async function loadCommissionsPreview() {
+    const container = document.getElementById('commissions-preview');
+    if (!container) return;
+
+    try {
+        const response = await fetch('/data/commissions.json');
+        const data = await response.json();
+        const recentPastWork = (data.pastWork || []).slice(-3).reverse();
+
+        recentPastWork.forEach((item) => {
+            const img = document.createElement('img');
+            img.src = item.url;
+            img.alt = item.caption || '';
+            img.loading = 'lazy';
+            container.appendChild(img);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+loadCommissionsPreview();
+
+const bskyHandle = 'samisaderp.bsky.social';
 
 async function loadBlueskyFeed() {
     const feedContainer = document.getElementById('bsky-feed');

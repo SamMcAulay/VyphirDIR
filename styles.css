@@ -210,15 +210,50 @@ body {
     text-shadow: 0 0 5px var(--hot-pink);
 }
 
-.link-btn-commissions {
-    grid-column: 1 / -1;
+.commissions-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
     background: rgba(255, 105, 180, 0.15);
-    border-color: rgba(255, 105, 180, 0.6);
+    border: 1px solid rgba(255, 105, 180, 0.6);
+    color: var(--white);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
     animation: commissions-glow 2.5s ease-in-out infinite;
+    transition: background 0.2s ease;
 }
 
-.link-btn-commissions:hover, .link-btn-commissions:active {
+.commissions-cta:hover, .commissions-cta:active {
     background: rgba(255, 105, 180, 0.25);
+}
+
+.commissions-cta i {
+    font-size: 1.1rem;
+    color: var(--hot-pink);
+    text-shadow: 0 0 5px var(--hot-pink);
+}
+
+.commissions-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.commissions-preview-grid img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-element);
 }
 
 @keyframes commissions-glow {
