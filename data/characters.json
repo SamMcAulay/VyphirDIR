@@ -179,6 +179,58 @@
         }
       ],
       "slug": "gritchin"
+    },
+    {
+      "name": "Faeyren",
+      "species": "Crayon Dog",
+      "bio": "21 | He/Him | Male\nWhen he sits down he gets crayon marks everywhere, legend has it he was yelled at so much he has calves of steel, and is very good at cleaning crayon stains",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422814/vyphir/characters/eea87bce-790e-45a9-854b-fedc418a2e99.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422815/vyphir/characters/f970fabe-b84e-49eb-a16d-b2620eece406.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422815/vyphir/characters/d4e8f1ba-4a8e-4f9c-93df-5dba8a77d34a.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422816/vyphir/characters/a8f5d700-9f3a-4c59-8388-7d622fa44b59.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422817/vyphir/characters/715553e0-583f-4f95-aa22-39792253af7d.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422818/vyphir/characters/915032b3-e114-451c-a671-d846297f21f8.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422819/vyphir/characters/23e304ea-a324-41e6-ae84-16f343278c33.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422819/vyphir/characters/09164d39-8b00-4e83-a0b2-31764be5a050.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422820/vyphir/characters/d13895ff-01de-4ea5-b87e-0d4b5a841358.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422821/vyphir/characters/2ef15127-bb57-4497-9309-2d70be7561b7.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422821/vyphir/characters/4924001a-bc43-4109-baed-e8991f0097f9.png",
+          "nsfw": false
+        }
+      ],
+      "slug": "faeyren"
     }
   ]
 }
