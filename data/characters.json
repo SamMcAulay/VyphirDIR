@@ -1,3 +1,124 @@
 {
-  "characters": []
+  "characters": [
+    {
+      "name": "Vyphir",
+      "species": "Mainecoon Cat",
+      "bio": "20yo | She/Her | Female\nFunny Outgoing and confident extrovert, Brave and blunt.\nLoves: Affection, friends, socialization, Photography, painting and other arts, hiking and nature.",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421004/vyphir/characters/392a6c2d-d49f-45fd-9b74-351e1e5cec69.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421006/vyphir/characters/5cdbd0ac-4d1a-4807-8707-d5fb54f6ee0d.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421006/vyphir/characters/9f6a2159-a3f1-47bb-8ca1-370cc3eb2676.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421008/vyphir/characters/b4641272-84b5-475b-a479-ca4caf45b42d.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421009/vyphir/characters/e61a0531-0074-4bbb-8608-9cb5faf777c9.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421010/vyphir/characters/95610f86-5e59-43ad-a1cf-ce04bd601e50.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421011/vyphir/characters/5b258e29-8031-4682-a187-62a9fc6e41f5.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421012/vyphir/characters/1ed48057-eb9d-4e72-95b4-67bb5076d25e.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421013/vyphir/characters/1520e562-bc5c-4b57-9ca5-bcc2d96a39b5.png",
+          "nsfw": true
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421013/vyphir/characters/fd0791f8-8fe0-4afc-a860-d71ffd0084de.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421015/vyphir/characters/cf38a1a0-6b0e-46c6-abae-7324348832e5.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421016/vyphir/characters/6ffeb856-25ad-439e-83fd-e6dcf1bde7c9.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421017/vyphir/characters/bdb8f3ed-d997-4709-9c76-306a6cc6dbe5.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421018/vyphir/characters/c33afb1c-7f84-47f0-aaf7-81384648e382.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421019/vyphir/characters/263abe98-7602-4eb0-88d7-4dad8da640f2.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421020/vyphir/characters/94cf04ba-d3a6-4401-b298-cdc079dfb605.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421021/vyphir/characters/49e0b996-7fa9-4b9f-b2c9-fac97b3bd439.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421022/vyphir/characters/fa2cdbe6-2abf-4351-b49a-ad67a8f6b1e5.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421022/vyphir/characters/7d0b81e7-a033-4841-8d99-f60d85857612.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421023/vyphir/characters/b7bf76ec-a7fc-43f7-a5e5-21eec2d6d9a3.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421025/vyphir/characters/f7e8fc41-8268-4542-a90c-852799a99651.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421025/vyphir/characters/39673fef-3bda-4060-9ffb-c96bd43d952e.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421026/vyphir/characters/a99a996b-b4c2-4042-b8db-3b1faddc0a72.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421027/vyphir/characters/f2eba9a0-c2a8-4b8d-8f5f-8adac2ff0f99.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421032/vyphir/characters/978876ef-8578-43c9-84b0-e4ceeb855d57.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421033/vyphir/characters/c2c2212d-3e60-40ec-987c-bff807aa9019.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421033/vyphir/characters/c3fdd288-9268-4711-951c-b7c8281e22df.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421034/vyphir/characters/8921481c-d0f0-4e08-b5f5-2ca9a9520951.jpg",
+          "nsfw": false
+        }
+      ],
+      "slug": "vyphir"
+    }
+  ]
 }
