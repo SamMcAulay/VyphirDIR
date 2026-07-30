@@ -147,14 +147,56 @@ fetch('/data/characters.json')
     })
     .catch((error) => console.error('Failed to load current characters:', error));
 
-let currentCommissions = { tiers: [] };
+function renderTierRow(tier) {
+    const container = document.getElementById('comm-tiers-rows');
+    const row = document.createElement('div');
+    row.className = 'tier-row';
+    row.dataset.existingExample = (tier && tier.example) || '';
+
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.className = 'tier-name';
+    nameInput.placeholder = 'Tier name';
+    nameInput.value = (tier && tier.name) || '';
+
+    const priceInput = document.createElement('input');
+    priceInput.type = 'text';
+    priceInput.className = 'tier-price';
+    priceInput.placeholder = 'Price (e.g. $20)';
+    priceInput.value = (tier && tier.price) || '';
+
+    const descriptionInput = document.createElement('textarea');
+    descriptionInput.className = 'tier-description';
+    descriptionInput.rows = 2;
+    descriptionInput.placeholder = 'Description';
+    descriptionInput.value = (tier && tier.description) || '';
+
+    const imageLabel = document.createElement('label');
+    imageLabel.textContent = tier && tier.example ? 'Replace example image (optional)' : 'Example image (optional)';
+
+    const imageInput = document.createElement('input');
+    imageInput.type = 'file';
+    imageInput.className = 'tier-image';
+    imageInput.accept = 'image/png,image/jpeg,image/webp';
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = 'Remove tier';
+    removeButton.addEventListener('click', () => row.remove());
+
+    row.append(nameInput, priceInput, descriptionInput, imageLabel, imageInput, removeButton);
+    container.appendChild(row);
+}
+
+document.getElementById('comm-add-tier').addEventListener('click', () => renderTierRow(null));
+
 fetch('/data/commissions.json')
     .then((r) => r.json())
     .then((d) => {
-        currentCommissions = d;
         document.getElementById('comm-status').checked = Boolean(d.status);
         document.getElementById('comm-intro').value = d.intro || '';
         document.getElementById('comm-special-offer').value = d.specialOffer || '';
+        (d.tiers || []).forEach((tier) => renderTierRow(tier));
     })
     .catch((error) => console.error('Failed to load current commissions data:', error));
 
@@ -212,16 +254,33 @@ document.getElementById('commissions-info-form').addEventListener('submit', asyn
         return;
     }
 
+    const tierRows = Array.from(document.querySelectorAll('#comm-tiers-rows .tier-row'));
+    const tiers = [];
+    const tierFiles = [];
+    tierRows.forEach((row) => {
+        const name = row.querySelector('.tier-name').value.trim();
+        const price = row.querySelector('.tier-price').value.trim();
+        const description = row.querySelector('.tier-description').value.trim();
+        const existingExample = row.dataset.existingExample || '';
+        const newFile = row.querySelector('.tier-image').files[0];
+
+        if (!name && !price && !description && !existingExample && !newFile) return;
+
+        tiers.push({ name, price, description, example: existingExample });
+        tierFiles.push(newFile || new File([], ''));
+    });
+
     const meta = {
         type: 'info',
         status: document.getElementById('comm-status').checked,
         intro: document.getElementById('comm-intro').value,
         specialOffer: document.getElementById('comm-special-offer').value,
-        tiers: currentCommissions.tiers || [],
+        tiers,
     };
 
     const formData = new FormData();
     formData.append('meta', JSON.stringify(meta));
+    tierFiles.forEach((file) => formData.append('tierImages', file));
 
     setStatus('commissions-info-status', 'Saving...', false);
     try {
@@ -229,6 +288,8 @@ document.getElementById('commissions-info-form').addEventListener('submit', asyn
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Unknown error');
         setStatus('commissions-info-status', 'Saved — live shortly', false);
+        document.getElementById('comm-tiers-rows').innerHTML = '';
+        (result.tiers || []).forEach((tier) => renderTierRow(tier));
     } catch (error) {
         setStatus('commissions-info-status', error.message, true);
     }
