@@ -155,6 +155,30 @@
         }
       ],
       "slug": "pharron"
+    },
+    {
+      "name": "Gritchin",
+      "species": "Stray Cat",
+      "bio": "34 | He/She | Male\nStray cat abandoned by its family. Spent too many years eating random shit from the streets he turned green! scientists are still wondering what tf she ate",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422613/vyphir/characters/d0ee7b2f-db7d-47da-b901-ae7479811d6c.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422613/vyphir/characters/4a76a088-cfdf-408f-a312-426d5a887d48.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422614/vyphir/characters/e947620e-cde8-473e-aa7c-02b7bea5e6ef.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422615/vyphir/characters/d8da9d5d-7928-420d-bb6a-2a358cdeeca9.png",
+          "nsfw": false
+        }
+      ],
+      "slug": "gritchin"
     }
   ]
 }
