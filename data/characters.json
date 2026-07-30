@@ -127,6 +127,34 @@
         }
       ],
       "slug": "vyphir"
+    },
+    {
+      "name": "Pharron",
+      "species": "Protogen",
+      "bio": "25 | They/Them | Non Binary\nPharaoh in his past life, or so he thinks!",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422460/vyphir/characters/93796a64-28c0-4db9-a0ae-23f68eb99c4c.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422462/vyphir/characters/fde5bd82-4218-4446-a5eb-4d54334e252a.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422464/vyphir/characters/7828d78c-8b7b-4301-af57-f8158e79e8ed.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422464/vyphir/characters/ad428c71-3343-4b76-a0b0-c2d91c8895a0.jpg",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422465/vyphir/characters/54b86dc4-04c8-47eb-be80-a145f643972b.jpg",
+          "nsfw": false
+        }
+      ],
+      "slug": "pharron"
     }
   ]
 }
