@@ -267,6 +267,18 @@
         }
       ],
       "slug": "blair"
+    },
+    {
+      "name": "Zephyr",
+      "species": "Lemur",
+      "bio": "17 | he/him | Male\nHappy and bubbly boy, always looking on the bright side of things, blindsided a tad by his innocence. ",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785423399/vyphir/characters/5d65dcf0-818e-4f3a-a1cd-c04a2a768fef.png",
+          "nsfw": false
+        }
+      ],
+      "slug": "zephyr"
     }
   ]
 }
