@@ -190,6 +190,87 @@ function renderTierRow(tier) {
 
 document.getElementById('comm-add-tier').addEventListener('click', () => renderTierRow(null));
 
+let currentPastWork = [];
+
+function renderPastWorkList() {
+    const container = document.getElementById('past-work-list');
+    container.innerHTML = '';
+    currentPastWork.forEach((entry) => {
+        const row = document.createElement('div');
+        row.className = 'past-work-list-row';
+
+        const thumb = document.createElement('img');
+        thumb.className = 'past-work-list-thumb';
+        thumb.src = entry.url;
+        thumb.alt = '';
+
+        const caption = document.createElement('span');
+        caption.className = 'past-work-list-caption';
+        caption.textContent = entry.caption || '';
+
+        const editButton = document.createElement('button');
+        editButton.type = 'button';
+        editButton.textContent = 'Edit caption';
+        editButton.addEventListener('click', () => editPastWorkFlow(entry));
+
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'danger-button';
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => deletePastWorkFlow(entry));
+
+        row.append(thumb, caption, editButton, deleteButton);
+        container.appendChild(row);
+    });
+}
+
+async function editPastWorkFlow(entry) {
+    const newCaption = window.prompt('Edit caption:', entry.caption || '');
+    if (newCaption === null) return;
+    if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append(
+            'meta',
+            JSON.stringify({ type: 'past-work', action: 'edit', url: entry.url, caption: newCaption })
+        );
+        const response = await fetch('/api/publish-commissions', { method: 'POST', body: formData });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unknown error');
+        entry.caption = newCaption;
+        renderPastWorkList();
+        setStatus('past-work-status', 'Caption updated — live shortly', false);
+    } catch (error) {
+        setStatus('past-work-status', error.message, true);
+    }
+}
+
+async function deletePastWorkFlow(entry) {
+    if (
+        !window.confirm(
+            'Delete this past-work entry? This will be published live and permanently recorded in git history.'
+        )
+    ) {
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('meta', JSON.stringify({ type: 'past-work', action: 'delete', url: entry.url }));
+        const response = await fetch('/api/publish-commissions', { method: 'POST', body: formData });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unknown error');
+        currentPastWork = currentPastWork.filter((e) => e.url !== entry.url);
+        renderPastWorkList();
+        setStatus('past-work-status', 'Deleted — live shortly', false);
+    } catch (error) {
+        setStatus('past-work-status', error.message, true);
+    }
+}
+
 fetch('/data/commissions.json')
     .then((r) => r.json())
     .then((d) => {
@@ -197,6 +278,8 @@ fetch('/data/commissions.json')
         document.getElementById('comm-intro').value = d.intro || '';
         document.getElementById('comm-special-offer').value = d.specialOffer || '';
         (d.tiers || []).forEach((tier) => renderTierRow(tier));
+        currentPastWork = d.pastWork || [];
+        renderPastWorkList();
     })
     .catch((error) => console.error('Failed to load current commissions data:', error));
 
@@ -304,6 +387,7 @@ document.getElementById('past-work-form').addEventListener('submit', async (even
     const file = document.getElementById('past-work-image').files[0];
     const meta = {
         type: 'past-work',
+        action: 'add',
         caption: document.getElementById('past-work-caption').value,
     };
 
@@ -318,6 +402,8 @@ document.getElementById('past-work-form').addEventListener('submit', async (even
         if (!response.ok) throw new Error(result.error || 'Unknown error');
         setStatus('past-work-status', 'Published — live shortly', false);
         event.target.reset();
+        currentPastWork.push(result.entry);
+        renderPastWorkList();
     } catch (error) {
         setStatus('past-work-status', error.message, true);
     }
