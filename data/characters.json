@@ -231,6 +231,30 @@
         }
       ],
       "slug": "faeyren"
+    },
+    {
+      "name": "Drasil",
+      "species": "Samoyed Dog",
+      "bio": "27 | he/they | Non-binary\nDerived from the Yggdrasil tree of life, forever wearing its brands",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785423030/vyphir/characters/c4616ea4-293e-40cf-b81c-93a00a44ba73.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785423030/vyphir/characters/dcb41fce-3e65-4575-8ea0-2e29511b55d3.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785423031/vyphir/characters/2adf3557-c5ac-44fd-a810-a69947f68fdf.png",
+          "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785423032/vyphir/characters/54c34575-8de8-4ced-a55e-661fff7f999c.png",
+          "nsfw": false
+        }
+      ],
+      "slug": "drasil"
     }
   ]
 }
