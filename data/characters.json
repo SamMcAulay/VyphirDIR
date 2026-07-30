@@ -116,6 +116,14 @@
         {
           "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421034/vyphir/characters/8921481c-d0f0-4e08-b5f5-2ca9a9520951.jpg",
           "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421130/vyphir/characters/161d0fa1-9f27-45c5-9f08-215e51039c8a.png",
+          "nsfw": true
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421132/vyphir/characters/366ae6d7-c1a6-4a75-9fbf-c33d6a736dc4.png",
+          "nsfw": true
         }
       ],
       "slug": "vyphir"
