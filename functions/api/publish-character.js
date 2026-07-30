@@ -54,7 +54,7 @@ async function updateCharactersFile(payload, existingSlug, githubConfig) {
             }
             data.characters[index] = { ...data.characters[index], ...payload, slug };
         } else {
-            const existingSlugs = data.characters.map((c) => c.slug);
+            const existingSlugs = (data.characters || []).map((c) => c.slug);
             slug = uniqueSlug(payload.name, existingSlugs);
             data.characters.push({ ...payload, slug });
         }

@@ -43,6 +43,15 @@ async function loadCharacterGallery() {
         const response = await fetch('/data/characters.json');
         const data = await response.json();
         const characters = data.characters || [];
+
+        if (characters.length === 0) {
+            const empty = document.createElement('p');
+            empty.className = 'gallery-empty';
+            empty.textContent = '> NO CHARACTERS ARCHIVED YET';
+            galleryDiv.appendChild(empty);
+            return;
+        }
+
         shuffleArray(characters);
 
         characters.forEach((char) => {
@@ -81,6 +90,14 @@ async function loadCommissionsPreview() {
         const response = await fetch('/data/commissions.json');
         const data = await response.json();
         const recentPastWork = (data.pastWork || []).slice(-3).reverse();
+
+        if (recentPastWork.length === 0) {
+            const empty = document.createElement('p');
+            empty.className = 'gallery-empty';
+            empty.textContent = '> NO PAST WORK YET';
+            container.appendChild(empty);
+            return;
+        }
 
         recentPastWork.forEach((item) => {
             const img = document.createElement('img');

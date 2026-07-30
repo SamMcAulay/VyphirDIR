@@ -12,13 +12,12 @@ function renderNsfwCheckboxes(files) {
         row.className = 'image-row';
 
         const label = document.createElement('label');
-        label.textContent = file.name;
-
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.dataset.nsfwIndex = String(i);
 
-        row.append(checkbox, label);
+        label.append(checkbox, document.createTextNode(` ${file.name}`));
+        row.append(label);
         container.appendChild(row);
     });
 }
