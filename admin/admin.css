@@ -103,11 +103,5 @@ h1, h2 { margin-bottom: 15px; }
 
 .tier-row input[type="text"],
 .tier-row textarea {
-    width: 100%;
-    padding: 8px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: inherit;
     margin-top: 6px;
 }

@@ -145,7 +145,11 @@ fetch('/data/characters.json')
         currentCharacters = d.characters || [];
         renderCharacterList();
     })
-    .catch((error) => console.error('Failed to load current characters:', error));
+    .catch((error) => {
+        console.error('Failed to load current characters:', error);
+        setStatus('character-status', 'Could not load current character data — reload before editing.', true);
+        document.getElementById('character-submit-button').disabled = true;
+    });
 
 function renderTierRow(tier) {
     const container = document.getElementById('comm-tiers-rows');
@@ -281,13 +285,19 @@ fetch('/data/commissions.json')
         currentPastWork = d.pastWork || [];
         renderPastWorkList();
     })
-    .catch((error) => console.error('Failed to load current commissions data:', error));
+    .catch((error) => {
+        console.error('Failed to load current commissions data:', error);
+        setStatus('commissions-info-status', 'Could not load current commission data — reload before saving.', true);
+        document.querySelector('#commissions-info-form button[type="submit"]').disabled = true;
+    });
 
 document.getElementById('character-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
         return;
     }
+
+    const wasEditing = Boolean(editingSlug);
 
     const files = document.getElementById('char-images').files;
     const nsfwFlags = Array.from(document.querySelectorAll('#char-nsfw-rows [data-nsfw-index]')).map((cb) => cb.checked);
@@ -297,6 +307,12 @@ document.getElementById('character-form').addEventListener('submit', async (even
             url: row.dataset.url,
             nsfw: row.querySelector('.existing-image-nsfw').checked,
         }));
+
+    const totalImageCount = existingImages.length + files.length;
+    const allImagesNsfw =
+        totalImageCount > 0 &&
+        existingImages.every((img) => img.nsfw) &&
+        nsfwFlags.slice(0, files.length).every(Boolean);
 
     const meta = {
         name: document.getElementById('char-name').value,
@@ -311,12 +327,19 @@ document.getElementById('character-form').addEventListener('submit', async (even
     formData.append('meta', JSON.stringify(meta));
     Array.from(files).forEach((file) => formData.append('images', file));
 
-    setStatus('character-status', editingSlug ? 'Saving...' : 'Publishing...', false);
+    setStatus('character-status', wasEditing ? 'Saving...' : 'Publishing...', false);
     try {
         const response = await fetch('/api/publish-character', { method: 'POST', body: formData });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Unknown error');
-        setStatus('character-status', `Published — live shortly at /gallery/${result.slug}/`, false);
+        const nsfwNote = allImagesNsfw
+            ? " (note: all images are NSFW, so this character won't appear on the homepage gallery)"
+            : '';
+        setStatus(
+            'character-status',
+            `${wasEditing ? 'Saved' : 'Published'} — live shortly at /gallery/${result.slug}/${nsfwNote}`,
+            false
+        );
 
         const index = currentCharacters.findIndex((c) => c.slug === result.slug);
         if (index === -1) {
@@ -350,7 +373,7 @@ document.getElementById('commissions-info-form').addEventListener('submit', asyn
         if (!name && !price && !description && !existingExample && !newFile) return;
 
         tiers.push({ name, price, description, example: existingExample });
-        tierFiles.push(newFile || new File([], ''));
+        tierFiles.push(newFile || new File([], 'unchanged'));
     });
 
     const meta = {

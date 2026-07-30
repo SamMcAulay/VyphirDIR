@@ -46,7 +46,7 @@ async function updateCharactersFile(payload, existingSlug, githubConfig) {
 
         let slug = existingSlug;
         if (slug) {
-            const index = data.characters.findIndex((c) => c.slug === slug);
+            const index = (data.characters || []).findIndex((c) => c.slug === slug);
             if (index === -1) {
                 const error = new Error(`Character with slug "${slug}" not found`);
                 error.notFound = true;
@@ -77,7 +77,7 @@ export async function deleteCharacter(slug, githubConfig) {
         const { content, sha } = await getFile(path, githubConfig);
         const data = JSON.parse(content);
 
-        const index = data.characters.findIndex((c) => c.slug === slug);
+        const index = (data.characters || []).findIndex((c) => c.slug === slug);
         if (index === -1) {
             const error = new Error(`Character with slug "${slug}" not found`);
             error.notFound = true;
