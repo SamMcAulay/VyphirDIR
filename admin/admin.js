@@ -212,34 +212,50 @@ function renderTierRow(tier) {
 document.getElementById('comm-add-tier').addEventListener('click', () => renderTierRow(null));
 
 let currentPastWork = [];
+let savedPastWorkOrder = [];
 
-async function movePastWork(entry, direction) {
+function pastWorkOrderIsDirty() {
+    if (currentPastWork.length !== savedPastWorkOrder.length) return true;
+    return currentPastWork.some((entry, i) => entry.url !== savedPastWorkOrder[i]);
+}
+
+function updateSaveOrderButton() {
+    document.getElementById('past-work-save-order').disabled = !pastWorkOrderIsDirty();
+}
+
+function movePastWork(entry, direction) {
     const index = currentPastWork.findIndex((e) => e.url === entry.url);
     const targetIndex = index + direction;
     if (index === -1 || targetIndex < 0 || targetIndex >= currentPastWork.length) return;
-    if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
-        return;
-    }
 
     const reordered = [...currentPastWork];
     [reordered[index], reordered[targetIndex]] = [reordered[targetIndex], reordered[index]];
+    currentPastWork = reordered;
+    renderPastWorkList();
+}
+
+document.getElementById('past-work-save-order').addEventListener('click', async () => {
+    if (!pastWorkOrderIsDirty()) return;
+    if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
+        return;
+    }
 
     try {
         const formData = new FormData();
         formData.append(
             'meta',
-            JSON.stringify({ type: 'past-work', action: 'reorder', order: reordered.map((e) => e.url) })
+            JSON.stringify({ type: 'past-work', action: 'reorder', order: currentPastWork.map((e) => e.url) })
         );
         const response = await fetch('/api/publish-commissions', { method: 'POST', body: formData });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Unknown error');
-        currentPastWork = reordered;
-        renderPastWorkList();
-        setStatus('past-work-status', 'Reordered — live shortly', false);
+        savedPastWorkOrder = currentPastWork.map((e) => e.url);
+        updateSaveOrderButton();
+        setStatus('past-work-order-status', 'Order saved — live shortly', false);
     } catch (error) {
-        setStatus('past-work-status', error.message, true);
+        setStatus('past-work-order-status', error.message, true);
     }
-}
+});
 
 async function toggleNsfwFlow(entry, checkbox) {
     const newValue = checkbox.checked;
@@ -314,6 +330,7 @@ function renderPastWorkList() {
         row.append(thumb, caption, nsfwLabel, upButton, downButton, editButton, deleteButton);
         container.appendChild(row);
     });
+    updateSaveOrderButton();
 }
 
 async function editPastWorkFlow(entry) {
@@ -356,6 +373,7 @@ async function deletePastWorkFlow(entry) {
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Unknown error');
         currentPastWork = currentPastWork.filter((e) => e.url !== entry.url);
+        savedPastWorkOrder = savedPastWorkOrder.filter((u) => u !== entry.url);
         renderPastWorkList();
         setStatus('past-work-status', 'Deleted — live shortly', false);
     } catch (error) {
@@ -371,6 +389,7 @@ fetch('/data/commissions.json')
         document.getElementById('comm-special-offer').value = d.specialOffer || '';
         (d.tiers || []).forEach((tier) => renderTierRow(tier));
         currentPastWork = d.pastWork || [];
+        savedPastWorkOrder = currentPastWork.map((e) => e.url);
         renderPastWorkList();
     })
     .catch((error) => {
@@ -519,6 +538,7 @@ document.getElementById('past-work-form').addEventListener('submit', async (even
         setStatus('past-work-status', 'Published — live shortly', false);
         event.target.reset();
         currentPastWork.push(result.entry);
+        savedPastWorkOrder.push(result.entry.url);
         renderPastWorkList();
     } catch (error) {
         setStatus('past-work-status', error.message, true);

@@ -539,12 +539,12 @@ a.gallery-card {
 
 #commission-past-work {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
 }
 
 #commission-past-work .past-work-card p {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     margin: 0;
 }
 
