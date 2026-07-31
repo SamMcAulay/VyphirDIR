@@ -177,7 +177,8 @@
         },
         {
           "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422615/vyphir/characters/d8da9d5d-7928-420d-bb6a-2a358cdeeca9.png",
-          "nsfw": false
+          "nsfw": false,
+          "thumbnail": true
         }
       ],
       "slug": "gritchin"
