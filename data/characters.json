@@ -152,7 +152,8 @@
         },
         {
           "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422465/vyphir/characters/54b86dc4-04c8-47eb-be80-a145f643972b.jpg",
-          "nsfw": false
+          "nsfw": false,
+          "thumbnail": true
         }
       ],
       "slug": "pharron"
