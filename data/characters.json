@@ -230,7 +230,8 @@
         },
         {
           "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422821/vyphir/characters/4924001a-bc43-4109-baed-e8991f0097f9.png",
-          "nsfw": false
+          "nsfw": false,
+          "thumbnail": true
         }
       ],
       "slug": "faeyren"
