@@ -15,7 +15,8 @@
         },
         {
           "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421006/vyphir/characters/9f6a2159-a3f1-47bb-8ca1-370cc3eb2676.png",
-          "nsfw": false
+          "nsfw": false,
+          "thumbnail": true
         },
         {
           "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421008/vyphir/characters/b4641272-84b5-475b-a479-ca4caf45b42d.png",
