@@ -55,6 +55,34 @@ input[type="checkbox"]:checked::after {
     line-height: 1;
 }
 
+input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    border: 1px solid rgba(255, 105, 180, 0.5);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+}
+
+input[type="radio"]:checked {
+    border-color: var(--hot-pink);
+}
+
+input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--hot-pink);
+}
+
 input[type="file"]::file-selector-button,
 input[type="file"]::-webkit-file-upload-button {
     font-family: 'Space Mono', monospace;
