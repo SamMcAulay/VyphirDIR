@@ -604,3 +604,7 @@ a.gallery-card {
     font-family: 'Space Mono', monospace;
     font-size: 0.85rem;
 }
+
+a.enlarge-link {
+    display: block;
+}
