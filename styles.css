@@ -580,3 +580,27 @@ a.gallery-card {
     color: var(--hot-pink);
     font-family: 'Space Mono', monospace;
 }
+
+.permalink-copy-btn {
+    background: var(--hot-pink);
+    color: var(--bg-dark);
+    font-family: 'Space Mono', monospace;
+    font-weight: bold;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.permalink-copy-btn:hover {
+    background: var(--pink);
+}
+
+.permalink-explore-link {
+    display: inline-block;
+    margin-top: 12px;
+    margin-left: 12px;
+    color: var(--hot-pink);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+}
