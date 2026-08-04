@@ -1,4 +1,5 @@
 import { setupNsfwReveal } from '../nsfw-reveal.js';
+import { setupEnlargeableImages } from '../shared/enlargeable.js';
 
 function renderTier(tier) {
     const card = document.createElement('div');
@@ -71,6 +72,7 @@ async function loadCommissions() {
 
         const pastWorkEl = document.getElementById('commission-past-work');
         (data.pastWork || []).forEach((item) => pastWorkEl.appendChild(renderPastWork(item)));
+        setupEnlargeableImages();
         setupNsfwReveal();
     } catch (error) {
         console.error(error);
