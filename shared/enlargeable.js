@@ -12,6 +12,7 @@ export function setupEnlargeableImages(root = document) {
         link.href = `/i/${id}`;
         link.target = '_blank';
         link.rel = 'noopener';
+        link.setAttribute('aria-label', img.alt ? `Enlarge ${img.alt}` : 'Enlarge image');
 
         img.replaceWith(link);
         link.appendChild(img);

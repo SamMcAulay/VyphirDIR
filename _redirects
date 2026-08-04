@@ -2,7 +2,7 @@
 /tests/*         /  301
 /scripts/*       /  301
 /templates/*     /  301
-/shared/*        /  301
+/shared/slugify.js  /  301
 /MANUAL_SETUP.md /  301
 /package.json    /  301
 /wrangler.toml   /  301
