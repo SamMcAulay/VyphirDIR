@@ -64,7 +64,7 @@ function renderPermalinkPage({ title, description, url, nsfw, backHref }, reques
     const safeUrl = escapeHtml(url);
     const safeBackHref = escapeHtml(backHref);
     const safePageUrl = escapeHtml(requestUrl);
-    const wrapClass = nsfw ? 'char-image-wrap nsfw-blur reveal-section' : 'char-image-wrap reveal-section';
+    const wrapClass = nsfw ? 'char-image-wrap nsfw-blur' : 'char-image-wrap';
     const nsfwAttr = nsfw ? ' data-nsfw="true"' : '';
     const shareTags = nsfw
         ? `<meta name="twitter:card" content="summary">`

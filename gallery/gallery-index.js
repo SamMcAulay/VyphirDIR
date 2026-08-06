@@ -1,7 +1,4 @@
 import { setupEnlargeableImages } from '../shared/enlargeable.js';
-import { initScrollMotion } from '../shared/scroll-motion.js';
-
-initScrollMotion();
 
 function truncateBio(bio, maxLength = 120) {
     const firstLine = (bio || '').split('\n')[0].trim();

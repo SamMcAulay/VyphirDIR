@@ -1,7 +1,4 @@
 import './background.js';
-import { initScrollMotion } from './shared/scroll-motion.js';
-
-initScrollMotion();
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
