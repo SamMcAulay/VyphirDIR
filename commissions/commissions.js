@@ -36,7 +36,7 @@ function renderPastWork(item) {
 
     const img = document.createElement('img');
     img.src = item.url;
-    img.alt = item.caption || 'Past commission work';
+    img.alt = item.caption || (item.giftArt ? 'Past gift art' : 'Past commission work');
     img.loading = 'lazy';
     wrap.appendChild(img);
     card.appendChild(wrap);

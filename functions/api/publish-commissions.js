@@ -27,6 +27,9 @@ export function validatePastWorkEntry(entry) {
     if (entry.nsfw !== undefined && typeof entry.nsfw !== 'boolean') {
         errors.push('NSFW flag must be a boolean');
     }
+    if (entry.giftArt !== undefined && typeof entry.giftArt !== 'boolean') {
+        errors.push('Gift art flag must be a boolean');
+    }
     return { valid: errors.length === 0, errors };
 }
 
@@ -40,6 +43,9 @@ export function validatePastWorkEdit(meta) {
     }
     if (meta && meta.nsfw !== undefined && typeof meta.nsfw !== 'boolean') {
         errors.push('NSFW flag must be a boolean');
+    }
+    if (meta && meta.giftArt !== undefined && typeof meta.giftArt !== 'boolean') {
+        errors.push('Gift art flag must be a boolean');
     }
     return { valid: errors.length === 0, errors };
 }
@@ -99,6 +105,7 @@ export async function editPastWork(url, updates, githubConfig) {
             ...existing,
             caption: updates.caption !== undefined ? updates.caption : existing.caption || '',
             nsfw: updates.nsfw !== undefined ? Boolean(updates.nsfw) : Boolean(existing.nsfw),
+            giftArt: updates.giftArt !== undefined ? Boolean(updates.giftArt) : Boolean(existing.giftArt),
         };
         await putFile(path, JSON.stringify(data, null, 2), sha, 'content: edit past commission work', githubConfig);
     });
@@ -165,7 +172,11 @@ export async function onRequestPost(context) {
                         headers: { 'Content-Type': 'application/json' },
                     });
                 }
-                await editPastWork(meta.url, { caption: meta.caption, nsfw: meta.nsfw }, githubConfig);
+                await editPastWork(
+                    meta.url,
+                    { caption: meta.caption, nsfw: meta.nsfw, giftArt: meta.giftArt },
+                    githubConfig
+                );
                 return new Response(JSON.stringify({ ok: true }), {
                     headers: { 'Content-Type': 'application/json' },
                 });
@@ -207,7 +218,7 @@ export async function onRequestPost(context) {
                 });
             }
             const url = await uploadImage(file, cloudinaryConfig);
-            const entry = { url, caption: meta.caption || '', nsfw: Boolean(meta.nsfw) };
+            const entry = { url, caption: meta.caption || '', nsfw: Boolean(meta.nsfw), giftArt: Boolean(meta.giftArt) };
             const { valid, errors } = validatePastWorkEntry(entry);
             if (!valid) {
                 return new Response(JSON.stringify({ error: errors.join(', ') }), {

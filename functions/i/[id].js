@@ -21,12 +21,13 @@ export function findImageById(charactersData, commissionsData, id) {
 
     for (const item of (commissionsData?.pastWork || [])) {
         if (extractImageId(item.url) === id) {
+            const isGiftArt = Boolean(item.giftArt);
             return {
                 kind: 'commission',
                 url: item.url,
                 nsfw: Boolean(item.nsfw),
-                title: 'Commission — Vyphir',
-                description: item.caption || 'Past commission work',
+                title: isGiftArt ? 'Gift Art — Vyphir' : 'Commission — Vyphir',
+                description: item.caption || (isGiftArt ? 'Past gift art' : 'Past commission work'),
                 backHref: '/commissions/',
             };
         }

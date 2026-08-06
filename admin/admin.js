@@ -281,6 +281,36 @@ async function toggleNsfwFlow(entry, checkbox) {
     }
 }
 
+async function toggleGiftArtFlow(entry, checkbox) {
+    const newValue = checkbox.checked;
+    if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
+        checkbox.checked = Boolean(entry.giftArt);
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append(
+            'meta',
+            JSON.stringify({
+                type: 'past-work',
+                action: 'edit',
+                url: entry.url,
+                caption: entry.caption,
+                giftArt: newValue,
+            })
+        );
+        const response = await fetch('/api/publish-commissions', { method: 'POST', body: formData });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unknown error');
+        entry.giftArt = newValue;
+        setStatus('past-work-status', 'Updated — live shortly', false);
+    } catch (error) {
+        checkbox.checked = Boolean(entry.giftArt);
+        setStatus('past-work-status', error.message, true);
+    }
+}
+
 function renderPastWorkList() {
     const container = document.getElementById('past-work-list');
     container.innerHTML = '';
@@ -303,6 +333,13 @@ function renderPastWorkList() {
         nsfwCheckbox.checked = Boolean(entry.nsfw);
         nsfwCheckbox.addEventListener('change', () => toggleNsfwFlow(entry, nsfwCheckbox));
         nsfwLabel.append(nsfwCheckbox, document.createTextNode(' NSFW'));
+
+        const giftArtLabel = document.createElement('label');
+        const giftArtCheckbox = document.createElement('input');
+        giftArtCheckbox.type = 'checkbox';
+        giftArtCheckbox.checked = Boolean(entry.giftArt);
+        giftArtCheckbox.addEventListener('change', () => toggleGiftArtFlow(entry, giftArtCheckbox));
+        giftArtLabel.append(giftArtCheckbox, document.createTextNode(' Gift art'));
 
         const upButton = document.createElement('button');
         upButton.type = 'button';
@@ -327,7 +364,7 @@ function renderPastWorkList() {
         deleteButton.textContent = 'Delete';
         deleteButton.addEventListener('click', () => deletePastWorkFlow(entry));
 
-        row.append(thumb, caption, nsfwLabel, upButton, downButton, editButton, deleteButton);
+        row.append(thumb, caption, nsfwLabel, giftArtLabel, upButton, downButton, editButton, deleteButton);
         container.appendChild(row);
     });
     updateSaveOrderButton();
@@ -524,6 +561,7 @@ document.getElementById('past-work-form').addEventListener('submit', async (even
         action: 'add',
         caption: document.getElementById('past-work-caption').value,
         nsfw: document.getElementById('past-work-nsfw').checked,
+        giftArt: document.getElementById('past-work-gift-art').checked,
     };
 
     const formData = new FormData();
