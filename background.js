@@ -18,10 +18,10 @@ if (canvas) {
     const galaxyGroup = new THREE.Group();
     scene.add(galaxyGroup);
 
-    const colorPink = new THREE.Color('#ffb6c1');
+    const colorBoldRed = new THREE.Color('#ff1f4b');
     const colorRed = new THREE.Color('#ff4d4d');
-    const colorWhite = new THREE.Color('#ffffff');
-    const colorsArray = [colorPink, colorRed, colorWhite];
+    const colorCream = new THREE.Color('#fff2d6');
+    const colorsArray = [colorBoldRed, colorRed, colorCream];
 
     const stars = [];
     const numStars = 130;
@@ -65,7 +65,7 @@ if (canvas) {
         vertexColors: true,
         blending: THREE.AdditiveBlending,
         transparent: true,
-        opacity: 0.6
+        opacity: 0.75
     });
 
     const linesMesh = new THREE.LineSegments(lineGeo, lineMat);
