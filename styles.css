@@ -14,6 +14,35 @@
     --frame-w: 2px;
 }
 
+@view-transition {
+    navigation: auto;
+}
+
+.datapad-screen {
+    view-transition-name: main-panel;
+}
+
+::view-transition-group(main-panel) {
+    animation-timing-function: steps(2, jump-none);
+}
+
+::view-transition-old(main-panel) {
+    animation: panel-flip-out 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+::view-transition-new(main-panel) {
+    animation: panel-flip-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.45s both;
+}
+
+@keyframes panel-flip-out {
+    to { transform: perspective(1800px) rotateY(90deg); }
+}
+
+@keyframes panel-flip-in {
+    from { transform: perspective(1800px) rotateY(-90deg); }
+    to   { transform: perspective(1800px) rotateY(0deg); }
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -266,7 +295,8 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: color 0.08s linear;
+    filter: drop-shadow(3px 4px 0 rgba(0, 0, 0, 0.4));
+    transition: color 0.08s linear, filter 0.08s linear, transform 0.08s linear;
 }
 
 .link-btn::before {
@@ -290,6 +320,8 @@ body {
 
 .link-btn:hover, .link-btn:active {
     color: var(--bg-dark);
+    transform: translate(3px, 4px);
+    filter: drop-shadow(0 0 0 transparent);
 }
 
 .link-btn:hover::before, .link-btn:active::before {
@@ -324,7 +356,8 @@ body {
     font-weight: 700;
     text-align: center;
     margin-bottom: 12px;
-    transition: color 0.08s linear;
+    filter: drop-shadow(3px 4px 0 rgba(0, 0, 0, 0.4));
+    transition: color 0.08s linear, filter 0.08s linear, transform 0.08s linear;
 }
 
 .commissions-cta::before {
@@ -346,6 +379,8 @@ body {
 
 .commissions-cta:hover, .commissions-cta:active {
     color: var(--bg-dark);
+    transform: translate(3px, 4px);
+    filter: drop-shadow(0 0 0 transparent);
 }
 
 .commissions-cta:hover::before, .commissions-cta:active::before {
@@ -372,8 +407,15 @@ body {
     aspect-ratio: 1;
     object-fit: cover;
     border-radius: 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 105, 180, 0.55);
     background: var(--bg-element);
+    transition: transform 0.2s ease-out, filter 0.2s ease-out, border-color 0.2s ease-out;
+}
+
+.commissions-preview-grid img:hover {
+    transform: translateY(-4px) scale(1.04);
+    filter: drop-shadow(4px 8px 10px rgba(0, 0, 0, 0.5));
+    border-color: var(--hot-pink);
 }
 
 .gallery-empty {
@@ -388,6 +430,12 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .status-light {
         animation: none;
+    }
+
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
     }
 }
 
@@ -409,7 +457,7 @@ body {
     display: flex;
     gap: 15px;
     overflow-x: auto;
-    padding-bottom: 10px;
+    padding: 8px 2px 14px 2px;
     scroll-snap-type: x mandatory;
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 105, 180, 0.4) rgba(255, 255, 255, 0.05);
@@ -435,6 +483,7 @@ body {
     background: linear-gradient(135deg, rgba(255, 105, 180, 0.45), rgba(255, 255, 255, 0.14));
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     overflow: hidden;
+    transition: transform 0.2s ease-out, filter 0.2s ease-out;
 }
 
 .gallery-card::before {
@@ -457,6 +506,8 @@ body {
 
 .gallery-card:hover {
     background: linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 255, 255, 0.3));
+    transform: translateY(-4px) scale(1.04);
+    filter: drop-shadow(4px 8px 10px rgba(0, 0, 0, 0.5));
 }
 
 .gallery-card img {
@@ -593,6 +644,12 @@ a.gallery-card {
     clip-path: polygon(0 var(--notch-sm), var(--notch-sm) 0, 100% 0, 100% calc(100% - var(--notch-sm)), calc(100% - var(--notch-sm)) 100%, 0 100%);
     overflow: hidden;
     background: var(--bg-element);
+    transition: transform 0.2s ease-out, filter 0.2s ease-out;
+}
+
+.char-image-wrap:hover {
+    transform: translateY(-4px) scale(1.04);
+    filter: drop-shadow(4px 8px 10px rgba(0, 0, 0, 0.5));
 }
 
 .char-image-wrap img {
@@ -682,6 +739,15 @@ a.gallery-card {
     padding: 12px;
 }
 
+.past-work-card {
+    transition: transform 0.2s ease-out, filter 0.2s ease-out;
+}
+
+.past-work-card:hover {
+    transform: translateY(-4px) scale(1.04);
+    filter: drop-shadow(4px 8px 10px rgba(0, 0, 0, 0.5));
+}
+
 .tier-card::before, .past-work-card::before {
     content: '';
     position: absolute;
@@ -765,6 +831,7 @@ a.enlarge-link {
     background: linear-gradient(135deg, rgba(255, 105, 180, 0.45), rgba(255, 255, 255, 0.14));
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     overflow: hidden;
+    transition: transform 0.2s ease-out, filter 0.2s ease-out;
 }
 
 .gallery-index-card::before {
@@ -787,6 +854,8 @@ a.enlarge-link {
 
 .gallery-index-card:hover {
     background: linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 255, 255, 0.3));
+    transform: translateY(-4px) scale(1.04);
+    filter: drop-shadow(4px 8px 10px rgba(0, 0, 0, 0.5));
 }
 
 .gallery-index-card-main {
