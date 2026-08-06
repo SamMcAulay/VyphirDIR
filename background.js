@@ -5,8 +5,8 @@ const canvas = document.querySelector('#webgl-canvas');
 if (canvas) {
     const scene = new THREE.Scene();
 
-    scene.background = new THREE.Color('#120a0d');
-    scene.fog = new THREE.FogExp2('#120a0d', 0.04);
+    scene.background = new THREE.Color('#2a1220');
+    scene.fog = new THREE.FogExp2('#2a1220', 0.04);
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 0, 10);

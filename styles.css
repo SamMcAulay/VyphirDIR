@@ -6,11 +6,12 @@
     --pink: #ffb6c1;
     --hot-pink: #ff69b4;
     --red: #ff4d4d;
-    --bg-glass: rgba(20, 10, 15, 0.25);
-    --bg-element: rgba(255, 255, 255, 0.03);
+    --bg-glass: rgba(15, 6, 10, 0.55);
+    --bg-element: rgba(15, 6, 10, 0.5);
     --notch-lg: 26px;
     --notch-md: 15px;
     --notch-sm: 9px;
+    --frame-w: 2px;
 }
 
 * {
@@ -134,18 +135,34 @@ body {
 }
 
 .datapad-screen {
-    background:
-        linear-gradient(var(--bg-glass), var(--bg-glass)) padding-box,
-        linear-gradient(135deg, rgba(255, 105, 180, 0.6), rgba(255, 255, 255, 0.15)) border-box;
-    border: 3px solid transparent;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    --frame-w: 3px;
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.75), rgba(255, 255, 255, 0.2));
     clip-path: polygon(0 var(--notch-lg), var(--notch-lg) 0, 100% 0, 100% calc(100% - var(--notch-lg)), calc(100% - var(--notch-lg)) 100%, 0 100%);
     filter: drop-shadow(8px 11px 0 rgba(0, 0, 0, 0.5));
     padding: 25px 20px 40px 20px;
     display: flex;
     flex-direction: column;
     gap: 25px;
+}
+
+.datapad-screen::before {
+    content: '';
+    position: absolute;
+    inset: var(--frame-w);
+    z-index: -1;
+    background: var(--bg-glass);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    clip-path: polygon(
+        0 calc(var(--notch-lg) - var(--frame-w)),
+        calc(var(--notch-lg) - var(--frame-w)) 0,
+        100% 0,
+        100% calc(100% - var(--notch-lg) + var(--frame-w)),
+        calc(100% - var(--notch-lg) + var(--frame-w)) 100%,
+        0 100%
+    );
 }
 
 .sys-header {
@@ -189,14 +206,30 @@ body {
     text-align: center;
 }
 
-.avatar {
+.avatar-frame {
+    display: inline-block;
+    position: relative;
     width: 100px;
     height: 100px;
-    padding: 4px;
-    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
-    background: linear-gradient(135deg, var(--hot-pink), rgba(255, 105, 180, 0.35));
     margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--hot-pink), rgba(255, 105, 180, 0.4));
+    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
+}
+
+.avatar {
+    position: absolute;
+    inset: var(--frame-w);
+    width: calc(100% - (var(--frame-w) * 2));
+    height: calc(100% - (var(--frame-w) * 2));
     object-fit: cover;
+    clip-path: polygon(
+        0 calc(var(--notch-md) - var(--frame-w)),
+        calc(var(--notch-md) - var(--frame-w)) 0,
+        100% 0,
+        100% calc(100% - var(--notch-md) + var(--frame-w)),
+        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
+        0 100%
+    );
 }
 
 .profile h1 {
@@ -218,10 +251,9 @@ body {
 }
 
 .link-btn {
-    background:
-        linear-gradient(var(--bg-element), var(--bg-element)) padding-box,
-        linear-gradient(135deg, rgba(255, 105, 180, 0.5), rgba(255, 255, 255, 0.15)) border-box;
-    border: 2px solid transparent;
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.65), rgba(255, 255, 255, 0.2));
     color: var(--white);
     text-decoration: none;
     padding: 12px;
@@ -234,16 +266,34 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: background-color 0.08s linear, color 0.08s linear;
+    transition: color 0.08s linear;
+}
+
+.link-btn::before {
+    content: '';
+    position: absolute;
+    inset: var(--frame-w);
+    z-index: -1;
+    background: var(--bg-element);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    transition: background-color 0.08s linear;
+    clip-path: polygon(
+        0 calc(var(--notch-md) - var(--frame-w)),
+        calc(var(--notch-md) - var(--frame-w)) 0,
+        100% 0,
+        100% calc(100% - var(--notch-md) + var(--frame-w)),
+        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
+        0 100%
+    );
 }
 
 .link-btn:hover, .link-btn:active {
-    background:
-        linear-gradient(var(--hot-pink), var(--hot-pink)) padding-box,
-        linear-gradient(var(--hot-pink), var(--hot-pink)) border-box;
     color: var(--bg-dark);
+}
+
+.link-btn:hover::before, .link-btn:active::before {
+    background: var(--hot-pink);
 }
 
 .link-btn i {
@@ -256,6 +306,9 @@ body {
 }
 
 .commissions-cta {
+    --frame-w: 3px;
+    position: relative;
+    isolation: isolate;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -263,10 +316,7 @@ body {
     width: 100%;
     padding: 14px;
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
-    background:
-        linear-gradient(rgba(255, 105, 180, 0.28), rgba(255, 105, 180, 0.28)) padding-box,
-        linear-gradient(135deg, var(--red), var(--hot-pink)) border-box;
-    border: 3px solid transparent;
+    background: linear-gradient(135deg, var(--red), var(--hot-pink));
     color: var(--white);
     text-decoration: none;
     font-family: 'Space Mono', monospace;
@@ -274,14 +324,32 @@ body {
     font-weight: 700;
     text-align: center;
     margin-bottom: 12px;
-    transition: background-color 0.08s linear, color 0.08s linear;
+    transition: color 0.08s linear;
+}
+
+.commissions-cta::before {
+    content: '';
+    position: absolute;
+    inset: var(--frame-w);
+    z-index: -1;
+    background: rgba(255, 105, 180, 0.28);
+    transition: background-color 0.08s linear;
+    clip-path: polygon(
+        0 calc(var(--notch-md) - var(--frame-w)),
+        calc(var(--notch-md) - var(--frame-w)) 0,
+        100% 0,
+        100% calc(100% - var(--notch-md) + var(--frame-w)),
+        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
+        0 100%
+    );
 }
 
 .commissions-cta:hover, .commissions-cta:active {
-    background:
-        linear-gradient(var(--hot-pink), var(--hot-pink)) padding-box,
-        linear-gradient(135deg, var(--red), var(--hot-pink)) border-box;
     color: var(--bg-dark);
+}
+
+.commissions-cta:hover::before, .commissions-cta:active::before {
+    background: var(--hot-pink);
 }
 
 .commissions-cta i {
@@ -360,22 +428,35 @@ body {
 }
 
 .gallery-card {
+    position: relative;
+    isolation: isolate;
     flex: 0 0 140px;
     scroll-snap-align: start;
-    background:
-        linear-gradient(var(--bg-element), var(--bg-element)) padding-box,
-        linear-gradient(135deg, rgba(255, 105, 180, 0.4), rgba(255, 255, 255, 0.12)) border-box;
-    border: 2px solid transparent;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.45), rgba(255, 255, 255, 0.14));
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     overflow: hidden;
+}
+
+.gallery-card::before {
+    content: '';
+    position: absolute;
+    inset: var(--frame-w);
+    z-index: -1;
+    background: var(--bg-element);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    clip-path: polygon(
+        0 calc(var(--notch-md) - var(--frame-w)),
+        calc(var(--notch-md) - var(--frame-w)) 0,
+        100% 0,
+        100% calc(100% - var(--notch-md) + var(--frame-w)),
+        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
+        0 100%
+    );
 }
 
 .gallery-card:hover {
-    background:
-        linear-gradient(var(--bg-element), var(--bg-element)) padding-box,
-        linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 255, 255, 0.3)) border-box;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 255, 255, 0.3));
 }
 
 .gallery-card img {
@@ -401,15 +482,30 @@ body {
 }
 
 .feed-container {
-    background:
-        linear-gradient(var(--bg-element), var(--bg-element)) padding-box,
-        linear-gradient(135deg, rgba(255, 105, 180, 0.4), rgba(255, 255, 255, 0.12)) border-box;
-    border: 2px solid transparent;
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.45), rgba(255, 255, 255, 0.14));
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     padding: 15px;
     min-height: 200px;
+}
+
+.feed-container::before {
+    content: '';
+    position: absolute;
+    inset: var(--frame-w);
+    z-index: -1;
+    background: var(--bg-element);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    clip-path: polygon(
+        0 calc(var(--notch-md) - var(--frame-w)),
+        calc(var(--notch-md) - var(--frame-w)) 0,
+        100% 0,
+        100% calc(100% - var(--notch-md) + var(--frame-w)),
+        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
+        0 100%
+    );
 }
 
 .feed-entry {
@@ -553,23 +649,53 @@ a.gallery-card {
 }
 
 .commission-special-offer {
-    background:
-        linear-gradient(var(--bg-element), var(--bg-element)) padding-box,
-        linear-gradient(135deg, var(--hot-pink), rgba(255, 105, 180, 0.25)) border-box;
-    border: 2px solid transparent;
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, var(--hot-pink), rgba(255, 105, 180, 0.3));
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     padding: 12px 15px;
     margin: 15px 0;
     font-weight: bold;
 }
 
+.commission-special-offer::before {
+    content: '';
+    position: absolute;
+    inset: var(--frame-w);
+    z-index: -1;
+    background: var(--bg-element);
+    clip-path: polygon(
+        0 calc(var(--notch-md) - var(--frame-w)),
+        calc(var(--notch-md) - var(--frame-w)) 0,
+        100% 0,
+        100% calc(100% - var(--notch-md) + var(--frame-w)),
+        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
+        0 100%
+    );
+}
+
 .tier-card, .past-work-card {
-    background:
-        linear-gradient(var(--bg-element), var(--bg-element)) padding-box,
-        linear-gradient(135deg, rgba(255, 105, 180, 0.4), rgba(255, 255, 255, 0.12)) border-box;
-    border: 2px solid transparent;
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.45), rgba(255, 255, 255, 0.14));
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     padding: 12px;
+}
+
+.tier-card::before, .past-work-card::before {
+    content: '';
+    position: absolute;
+    inset: var(--frame-w);
+    z-index: -1;
+    background: var(--bg-element);
+    clip-path: polygon(
+        0 calc(var(--notch-md) - var(--frame-w)),
+        calc(var(--notch-md) - var(--frame-w)) 0,
+        100% 0,
+        100% calc(100% - var(--notch-md) + var(--frame-w)),
+        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
+        0 100%
+    );
 }
 
 .tier-card {
@@ -634,20 +760,33 @@ a.enlarge-link {
 }
 
 .gallery-index-card {
-    background:
-        linear-gradient(var(--bg-element), var(--bg-element)) padding-box,
-        linear-gradient(135deg, rgba(255, 105, 180, 0.4), rgba(255, 255, 255, 0.12)) border-box;
-    border: 2px solid transparent;
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.45), rgba(255, 255, 255, 0.14));
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     overflow: hidden;
+}
+
+.gallery-index-card::before {
+    content: '';
+    position: absolute;
+    inset: var(--frame-w);
+    z-index: -1;
+    background: var(--bg-element);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    clip-path: polygon(
+        0 calc(var(--notch-md) - var(--frame-w)),
+        calc(var(--notch-md) - var(--frame-w)) 0,
+        100% 0,
+        100% calc(100% - var(--notch-md) + var(--frame-w)),
+        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
+        0 100%
+    );
 }
 
 .gallery-index-card:hover {
-    background:
-        linear-gradient(var(--bg-element), var(--bg-element)) padding-box,
-        linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 255, 255, 0.3)) border-box;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 255, 255, 0.3));
 }
 
 .gallery-index-card-main {
