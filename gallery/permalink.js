@@ -1,4 +1,5 @@
 import { setupNsfwReveal } from '../nsfw-reveal.js';
+import { initScrollMotion } from '../shared/scroll-motion.js';
 
 function setupCopyLink() {
     const button = document.getElementById('copy-link-btn');
@@ -17,4 +18,5 @@ function setupCopyLink() {
 document.addEventListener('DOMContentLoaded', () => {
     setupNsfwReveal();
     setupCopyLink();
+    initScrollMotion();
 });

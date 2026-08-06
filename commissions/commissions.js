@@ -1,5 +1,8 @@
 import { setupNsfwReveal } from '../nsfw-reveal.js';
 import { setupEnlargeableImages } from '../shared/enlargeable.js';
+import { initScrollMotion } from '../shared/scroll-motion.js';
+
+initScrollMotion();
 
 function renderTier(tier) {
     const card = document.createElement('div');

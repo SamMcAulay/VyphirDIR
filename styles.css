@@ -317,9 +317,33 @@ body {
     padding: 15px 0;
 }
 
+.hero-tilt {
+    transform: rotate(-4deg);
+    transform-origin: center center;
+}
+
+.reveal-section {
+    opacity: 0.85;
+    transform: skewX(5deg) translateY(14px);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.reveal-section.revealed {
+    opacity: 1;
+    transform: skewX(0deg) translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
     .status-light {
         animation: none;
+    }
+    .hero-tilt {
+        transform: none;
+    }
+    .reveal-section {
+        opacity: 1;
+        transform: none;
+        transition: none;
     }
 }
 
