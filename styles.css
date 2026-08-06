@@ -6,8 +6,11 @@
     --pink: #ffb6c1;
     --hot-pink: #ff69b4;
     --red: #ff4d4d;
-    --bg-glass: rgba(20, 10, 15, 0.25); 
-    --bg-element: rgba(255, 255, 255, 0.03); 
+    --bg-glass: rgba(20, 10, 15, 0.25);
+    --bg-element: rgba(255, 255, 255, 0.03);
+    --notch-lg: 20px;
+    --notch-md: 12px;
+    --notch-sm: 7px;
 }
 
 * {
@@ -32,7 +35,7 @@ input[type="checkbox"] {
     height: 16px;
     min-width: 16px;
     border: 1px solid rgba(255, 105, 180, 0.5);
-    border-radius: 4px;
+    border-radius: 0;
     background: rgba(255, 255, 255, 0.05);
     cursor: pointer;
     position: relative;
@@ -134,13 +137,11 @@ body {
     background: var(--bg-glass);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border-radius: 35px;
+    clip-path: polygon(0 var(--notch-lg), var(--notch-lg) 0, 100% 0, 100% calc(100% - var(--notch-lg)), calc(100% - var(--notch-lg)) 100%, 0 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-top: 1px solid rgba(255, 105, 180, 0.4);
-    border-left: 1px solid rgba(255, 105, 180, 0.3);
-    box-shadow: 
-        0 30px 50px rgba(0,0,0,0.6),
-        inset 0 0 20px rgba(255, 105, 180, 0.05);
+    border-top: 2px solid rgba(255, 105, 180, 0.45);
+    border-left: 2px solid rgba(255, 105, 180, 0.35);
+    filter: drop-shadow(10px 14px 0 rgba(0, 0, 0, 0.45));
     padding: 25px 20px 40px 20px;
     display: flex;
     flex-direction: column;
@@ -157,15 +158,14 @@ body {
     font-weight: 700;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 10px;
-    text-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
 }
 
 .status-light {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
     background-color: var(--red);
-    border-radius: 50%;
-    box-shadow: 0 0 10px var(--red), 0 0 5px var(--red);
+    border-radius: 0;
+    transform: rotate(45deg);
     animation: blink 2s infinite;
 }
 
@@ -181,9 +181,8 @@ body {
 .avatar {
     width: 100px;
     height: 100px;
-    border-radius: 50%;
+    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     border: 2px solid rgba(255, 105, 180, 0.6);
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
     margin-bottom: 10px;
     background-color: transparent;
     object-fit: cover;
@@ -193,7 +192,6 @@ body {
     font-size: 1.5rem;
     color: var(--white);
     margin-bottom: 5px;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .profile p {
@@ -213,7 +211,7 @@ body {
     color: var(--white);
     text-decoration: none;
     padding: 12px;
-    border-radius: 12px;
+    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     font-family: 'Space Mono', monospace;
     font-size: 0.85rem;
     font-weight: 700;
@@ -223,23 +221,26 @@ body {
     justify-content: center;
     gap: 8px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.2s ease;
+    border-top: 1px solid rgba(255, 105, 180, 0.25);
+    border-left: 1px solid rgba(255, 105, 180, 0.2);
+    transition: background-color 0.08s linear, border-color 0.08s linear, color 0.08s linear;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
 
 .link-btn:hover, .link-btn:active {
-    transform: translateY(-2px);
-    background: rgba(255, 105, 180, 0.15);
-    border-color: rgba(255, 105, 180, 0.6);
-    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.2);
-    color: var(--white);
+    background: var(--hot-pink);
+    border-color: var(--hot-pink);
+    color: var(--bg-dark);
 }
 
 .link-btn i {
     font-size: 1.1rem;
     color: var(--hot-pink);
-    text-shadow: 0 0 5px var(--hot-pink);
+}
+
+.link-btn:hover i, .link-btn:active i {
+    color: var(--bg-dark);
 }
 
 .commissions-cta {
@@ -249,9 +250,9 @@ body {
     gap: 8px;
     width: 100%;
     padding: 14px;
-    border-radius: 12px;
-    background: rgba(255, 105, 180, 0.15);
-    border: 1px solid rgba(255, 105, 180, 0.6);
+    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
+    background: rgba(255, 105, 180, 0.22);
+    border: 2px solid var(--hot-pink);
     color: var(--white);
     text-decoration: none;
     font-family: 'Space Mono', monospace;
@@ -259,18 +260,21 @@ body {
     font-weight: 700;
     text-align: center;
     margin-bottom: 12px;
-    animation: commissions-glow 2.5s ease-in-out infinite;
-    transition: background 0.2s ease;
+    transition: background-color 0.08s linear, color 0.08s linear;
 }
 
 .commissions-cta:hover, .commissions-cta:active {
-    background: rgba(255, 105, 180, 0.25);
+    background: var(--hot-pink);
+    color: var(--bg-dark);
 }
 
 .commissions-cta i {
     font-size: 1.1rem;
     color: var(--hot-pink);
-    text-shadow: 0 0 5px var(--hot-pink);
+}
+
+.commissions-cta:hover i, .commissions-cta:active i {
+    color: var(--bg-dark);
 }
 
 .commissions-preview-grid {
@@ -283,7 +287,7 @@ body {
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 0;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: var(--bg-element);
 }
@@ -297,17 +301,8 @@ body {
     padding: 15px 0;
 }
 
-@keyframes commissions-glow {
-    0%, 100% {
-        box-shadow: 0 0 15px rgba(255, 105, 180, 0.5), 0 0 30px rgba(255, 105, 180, 0.25);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(255, 105, 180, 0.8), 0 0 50px rgba(255, 105, 180, 0.4);
-    }
-}
-
 @media (prefers-reduced-motion: reduce) {
-    .commissions-cta, .status-light {
+    .status-light {
         animation: none;
     }
 }
@@ -320,12 +315,10 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
 .section-title i {
     color: var(--red);
-    text-shadow: 0 0 8px var(--red);
 }
 
 .gallery-container {
@@ -343,11 +336,11 @@ body {
 }
 .gallery-container::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
+    border-radius: 0;
 }
 .gallery-container::-webkit-scrollbar-thumb {
     background: rgba(255, 105, 180, 0.4);
-    border-radius: 10px;
+    border-radius: 0;
 }
 
 .gallery-card {
@@ -355,7 +348,9 @@ body {
     scroll-snap-align: start;
     background: var(--bg-element);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border-top: 1px solid rgba(255, 105, 180, 0.3);
+    border-left: 1px solid rgba(255, 105, 180, 0.22);
+    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     overflow: hidden;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
@@ -386,13 +381,14 @@ body {
     padding: 8px 5px;
     color: var(--hot-pink);
     font-weight: bold;
-    text-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
 }
 
 .feed-container {
     background: var(--bg-element);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border-top: 1px solid rgba(255, 105, 180, 0.3);
+    border-left: 1px solid rgba(255, 105, 180, 0.22);
+    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     padding: 15px;
     min-height: 200px;
     backdrop-filter: blur(4px);
@@ -481,7 +477,7 @@ a.gallery-card {
 
 .char-image-wrap {
     position: relative;
-    border-radius: 12px;
+    clip-path: polygon(0 var(--notch-sm), var(--notch-sm) 0, 100% 0, 100% calc(100% - var(--notch-sm)), calc(100% - var(--notch-sm)) 100%, 0 100%);
     overflow: hidden;
     background: var(--bg-element);
 }
@@ -524,7 +520,7 @@ a.gallery-card {
     font-family: 'Space Mono', monospace;
     font-weight: bold;
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: 0;
     display: inline-block;
     margin-bottom: 10px;
 }
@@ -542,7 +538,7 @@ a.gallery-card {
 .commission-special-offer {
     background: var(--bg-element);
     border: 1px solid rgba(255, 105, 180, 0.4);
-    border-radius: 12px;
+    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     padding: 12px 15px;
     margin: 15px 0;
     font-weight: bold;
@@ -551,7 +547,9 @@ a.gallery-card {
 .tier-card, .past-work-card {
     background: var(--bg-element);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border-top: 1px solid rgba(255, 105, 180, 0.3);
+    border-left: 1px solid rgba(255, 105, 180, 0.22);
+    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     padding: 12px;
 }
 
@@ -561,7 +559,7 @@ a.gallery-card {
 
 .tier-card img, .past-work-card img {
     width: 100%;
-    border-radius: 8px;
+    border-radius: 0;
     margin-bottom: 8px;
 }
 
@@ -587,8 +585,9 @@ a.gallery-card {
     font-family: 'Space Mono', monospace;
     font-weight: bold;
     padding: 10px 16px;
-    border-radius: 8px;
+    clip-path: polygon(0 var(--notch-sm), var(--notch-sm) 0, 100% 0, 100% calc(100% - var(--notch-sm)), calc(100% - var(--notch-sm)) 100%, 0 100%);
     cursor: pointer;
+    transition: background-color 0.08s linear;
 }
 
 .permalink-copy-btn:hover {
@@ -618,7 +617,9 @@ a.enlarge-link {
 .gallery-index-card {
     background: var(--bg-element);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
+    border-top: 1px solid rgba(255, 105, 180, 0.3);
+    border-left: 1px solid rgba(255, 105, 180, 0.22);
+    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     overflow: hidden;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
@@ -640,7 +641,7 @@ a.enlarge-link {
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 0;
     margin-bottom: 10px;
     display: block;
 }
@@ -650,7 +651,6 @@ a.enlarge-link {
     font-family: 'Space Mono', monospace;
     font-size: 1rem;
     margin-bottom: 6px;
-    text-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
 }
 
 .gallery-index-bio {
