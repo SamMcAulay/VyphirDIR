@@ -51,34 +51,34 @@ function renderPastWork(item) {
 }
 
 async function loadCommissions() {
+    const statusEl = document.getElementById('commission-status');
+    const offerEl = document.getElementById('commission-special-offer');
+    const introEl = document.getElementById('commission-intro');
+    const tiersEl = document.getElementById('commission-tiers');
+    const pastWorkEl = document.getElementById('commission-past-work');
+
     try {
         const response = await fetch('/data/commissions.json');
         const data = await response.json();
 
-        const statusEl = document.getElementById('commission-status');
         statusEl.textContent = data.status ? 'COMMISSIONS OPEN' : 'COMMISSIONS CLOSED';
         statusEl.className = `commission-status ${data.status ? 'open' : 'closed'}`;
 
-        const offerEl = document.getElementById('commission-special-offer');
         if (data.specialOffer) {
             offerEl.textContent = data.specialOffer;
             offerEl.className = 'commission-special-offer';
         }
 
-        document.getElementById('commission-intro').textContent = data.intro || '';
+        introEl.textContent = data.intro || '';
 
-        const tiersEl = document.getElementById('commission-tiers');
         (data.tiers || []).forEach((tier) => tiersEl.appendChild(renderTier(tier)));
-
-        const pastWorkEl = document.getElementById('commission-past-work');
         (data.pastWork || []).forEach((item) => pastWorkEl.appendChild(renderPastWork(item)));
         setupEnlargeableImages();
         setupNsfwReveal();
     } catch (error) {
         console.error(error);
-        const intro = document.getElementById('commission-intro');
-        intro.textContent = '> DATA UNAVAILABLE.';
-        intro.className = 'feed-error';
+        introEl.textContent = '> DATA UNAVAILABLE.';
+        introEl.className = 'feed-error';
     }
 }
 
