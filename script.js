@@ -1,11 +1,11 @@
-import './background.js';
-
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
+
+let autoScrollCleanup = null;
 
 function setupAutoScroll(containerId) {
     const container = document.getElementById(containerId);
@@ -33,6 +33,14 @@ function setupAutoScroll(containerId) {
     container.addEventListener('mouseleave', startScroll);
     container.addEventListener('touchstart', stopScroll, {passive: true});
     container.addEventListener('touchend', startScroll, {passive: true});
+
+    autoScrollCleanup = () => {
+        stopScroll();
+        container.removeEventListener('mouseenter', stopScroll);
+        container.removeEventListener('mouseleave', startScroll);
+        container.removeEventListener('touchstart', stopScroll);
+        container.removeEventListener('touchend', startScroll);
+    };
 }
 
 async function loadCharacterGallery() {
@@ -81,8 +89,6 @@ async function loadCharacterGallery() {
     }
 }
 
-loadCharacterGallery();
-
 async function loadCommissionsPreview() {
     const container = document.getElementById('commissions-preview');
     if (!container) return;
@@ -111,8 +117,6 @@ async function loadCommissionsPreview() {
         console.error(error);
     }
 }
-
-loadCommissionsPreview();
 
 const bskyHandle = 'samisaderp.bsky.social';
 
@@ -165,4 +169,16 @@ async function loadBlueskyFeed() {
     }
 }
 
-loadBlueskyFeed();
+export function init() {
+    autoScrollCleanup = null;
+    loadCharacterGallery();
+    loadCommissionsPreview();
+    loadBlueskyFeed();
+}
+
+export function cleanup() {
+    if (autoScrollCleanup) {
+        autoScrollCleanup();
+        autoScrollCleanup = null;
+    }
+}
