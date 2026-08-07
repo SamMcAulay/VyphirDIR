@@ -95,4 +95,6 @@ async function loadGalleryIndex() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadGalleryIndex);
+export function init() {
+    loadGalleryIndex();
+}
