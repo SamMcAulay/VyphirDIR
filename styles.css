@@ -295,8 +295,8 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    filter: drop-shadow(3px 4px 0 rgba(0, 0, 0, 0.4));
-    transition: color 0.08s linear, filter 0.08s linear, transform 0.08s linear;
+    box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.4);
+    transition: color 0.08s linear, box-shadow 0.08s linear, transform 0.08s linear;
 }
 
 .link-btn::before {
@@ -321,7 +321,7 @@ body {
 .link-btn:hover, .link-btn:active {
     color: var(--bg-dark);
     transform: translate(3px, 4px);
-    filter: drop-shadow(0 0 0 transparent);
+    box-shadow: none;
 }
 
 .link-btn:hover::before, .link-btn:active::before {
@@ -483,7 +483,7 @@ body {
     background: linear-gradient(135deg, rgba(255, 105, 180, 0.45), rgba(255, 255, 255, 0.14));
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     overflow: hidden;
-    transition: transform 0.2s ease-out, filter 0.2s ease-out;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
 .gallery-card::before {
@@ -507,7 +507,7 @@ body {
 .gallery-card:hover {
     background: linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 255, 255, 0.3));
     transform: translateY(-4px) scale(1.04);
-    filter: drop-shadow(4px 8px 10px rgba(0, 0, 0, 0.5));
+    box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.5);
 }
 
 .gallery-card img {
@@ -831,7 +831,7 @@ a.enlarge-link {
     background: linear-gradient(135deg, rgba(255, 105, 180, 0.45), rgba(255, 255, 255, 0.14));
     clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
     overflow: hidden;
-    transition: transform 0.2s ease-out, filter 0.2s ease-out;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
 .gallery-index-card::before {
@@ -855,7 +855,7 @@ a.enlarge-link {
 .gallery-index-card:hover {
     background: linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 255, 255, 0.3));
     transform: translateY(-4px) scale(1.04);
-    filter: drop-shadow(4px 8px 10px rgba(0, 0, 0, 0.5));
+    box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.5);
 }
 
 .gallery-index-card-main {
