@@ -82,4 +82,6 @@ async function loadCommissions() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadCommissions);
+export function init() {
+    loadCommissions();
+}
