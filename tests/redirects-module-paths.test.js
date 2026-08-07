@@ -55,6 +55,12 @@ function findEntryModules() {
     // functions/i/[id].js server-renders a page (not a static .html file, so the
     // scan above can't see it) that loads this module — add it explicitly.
     entries.add('/gallery/permalink.js');
+    // router.js reaches these via dynamic import(route.module) with a variable
+    // argument, which this regex-based static scan can't follow — add them explicitly.
+    entries.add('/script.js');
+    entries.add('/gallery/gallery-index.js');
+    entries.add('/gallery/character.js');
+    entries.add('/commissions/commissions.js');
     return [...entries];
 }
 
