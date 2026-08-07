@@ -1,7 +1,7 @@
 import { setupNsfwReveal } from '../nsfw-reveal.js';
 import { setupEnlargeableImages } from '../shared/enlargeable.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+export function init() {
     setupEnlargeableImages();
     setupNsfwReveal();
-});
+}
