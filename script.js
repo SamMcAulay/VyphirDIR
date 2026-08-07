@@ -6,6 +6,7 @@ function shuffleArray(array) {
 }
 
 let autoScrollCleanup = null;
+let initGeneration = 0;
 
 function setupAutoScroll(containerId) {
     const container = document.getElementById(containerId);
@@ -43,7 +44,7 @@ function setupAutoScroll(containerId) {
     };
 }
 
-async function loadCharacterGallery() {
+async function loadCharacterGallery(generation) {
     const galleryDiv = document.getElementById('character-gallery');
     if (!galleryDiv) return;
 
@@ -83,6 +84,7 @@ async function loadCharacterGallery() {
             galleryDiv.appendChild(card);
         });
 
+        if (generation !== initGeneration) return; // a newer init() has since started; this response is stale, don't touch shared state
         setupAutoScroll('character-gallery');
     } catch (error) {
         console.error(error);
@@ -170,8 +172,10 @@ async function loadBlueskyFeed() {
 }
 
 export function init() {
+    initGeneration += 1;
+    const generation = initGeneration;
     autoScrollCleanup = null;
-    loadCharacterGallery();
+    loadCharacterGallery(generation);
     loadCommissionsPreview();
     loadBlueskyFeed();
 }
