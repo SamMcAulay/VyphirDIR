@@ -96,12 +96,12 @@ document.addEventListener('click', (event) => {
     if (!match) return;
 
     const { url, route } = match;
-    event.preventDefault();
 
     if (url.pathname === window.location.pathname && url.search === window.location.search) {
-        return; // already on this page, do nothing
+        return; // already on this page — leave the click alone entirely
     }
 
+    event.preventDefault();
     navigate(url, route, { push: true });
 });
 
