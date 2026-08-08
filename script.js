@@ -98,7 +98,9 @@ async function loadCommissionsPreview() {
     try {
         const response = await fetch('/data/commissions.json');
         const data = await response.json();
-        const recentPastWork = (data.pastWork || []).filter((item) => !item.nsfw).slice(-3).reverse();
+        const candidates = (data.pastWork || []).filter((item) => !item.nsfw).slice(-6);
+        shuffleArray(candidates);
+        const recentPastWork = candidates.slice(0, 3);
 
         if (recentPastWork.length === 0) {
             const empty = document.createElement('p');
