@@ -14,10 +14,10 @@ function currentWrapper() {
 
 async function runInit(modulePath) {
     const mod = await import(modulePath);
+    activeModulePath = modulePath;
     if (typeof mod.init === 'function') {
         mod.init();
     }
-    activeModulePath = modulePath;
 }
 
 async function runCleanup() {
@@ -65,7 +65,11 @@ async function navigate(url, route, { push }) {
         panel.innerHTML = newPanel.innerHTML;
         document.title = doc.title;
         window.scrollTo(0, 0);
-        await runInit(route.module);
+        try {
+            await runInit(route.module);
+        } catch (error) {
+            console.error('router: page module failed to initialize', error);
+        }
     };
 
     if (document.startViewTransition) {
@@ -102,13 +106,17 @@ document.addEventListener('click', (event) => {
     }
 
     event.preventDefault();
-    navigate(url, route, { push: true });
+    navigate(url, route, { push: true }).catch((error) => {
+        console.error('router: navigation failed', error);
+    });
 });
 
 window.addEventListener('popstate', () => {
     const route = matchRoute(window.location.pathname);
     if (!route) return;
-    navigate(new URL(window.location.href), route, { push: false });
+    navigate(new URL(window.location.href), route, { push: false }).catch((error) => {
+        console.error('router: navigation failed', error);
+    });
 });
 
 const initialRoute = matchRoute(window.location.pathname);
