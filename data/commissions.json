@@ -65,7 +65,9 @@
     },
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422041/vyphir/commissions/1cc470ca-33f8-41fb-bfd7-c3e234401433.png",
-      "caption": "one of my first ever furry drawings!"
+      "caption": "one of my first ever furry drawings!",
+      "nsfw": false,
+      "giftArt": true
     },
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785603368/vyphir/commissions/4650cf5d-5925-452a-a303-fd11b2ac3ff2.png",
