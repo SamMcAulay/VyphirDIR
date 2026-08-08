@@ -55,7 +55,9 @@
     },
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421971/vyphir/commissions/9e88b2a1-f044-4ef8-85af-1b1f5e8a2337.png",
-      "caption": "Why is he blue"
+      "caption": "Why is he blue",
+      "nsfw": false,
+      "giftArt": true
     },
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421888/vyphir/commissions/d7a4b55b-f415-4b5f-9d76-a94682e3b774.png",
