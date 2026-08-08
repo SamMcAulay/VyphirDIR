@@ -72,7 +72,8 @@
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785603368/vyphir/commissions/4650cf5d-5925-452a-a303-fd11b2ac3ff2.png",
       "caption": "Anime people are scary",
-      "nsfw": false
+      "nsfw": false,
+      "giftArt": true
     },
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422087/vyphir/commissions/2e313c23-0a7c-4a22-8f5d-738509370bdd.png",
