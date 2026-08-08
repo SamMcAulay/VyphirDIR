@@ -25,7 +25,9 @@
     },
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422154/vyphir/commissions/923181eb-81c1-4a51-881f-5fff3c926245.png",
-      "caption": "Fanart for cambee!"
+      "caption": "Fanart for cambee!",
+      "nsfw": false,
+      "giftArt": true
     },
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785879034/vyphir/commissions/58e43019-60b3-447a-ac77-9def42664aaf.png",
