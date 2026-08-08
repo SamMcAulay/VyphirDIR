@@ -18,6 +18,12 @@
   ],
   "pastWork": [
     {
+      "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1786156427/vyphir/commissions/6c0ae09d-107f-463c-9a5e-c6d74256de81.png",
+      "caption": "Wowzers something different so lovely",
+      "nsfw": false,
+      "giftArt": false
+    },
+    {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422173/vyphir/commissions/597557de-ac80-46a7-a8ea-21f103487637.png",
       "caption": "Fanart for oreo!",
       "nsfw": false,
@@ -94,12 +100,6 @@
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421991/vyphir/commissions/2f0da0a3-8e0c-41a1-b008-5cb5675c3e36.png",
       "caption": "Paw mmm",
       "nsfw": false
-    },
-    {
-      "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1786156427/vyphir/commissions/6c0ae09d-107f-463c-9a5e-c6d74256de81.png",
-      "caption": "Wowzers something different so lovely",
-      "nsfw": false,
-      "giftArt": false
     }
   ]
 }
