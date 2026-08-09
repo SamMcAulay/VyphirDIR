@@ -23,6 +23,7 @@
 }
 
 ::view-transition-group(main-panel) {
+    animation-duration: 0.9s;
     animation-timing-function: steps(2, jump-none);
 }
 
