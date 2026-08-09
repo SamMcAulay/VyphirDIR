@@ -33,7 +33,7 @@ async function runInit(modulePath) {
     const mod = await import(modulePath);
     activeModulePath = modulePath;
     if (typeof mod.init === 'function') {
-        mod.init();
+        await mod.init();
     }
 }
 

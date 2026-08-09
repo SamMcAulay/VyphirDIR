@@ -177,9 +177,11 @@ export function init() {
     initGeneration += 1;
     const generation = initGeneration;
     autoScrollCleanup = null;
-    loadCharacterGallery(generation);
-    loadCommissionsPreview();
-    loadBlueskyFeed();
+    loadBlueskyFeed(); // external API — don't block the page-flip transition's size on it
+    return Promise.all([
+        loadCharacterGallery(generation),
+        loadCommissionsPreview(),
+    ]);
 }
 
 export function cleanup() {

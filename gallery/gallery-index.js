@@ -96,5 +96,5 @@ async function loadGalleryIndex() {
 }
 
 export function init() {
-    loadGalleryIndex();
+    return loadGalleryIndex();
 }

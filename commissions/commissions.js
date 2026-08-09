@@ -83,5 +83,5 @@ async function loadCommissions() {
 }
 
 export function init() {
-    loadCommissions();
+    return loadCommissions();
 }
