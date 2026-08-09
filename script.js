@@ -98,7 +98,7 @@ async function loadCommissionsPreview() {
     try {
         const response = await fetch('/data/commissions.json');
         const data = await response.json();
-        const candidates = (data.pastWork || []).filter((item) => !item.nsfw).slice(-9);
+        const candidates = (data.pastWork || []).slice(0, 9).filter((item) => !item.nsfw);
         shuffleArray(candidates);
         const recentPastWork = candidates.slice(0, 3);
 
