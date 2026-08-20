@@ -6,7 +6,6 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 import {
     selectPreviewPieces,
-    buildDescription,
     generateCommissionsPreview,
 } from '../scripts/generate-commissions-preview.js';
 
@@ -46,20 +45,6 @@ test('selectPreviewPieces excludes nsfw and caps at 9, preserving order', () => 
     assert.equal(selected[0].url, 'https://example.com/0.png');
 });
 
-test('buildDescription lists captions in order, skipping blanks', () => {
-    const description = buildDescription([
-        { caption: 'First piece' },
-        { caption: '' },
-        { caption: 'Third piece' },
-    ]);
-    assert.equal(description, 'Examples:\n• First piece\n• Third piece');
-});
-
-test('buildDescription falls back to generic text when no captions exist', () => {
-    const description = buildDescription([{ caption: '' }, {}]);
-    assert.match(description, /DM me/);
-});
-
 test('generateCommissionsPreview writes a gif and templated index.html for real past work', async () => {
     const { dataPath, templatePath, outDir } = await setupProject({
         pastWork: [
@@ -74,6 +59,7 @@ test('generateCommissionsPreview writes a gif and templated index.html for real 
         () => generateCommissionsPreview({ dataPath, templatePath, outDir })
     );
 
+    // nsfw entry excluded from the count/frames
     assert.equal(result.pieceCount, 2);
     assert.match(result.ogImage, /^https:\/\/vyphir\.com\/commissions\/preview\.gif\?v=[0-9a-f]{10}$/);
 
@@ -82,8 +68,7 @@ test('generateCommissionsPreview writes a gif and templated index.html for real 
 
     const html = await readFile(join(outDir, 'index.html'), 'utf8');
     assert.match(html, /content="https:\/\/vyphir\.com\/commissions\/preview\.gif\?v=[0-9a-f]{10}"/);
-    assert.match(html, /Gift art for oreo!/);
-    assert.doesNotMatch(html, /Fanart for cambee!/);
+    assert.match(html, /Examples! See full catalogue on the site!/);
 });
 
 test('generateCommissionsPreview falls back gracefully when no eligible past work exists', async () => {
@@ -98,20 +83,5 @@ test('generateCommissionsPreview falls back gracefully when no eligible past wor
 
     await assert.rejects(stat(join(outDir, 'preview.gif')));
     const html = await readFile(join(outDir, 'index.html'), 'utf8');
-    assert.match(html, /DM me/);
-});
-
-test('escapes HTML special characters and encodes newlines in the description', async () => {
-    const { dataPath, templatePath, outDir } = await setupProject({
-        pastWork: [{ url: 'https://example.com/a.png', caption: '"><script>alert(1)</script>' }],
-    });
-
-    await withMockedFetch(
-        () => tinyPngResponse(),
-        () => generateCommissionsPreview({ dataPath, templatePath, outDir })
-    );
-
-    const html = await readFile(join(outDir, 'index.html'), 'utf8');
-    assert.doesNotMatch(html, /<script>alert\(1\)<\/script>/);
-    assert.match(html, /&#10;/);
+    assert.match(html, /Examples! See full catalogue on the site!/);
 });
