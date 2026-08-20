@@ -9,7 +9,7 @@ const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ROUTABLE_TEMPLATES = [
     'index.html',
     'gallery/index.html',
-    'commissions/index.html',
+    'templates/commissions.html',
     'templates/character.html',
 ];
 
