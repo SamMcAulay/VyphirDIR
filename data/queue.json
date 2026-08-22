@@ -2,27 +2,27 @@
   "columns": [
     {
       "id": "column-1",
-      "name": "Waitlist",
-      "enabled": true
-    },
-    {
-      "id": "column-2",
       "name": "In Queue",
       "enabled": true
     },
     {
-      "id": "column-3",
+      "id": "column-2",
       "name": "Sketch Provided",
       "enabled": true
     },
     {
-      "id": "column-4",
+      "id": "column-3",
       "name": "Paid",
       "enabled": true
     },
     {
-      "id": "column-5",
+      "id": "column-4",
       "name": "WIP",
+      "enabled": true
+    },
+    {
+      "id": "column-5",
+      "name": "Complete",
       "enabled": true
     }
   ],
