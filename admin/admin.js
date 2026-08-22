@@ -549,6 +549,177 @@ document.getElementById('commissions-info-form').addEventListener('submit', asyn
     }
 });
 
+function moveRow(row, direction) {
+    if (direction === -1 && row.previousElementSibling) {
+        row.parentElement.insertBefore(row, row.previousElementSibling);
+    } else if (direction === 1 && row.nextElementSibling) {
+        row.parentElement.insertBefore(row.nextElementSibling, row);
+    }
+}
+
+function renderTosBulletRow(container, bullet) {
+    const row = document.createElement('div');
+    row.className = 'tos-bullet-row';
+
+    const typeSelect = document.createElement('select');
+    typeSelect.className = 'tos-bullet-type';
+    [['plain', 'Plain'], ['yesno', 'Yes / No']].forEach(([value, label]) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = label;
+        typeSelect.appendChild(option);
+    });
+    typeSelect.value = (bullet && bullet.type) || 'plain';
+
+    const textInput = document.createElement('input');
+    textInput.type = 'text';
+    textInput.className = 'tos-bullet-text';
+    textInput.placeholder = 'Bullet text';
+    textInput.value = (bullet && bullet.text) || '';
+
+    const valueLabel = document.createElement('label');
+    valueLabel.className = 'tos-bullet-yesno-value';
+    const valueCheckbox = document.createElement('input');
+    valueCheckbox.type = 'checkbox';
+    valueCheckbox.className = 'tos-bullet-value';
+    valueCheckbox.checked = Boolean(bullet && bullet.value);
+    valueLabel.append(valueCheckbox, document.createTextNode(' Yes (unchecked = No)'));
+
+    const syncValueVisibility = () => valueLabel.classList.toggle('hidden', typeSelect.value !== 'yesno');
+    typeSelect.addEventListener('change', syncValueVisibility);
+    syncValueVisibility();
+
+    const upButton = document.createElement('button');
+    upButton.type = 'button';
+    upButton.textContent = '↑';
+    upButton.addEventListener('click', () => moveRow(row, -1));
+
+    const downButton = document.createElement('button');
+    downButton.type = 'button';
+    downButton.textContent = '↓';
+    downButton.addEventListener('click', () => moveRow(row, 1));
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'danger-button';
+    removeButton.textContent = 'Remove';
+    removeButton.addEventListener('click', () => row.remove());
+
+    row.append(typeSelect, textInput, valueLabel, upButton, downButton, removeButton);
+    container.appendChild(row);
+}
+
+function renderTosPointRow(point) {
+    const container = document.getElementById('tos-points-rows');
+    const row = document.createElement('div');
+    row.className = 'tos-point-row';
+
+    const header = document.createElement('div');
+    header.className = 'tos-point-row-header';
+
+    const upButton = document.createElement('button');
+    upButton.type = 'button';
+    upButton.textContent = '↑ Move point';
+    upButton.addEventListener('click', () => moveRow(row, -1));
+
+    const downButton = document.createElement('button');
+    downButton.type = 'button';
+    downButton.textContent = '↓ Move point';
+    downButton.addEventListener('click', () => moveRow(row, 1));
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'danger-button';
+    removeButton.textContent = 'Remove point';
+    removeButton.addEventListener('click', () => row.remove());
+
+    header.append(upButton, downButton, removeButton);
+
+    const titleLabel = document.createElement('label');
+    titleLabel.textContent = 'Title';
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.className = 'tos-point-title';
+    titleInput.value = (point && point.title) || '';
+
+    const bodyLabel = document.createElement('label');
+    bodyLabel.textContent = 'Body';
+    const bodyTextarea = document.createElement('textarea');
+    bodyTextarea.className = 'tos-point-body';
+    bodyTextarea.rows = 2;
+    bodyTextarea.value = (point && point.body) || '';
+
+    const bulletsLabel = document.createElement('label');
+    bulletsLabel.textContent = 'Bullets';
+    const bulletsContainer = document.createElement('div');
+    bulletsContainer.className = 'tos-bullet-rows';
+    ((point && point.bullets) || []).forEach((bullet) => renderTosBulletRow(bulletsContainer, bullet));
+
+    const addBulletButton = document.createElement('button');
+    addBulletButton.type = 'button';
+    addBulletButton.textContent = 'Add bullet';
+    addBulletButton.addEventListener('click', () => renderTosBulletRow(bulletsContainer, null));
+
+    row.append(header, titleLabel, titleInput, bodyLabel, bodyTextarea, bulletsLabel, bulletsContainer, addBulletButton);
+    container.appendChild(row);
+}
+
+document.getElementById('tos-add-point').addEventListener('click', () => renderTosPointRow(null));
+
+function collectTosPoints() {
+    return Array.from(document.querySelectorAll('#tos-points-rows > .tos-point-row'))
+        .map((row) => {
+            const bullets = Array.from(row.querySelectorAll('.tos-bullet-row'))
+                .map((bulletRow) => {
+                    const type = bulletRow.querySelector('.tos-bullet-type').value;
+                    const text = bulletRow.querySelector('.tos-bullet-text').value.trim();
+                    const bullet = { type, text };
+                    if (type === 'yesno') bullet.value = bulletRow.querySelector('.tos-bullet-value').checked;
+                    return bullet;
+                })
+                .filter((bullet) => bullet.text);
+
+            return {
+                title: row.querySelector('.tos-point-title').value.trim(),
+                body: row.querySelector('.tos-point-body').value.trim(),
+                bullets,
+            };
+        })
+        .filter((point) => point.title);
+}
+
+fetch('/data/tos.json')
+    .then((r) => r.json())
+    .then((d) => {
+        (d.points || []).forEach((point) => renderTosPointRow(point));
+    })
+    .catch((error) => {
+        console.error('Failed to load current TOS data:', error);
+        setStatus('tos-status', 'Could not load current TOS data — reload before editing.', true);
+        document.querySelector('#tos-form button[type="submit"]').disabled = true;
+    });
+
+document.getElementById('tos-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
+        return;
+    }
+
+    setStatus('tos-status', 'Saving...', false);
+    try {
+        const response = await fetch('/api/publish-tos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ points: collectTosPoints() }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unknown error');
+        setStatus('tos-status', 'Saved — live shortly', false);
+    } catch (error) {
+        setStatus('tos-status', error.message, true);
+    }
+});
+
 document.getElementById('past-work-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {

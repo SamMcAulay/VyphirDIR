@@ -11,6 +11,7 @@ const ROUTABLE_TEMPLATES = [
     'gallery/index.html',
     'templates/commissions.html',
     'templates/character.html',
+    'tos/index.html',
 ];
 
 function extractCsp(html) {

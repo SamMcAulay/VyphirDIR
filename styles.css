@@ -791,6 +791,50 @@ a.gallery-card {
     font-family: 'Space Mono', monospace;
 }
 
+.tos-point {
+    margin-bottom: 14px;
+}
+
+.tos-point h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
+
+.tos-point-number {
+    color: var(--hot-pink);
+}
+
+.tos-bullets {
+    list-style: none;
+    margin: 8px 0 0 0;
+    padding: 0;
+}
+
+.tos-bullets li {
+    padding: 3px 0;
+}
+
+.tos-bullet-plain::before {
+    content: '\2022';
+    color: var(--hot-pink);
+    margin-right: 8px;
+}
+
+.tos-bullet-yesno i {
+    width: 16px;
+    text-align: center;
+    margin-right: 8px;
+}
+
+.tos-bullet-yes i {
+    color: #4caf50;
+}
+
+.tos-bullet-no i {
+    color: var(--red);
+}
+
 .permalink-copy-btn {
     background: var(--hot-pink);
     color: var(--bg-dark);

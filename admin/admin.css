@@ -111,3 +111,54 @@ h1, h2 { margin-bottom: 15px; }
 .tier-row textarea {
     margin-top: 6px;
 }
+
+.tos-point-row {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 10px;
+}
+
+.tos-point-row input[type="text"],
+.tos-point-row textarea {
+    margin-top: 6px;
+}
+
+.tos-point-row-header {
+    display: flex;
+    gap: 8px;
+}
+
+.tos-point-row-header button {
+    margin-top: 0;
+    padding: 6px 10px;
+}
+
+.tos-bullet-rows {
+    margin-top: 8px;
+}
+
+.tos-bullet-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.tos-bullet-row .tos-bullet-text {
+    flex: 1;
+}
+
+.tos-bullet-row button {
+    margin-top: 0;
+    padding: 6px 10px;
+}
+
+.tos-bullet-yesno-value {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    white-space: nowrap;
+}
