@@ -164,6 +164,10 @@ body {
     max-width: 700px;
 }
 
+.datapad-wrapper--xwide {
+    max-width: 1100px;
+}
+
 .datapad-screen {
     --frame-w: 3px;
     position: relative;
@@ -836,15 +840,36 @@ a.gallery-card {
 }
 
 .queue-board-columns {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 14px;
-    overflow-x: auto;
     padding: 8px 2px 14px 2px;
-    align-items: flex-start;
+    align-items: start;
 }
 
-.queue-column {
-    flex: 0 0 220px;
+@media (max-width: 720px) {
+    .queue-board-columns {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 105, 180, 0.4) rgba(255, 255, 255, 0.05);
+    }
+
+    .queue-board-columns::-webkit-scrollbar {
+        height: 4px;
+    }
+    .queue-board-columns::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .queue-board-columns::-webkit-scrollbar-thumb {
+        background: rgba(255, 105, 180, 0.4);
+    }
+
+    .queue-column {
+        flex: 0 0 220px;
+        scroll-snap-align: start;
+    }
 }
 
 .queue-column h3 {
