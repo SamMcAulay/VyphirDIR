@@ -1,0 +1,10 @@
+{
+  "columns": [
+    { "id": "column-1", "name": "Waitlist", "enabled": true },
+    { "id": "column-2", "name": "In Queue", "enabled": true },
+    { "id": "column-3", "name": "Sketch Provided", "enabled": true },
+    { "id": "column-4", "name": "Paid", "enabled": true },
+    { "id": "column-5", "name": "WIP", "enabled": true }
+  ],
+  "cards": []
+}

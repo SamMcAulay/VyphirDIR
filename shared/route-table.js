@@ -3,6 +3,7 @@ const ROUTES = [
     { pattern: /^\/gallery\/$/, module: '/gallery/gallery-index.js' },
     { pattern: /^\/commissions\/$/, module: '/commissions/commissions.js' },
     { pattern: /^\/tos\/$/, module: '/tos/tos.js' },
+    { pattern: /^\/queue\/$/, module: '/queue/queue.js' },
     { pattern: /^\/gallery\/[^/]+\/$/, module: '/gallery/character.js' },
 ];
 

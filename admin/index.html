@@ -96,6 +96,34 @@
         </form>
     </section>
 
+    <section class="admin-panel">
+        <h2>Queue Columns</h2>
+        <div id="queue-columns-rows"></div>
+    </section>
+
+    <section class="admin-panel">
+        <h2>Queue Cards</h2>
+        <div id="queue-cards-list"></div>
+    </section>
+
+    <section class="admin-panel">
+        <h2>Add Queue Card</h2>
+        <form id="queue-card-form">
+            <label for="queue-card-title">Title</label>
+            <input type="text" id="queue-card-title" required>
+
+            <label for="queue-card-for">For</label>
+            <input type="text" id="queue-card-for" placeholder="@handle or name">
+
+            <label for="queue-card-target-date">Target date (optional)</label>
+            <input type="date" id="queue-card-target-date">
+
+            <button type="submit">Add Card</button>
+        </form>
+        <button type="button" id="queue-save">Save Queue</button>
+        <p class="admin-status" id="queue-status"></p>
+    </section>
+
     <script type="module" src="/admin/admin.js"></script>
 </body>
 </html>

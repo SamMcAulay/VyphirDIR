@@ -720,6 +720,172 @@ document.getElementById('tos-form').addEventListener('submit', async (event) => 
     }
 });
 
+let currentQueueColumns = [];
+let currentQueueCards = [];
+
+function renderQueueColumns() {
+    const container = document.getElementById('queue-columns-rows');
+    container.innerHTML = '';
+    currentQueueColumns.forEach((column) => {
+        const row = document.createElement('div');
+        row.className = 'image-row';
+
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.value = column.name;
+        nameInput.addEventListener('input', () => {
+            column.name = nameInput.value;
+        });
+
+        const enabledLabel = document.createElement('label');
+        const enabledCheckbox = document.createElement('input');
+        enabledCheckbox.type = 'checkbox';
+        enabledCheckbox.checked = column.enabled;
+        enabledCheckbox.addEventListener('change', () => {
+            column.enabled = enabledCheckbox.checked;
+        });
+        enabledLabel.append(enabledCheckbox, document.createTextNode(' Visible'));
+
+        row.append(nameInput, enabledLabel);
+        container.appendChild(row);
+    });
+}
+
+function moveQueueCardWithinColumn(card, direction) {
+    const sameColumn = currentQueueCards.filter((c) => c.columnId === card.columnId);
+    const posInColumn = sameColumn.indexOf(card);
+    const targetPos = posInColumn + direction;
+    if (targetPos < 0 || targetPos >= sameColumn.length) return;
+
+    const neighbor = sameColumn[targetPos];
+    const cardIndex = currentQueueCards.indexOf(card);
+    const neighborIndex = currentQueueCards.indexOf(neighbor);
+    [currentQueueCards[cardIndex], currentQueueCards[neighborIndex]] = [
+        currentQueueCards[neighborIndex],
+        currentQueueCards[cardIndex],
+    ];
+    renderQueueCards();
+}
+
+function renderQueueCards() {
+    const container = document.getElementById('queue-cards-list');
+    container.innerHTML = '';
+
+    currentQueueCards.forEach((card) => {
+        const row = document.createElement('div');
+        row.className = 'past-work-list-row';
+
+        const titleInput = document.createElement('input');
+        titleInput.type = 'text';
+        titleInput.value = card.title;
+        titleInput.addEventListener('input', () => {
+            card.title = titleInput.value;
+        });
+
+        const forInput = document.createElement('input');
+        forInput.type = 'text';
+        forInput.placeholder = 'For';
+        forInput.value = card.for || '';
+        forInput.addEventListener('input', () => {
+            card.for = forInput.value;
+        });
+
+        const dateInput = document.createElement('input');
+        dateInput.type = 'date';
+        dateInput.value = card.targetDate || '';
+        dateInput.addEventListener('input', () => {
+            card.targetDate = dateInput.value;
+        });
+
+        const columnSelect = document.createElement('select');
+        currentQueueColumns.forEach((column) => {
+            const option = document.createElement('option');
+            option.value = column.id;
+            option.textContent = column.enabled ? column.name : `${column.name} (hidden)`;
+            columnSelect.appendChild(option);
+        });
+        columnSelect.value = card.columnId;
+        columnSelect.addEventListener('change', () => {
+            card.columnId = columnSelect.value;
+            renderQueueCards();
+        });
+
+        const upButton = document.createElement('button');
+        upButton.type = 'button';
+        upButton.textContent = '↑';
+        upButton.addEventListener('click', () => moveQueueCardWithinColumn(card, -1));
+
+        const downButton = document.createElement('button');
+        downButton.type = 'button';
+        downButton.textContent = '↓';
+        downButton.addEventListener('click', () => moveQueueCardWithinColumn(card, 1));
+
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'danger-button';
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => {
+            currentQueueCards = currentQueueCards.filter((c) => c !== card);
+            renderQueueCards();
+        });
+
+        row.append(titleInput, forInput, dateInput, columnSelect, upButton, downButton, deleteButton);
+        container.appendChild(row);
+    });
+}
+
+fetch('/data/queue.json')
+    .then((r) => r.json())
+    .then((d) => {
+        currentQueueColumns = d.columns || [];
+        currentQueueCards = d.cards || [];
+        renderQueueColumns();
+        renderQueueCards();
+    })
+    .catch((error) => {
+        console.error('Failed to load current queue data:', error);
+        setStatus('queue-status', 'Could not load current queue data — reload before editing.', true);
+        document.getElementById('queue-save').disabled = true;
+    });
+
+document.getElementById('queue-card-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const titleInput = document.getElementById('queue-card-title');
+    const forInput = document.getElementById('queue-card-for');
+    const dateInput = document.getElementById('queue-card-target-date');
+
+    currentQueueCards.push({
+        id: crypto.randomUUID(),
+        columnId: (currentQueueColumns[0] || {}).id,
+        title: titleInput.value,
+        for: forInput.value,
+        targetDate: dateInput.value,
+        createdAt: new Date().toISOString(),
+    });
+    renderQueueCards();
+    event.target.reset();
+});
+
+document.getElementById('queue-save').addEventListener('click', async () => {
+    if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {
+        return;
+    }
+
+    setStatus('queue-status', 'Saving...', false);
+    try {
+        const response = await fetch('/api/publish-queue', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ columns: currentQueueColumns, cards: currentQueueCards }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unknown error');
+        setStatus('queue-status', 'Saved — live shortly', false);
+    } catch (error) {
+        setStatus('queue-status', error.message, true);
+    }
+});
+
 document.getElementById('past-work-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!window.confirm('This will be published live and permanently recorded in git history. Continue?')) {

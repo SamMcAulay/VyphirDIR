@@ -23,6 +23,10 @@ test('matchRoute matches the tos page', () => {
     assert.deepEqual(matchRoute('/tos/'), { module: '/tos/tos.js' });
 });
 
+test('matchRoute matches the queue page', () => {
+    assert.deepEqual(matchRoute('/queue/'), { module: '/queue/queue.js' });
+});
+
 test('matchRoute rejects the admin area', () => {
     assert.equal(matchRoute('/admin/'), null);
     assert.equal(matchRoute('/admin/index.html'), null);
@@ -37,6 +41,7 @@ test('matchRoute rejects paths missing a trailing slash', () => {
     assert.equal(matchRoute('/gallery/vyphir'), null);
     assert.equal(matchRoute('/commissions'), null);
     assert.equal(matchRoute('/tos'), null);
+    assert.equal(matchRoute('/queue'), null);
 });
 
 test('matchRoute rejects an empty character slug', () => {

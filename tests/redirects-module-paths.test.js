@@ -62,6 +62,7 @@ function findEntryModules() {
     entries.add('/gallery/character.js');
     entries.add('/commissions/commissions.js');
     entries.add('/tos/tos.js');
+    entries.add('/queue/queue.js');
     return [...entries];
 }
 
