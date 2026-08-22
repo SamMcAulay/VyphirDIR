@@ -1,3 +1,5 @@
+import { formatDate } from './shared/format-date.js';
+
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -137,7 +139,7 @@ async function loadBlueskyFeed() {
         data.feed.forEach(item => {
             const post = item.post?.record;
             if (!post) return;
-            const date = new Date(post.createdAt).toLocaleDateString();
+            const date = formatDate(post.createdAt);
 
             const entry = document.createElement('div');
             entry.className = 'feed-entry';

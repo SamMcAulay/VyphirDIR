@@ -1,8 +1,8 @@
+import { formatDate } from '../shared/format-date.js';
+
 function formatTargetDate(dateStr) {
     if (!dateStr) return '';
-    const date = new Date(`${dateStr}T00:00:00`);
-    if (Number.isNaN(date.getTime())) return '';
-    return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    return formatDate(`${dateStr}T00:00:00`);
 }
 
 function formatRelativeAge(isoString) {
