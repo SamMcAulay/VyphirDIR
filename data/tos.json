@@ -1,3 +1,22 @@
 {
-  "points": []
+  "points": [
+    {
+      "title": "Payments",
+      "body": "",
+      "bullets": [
+        {
+          "type": "plain",
+          "text": "Customer agrees to pay the due amount when the sketch is provided, at latest for any orders of value lower, or equal to €75"
+        },
+        {
+          "type": "plain",
+          "text": "On orders above €75 cutomer has the option of agreeing on a payment plan, if 50% is put as a down payment, and this is agreed with myself before hand."
+        },
+        {
+          "type": "plain",
+          "text": "Cutomer accepts that the item will not be delivered if payment is not completed in full."
+        }
+      ]
+    }
+  ]
 }
