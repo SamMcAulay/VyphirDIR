@@ -2,7 +2,7 @@
   "points": [
     {
       "title": "Payments",
-      "body": "",
+      "body": "Payments can only be accepted via PayPal, and revolut. Any orders under €15 must be sent through friends and family, or alternative, where customer occurs any fees or extra charges.",
       "bullets": [
         {
           "type": "plain",
@@ -17,6 +17,95 @@
           "text": "Cutomer accepts that the item will not be delivered if payment is not completed in full."
         }
       ]
+    },
+    {
+      "title": "What Can / Will I draw",
+      "body": "Simple backgrounds are included in charged price\nDetailed Backgrounds, or scenes may Incur a 50% price increase. \nExtra Characters may be added, for 75% of the original price\nSuggestive pieces may Incur up to a 25% price increase\nNSFW pieces may Incur up to a 50% price increase",
+      "bullets": [
+        {
+          "type": "yesno",
+          "text": "Furries / Anthro",
+          "value": true
+        },
+        {
+          "type": "yesno",
+          "text": "Feral",
+          "value": true
+        },
+        {
+          "type": "yesno",
+          "text": "NSFW / Suggestive",
+          "value": true
+        },
+        {
+          "type": "yesno",
+          "text": "Fettish / Kink",
+          "value": true
+        },
+        {
+          "type": "yesno",
+          "text": "Humans",
+          "value": false
+        },
+        {
+          "type": "yesno",
+          "text": "Realistic, or non stylised pieces",
+          "value": false
+        },
+        {
+          "type": "yesno",
+          "text": "Immoral or Illegal content",
+          "value": false
+        },
+        {
+          "type": "yesno",
+          "text": "ABDL, Watersports or adjacent",
+          "value": false
+        }
+      ]
+    },
+    {
+      "title": "Revisions",
+      "body": "Abuse of revisions or purposefully vague requests to garner more revisions will result in termination of any order.",
+      "bullets": [
+        {
+          "type": "plain",
+          "text": "Customer accepts that they have three total revisions during the sketch and line phase."
+        },
+        {
+          "type": "plain",
+          "text": "A revision is only used, when I fail to provide a sketch to the requests guidelines, IE; wrong expression, or incorrect markings."
+        },
+        {
+          "type": "plain",
+          "text": "revisions during colour and render phase, may only retain to markings, or detail added during colour phase. Customer accepts that no changes to line art, may be made during the colour stage. Same follows for any rendering"
+        }
+      ]
+    },
+    {
+      "title": "Currency Conversions",
+      "body": "Customer Agrees to pay the total amount specified in Euro, and it is the sole responsibility of the Customer to bear any currency conversion costs.",
+      "bullets": []
+    },
+    {
+      "title": "Refunds",
+      "body": "Refunds May be offered in the case the Customer changes their mind about the commission or my style, ONLY if I have not provided the next stage in the commission process, IE; cleaned sketch / line art / coloured sketch. If any refund is requested before this deadline, an 80% refund may be issued. This policy may be amended at any time for any reason, given extenuating circumstances from the Customer",
+      "bullets": []
+    },
+    {
+      "title": "Personal and Commercial Use",
+      "body": "Any product received by Customer is for personal use only. Any use of the product for commercial purposes has to be approved beforehand by the seller. This will require a separate agreement, defining exact use, and any further commercial costs, up to a 50% fee. \nAny Product intended for social media use, IE; profile banner, Emotes, or Bio panels, will not incur extra fees, but please make this clear in your order.",
+      "bullets": []
+    },
+    {
+      "title": "Cancellations",
+      "body": "I reserve every right to refuse, or cancel any order, under condition of full refund, without giving reason to the Customer.\nAny Disrespectful behavior, suspicious activity, or breach of these terms, will not be tolerated, and may result in customer being refused sales in the future.\nDue to the nature of custom commissions, notably Custom designs, Customer will not be eligible for any refunds if the designs / pieces have been delivered.",
+      "bullets": []
+    },
+    {
+      "title": "Delivery",
+      "body": "Final Product and updates will typically be sent via our primary communication channel. Delivery via email is offered at request of customer.",
+      "bullets": []
     }
   ]
 }
