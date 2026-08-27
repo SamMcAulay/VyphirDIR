@@ -137,6 +137,10 @@
         {
           "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1787505509/vyphir/characters/69ad05ea-eae2-4c9a-91a9-d2f62b6fc806.png",
           "nsfw": false
+        },
+        {
+          "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1787848040/vyphir/characters/25ffc2ff-7b39-4c0a-9bdd-a5cabb92d813.webp",
+          "nsfw": true
         }
       ],
       "slug": "vyphir"
