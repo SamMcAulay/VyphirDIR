@@ -118,6 +118,12 @@
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785421991/vyphir/commissions/2f0da0a3-8e0c-41a1-b008-5cb5675c3e36.png",
       "caption": "Paw mmm",
       "nsfw": false
+    },
+    {
+      "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1788127443/vyphir/commissions/06116013-3b70-4bac-a149-028f41d3c769.png",
+      "caption": "Comm for Cobalt, nsfw alt",
+      "nsfw": true,
+      "giftArt": false
     }
   ]
 }
