@@ -26,7 +26,7 @@ export function findImageById(charactersData, commissionsData, id) {
                 kind: 'commission',
                 url: item.url,
                 nsfw: Boolean(item.nsfw),
-                title: isGiftArt ? 'Gift Art — Vyphir' : 'Commission — Vyphir',
+                title: isGiftArt ? 'Gift Art | Vyphir' : 'Commission | Vyphir',
                 description: item.caption || (isGiftArt ? 'Past gift art' : 'Past commission work'),
                 backHref: '/commissions/',
             };

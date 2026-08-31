@@ -4,7 +4,7 @@ export function setupNsfwReveal(root = document) {
 
         const warning = document.createElement('div');
         warning.className = 'nsfw-warning';
-        warning.textContent = 'NSFW — click to reveal';
+        warning.textContent = 'NSFW (click to reveal)';
         wrap.appendChild(warning);
 
         warning.addEventListener('click', () => wrap.classList.add('revealed'));

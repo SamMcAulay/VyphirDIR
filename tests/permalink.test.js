@@ -44,7 +44,7 @@ test('finds an nsfw character image and marks it nsfw', () => {
 test('finds a commission past-work image by id', () => {
     const result = findImageById(characters, commissions, 'ccc-333');
     assert.equal(result.kind, 'commission');
-    assert.equal(result.title, 'Commission — Vyphir');
+    assert.equal(result.title, 'Commission | Vyphir');
     assert.equal(result.description, 'Fanart');
     assert.equal(result.backHref, '/commissions/');
 });
@@ -52,7 +52,7 @@ test('finds a commission past-work image by id', () => {
 test('labels a gift-art past-work image as Gift Art instead of Commission', () => {
     const result = findImageById(characters, commissions, 'ddd-444');
     assert.equal(result.kind, 'commission');
-    assert.equal(result.title, 'Gift Art — Vyphir');
+    assert.equal(result.title, 'Gift Art | Vyphir');
     assert.equal(result.description, 'A gift');
 });
 
