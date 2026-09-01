@@ -120,7 +120,8 @@
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422071/vyphir/commissions/83f7929e-0d4d-4a37-9dd4-c51325e90e63.png",
       "caption": "Yo wtf dont look at this nobody is kissing",
-      "nsfw": true
+      "nsfw": false,
+      "giftArt": false
     },
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422126/vyphir/commissions/77d8e5be-f670-49da-b251-48458aec592e.png",
