@@ -3,11 +3,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/generate-characters.js && node scripts/generate-commissions-preview.js",
+    "dev": "vite",
+    "build:client": "vite build --outDir dist/client",
+    "build:server": "vite build --ssr src/entry-server.jsx --outDir dist-server",
+    "build": "npm run build:client && npm run build:server && node scripts/render-pages.js",
     "test": "node --test"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
     "gifenc": "^1.0.3",
-    "sharp": "^0.35.3"
+    "sharp": "^0.35.3",
+    "vite": "^8.2.2"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.3",
+    "three": "^0.185.1"
   }
 }
