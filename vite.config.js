@@ -5,5 +5,8 @@ export default defineConfig({
   plugins: [react()],
   build: {
     manifest: true,
+    rollupOptions: {
+      input: 'src/entry-client.jsx',
+    },
   },
 });
