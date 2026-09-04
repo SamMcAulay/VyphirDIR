@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { escapeHtml } from '../shared/escape-html.js';
@@ -43,7 +43,6 @@ function renderShell({ title, description, ogImage, ogImageType, robotsNoIndex, 
     <link rel="stylesheet" href="/styles.css">${css.map((href) => `\n    <link rel="stylesheet" href="${href}">`).join('')}${(extraStylesheets || []).map((href) => `\n    <link rel="stylesheet" href="${href}">`).join('')}
 </head>
 <body>
-    <canvas id="webgl-canvas"></canvas>
     <div id="root">${appHtml}</div>
     <script type="module" src="${script}"></script>
 </body>

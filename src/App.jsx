@@ -1,12 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
 import { routes } from './routes.js';
+import Background from './components/Background.jsx';
 
 export default function App() {
     return (
-        <Routes>
-            {routes.map(({ path, Page }) => (
-                <Route key={path} path={path} element={<Page />} />
-            ))}
-        </Routes>
+        <>
+            <Background />
+            <Routes>
+                {routes.map(({ path, Page }) => (
+                    <Route key={path} path={path} element={<Page />} />
+                ))}
+            </Routes>
+        </>
     );
 }
