@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, cp, copyFile } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { escapeHtml } from '../shared/escape-html.js';
@@ -6,6 +6,9 @@ import { generateCommissionsPreviewImage } from './generate-commissions-preview-
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CLIENT_OUT = join(projectRoot, 'dist', 'client');
+
+const SITE_ORIGIN = 'https://vyphir.com';
+const FAVICON = `<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">`;
 
 const CSP = "default-src 'self'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; connect-src 'self' https://public.api.bsky.app; object-src 'none'; base-uri 'self';";
 
@@ -20,10 +23,11 @@ function entryAssets(manifest) {
     return { script: `/${entry.file}`, css: css.map((href) => `/${href}`) };
 }
 
-function renderShell({ title, description, ogImage, ogImageType, robotsNoIndex, csp, extraStylesheets, appHtml, script, css }) {
+function renderShell({ path, title, description, ogImage, ogImageType, robotsNoIndex, csp, extraStylesheets, embeddedData, appHtml, script, css }) {
     const ogTags = description
         ? `
     <meta property="og:type" content="website">
+    <meta property="og:url" content="${escapeHtml(SITE_ORIGIN + path)}">
     <meta property="og:title" content="${escapeHtml(title)}">
     <meta property="og:description" content="${escapeHtml(description)}">${ogImage ? `
     <meta property="og:image" content="${escapeHtml(ogImage)}">${ogImageType ? `
@@ -34,6 +38,7 @@ function renderShell({ title, description, ogImage, ogImageType, robotsNoIndex, 
 
     const effectiveCsp = csp || CSP;
     const allowsFontAwesome = effectiveCsp.includes('cdnjs.cloudflare.com');
+    const rootAttrs = embeddedData ? ` data-character="${escapeHtml(JSON.stringify(embeddedData))}"` : '';
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -42,12 +47,13 @@ function renderShell({ title, description, ogImage, ogImageType, robotsNoIndex, 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">${robotsNoIndex ? '\n    <meta name="robots" content="noindex, nofollow">' : ''}${ogTags}
     <meta http-equiv="Content-Security-Policy" content="${effectiveCsp}">
     <title>${escapeHtml(title)}</title>
+    ${FAVICON}
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">${allowsFontAwesome ? `
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">` : ''}
     <link rel="stylesheet" href="/styles.css">${css.map((href) => `\n    <link rel="stylesheet" href="${href}">`).join('')}${(extraStylesheets || []).map((href) => `\n    <link rel="stylesheet" href="${href}">`).join('')}
 </head>
 <body>
-    <div id="root">${appHtml}</div>
+    <div id="root"${rootAttrs}>${appHtml}</div>
     <script type="module" src="${script}"></script>
 </body>
 </html>
@@ -71,12 +77,26 @@ async function renderCharacters({ script, css }) {
         const route = {
             path: `/gallery/${character.slug}/`,
             title: `${character.name} | Vyphir`,
+            embeddedData: character,
         };
         await writeRoute({ route, html, script, css });
     }
 }
 
+// Vite only copies `public/` into the client build. These live outside it but are
+// fetched at runtime by the deployed site, so they must be copied in explicitly.
+async function copyRuntimeAssets() {
+    await cp(join(projectRoot, 'data'), join(CLIENT_OUT, 'data'), { recursive: true });
+
+    await copyFile(join(projectRoot, 'nsfw-reveal.js'), join(CLIENT_OUT, 'nsfw-reveal.js'));
+
+    await mkdir(join(CLIENT_OUT, 'gallery'), { recursive: true });
+    await copyFile(join(projectRoot, 'gallery', 'permalink.js'), join(CLIENT_OUT, 'gallery', 'permalink.js'));
+}
+
 async function main() {
+    await copyRuntimeAssets();
+
     const manifest = await loadManifest();
     const { script, css } = entryAssets(manifest);
     const { render, routes } = await import(join(projectRoot, 'dist-server', 'entry-server.js'));

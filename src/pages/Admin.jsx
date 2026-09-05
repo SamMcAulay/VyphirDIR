@@ -8,6 +8,7 @@ import AdminTos from '../components/admin/AdminTos.jsx';
 export default function Admin() {
     const [pastWork, setPastWork] = useState([]);
     const [savedPastWorkOrder, setSavedPastWorkOrder] = useState([]);
+    const [pastWorkLoadError, setPastWorkLoadError] = useState(false);
 
     useEffect(() => {
         fetch('/data/commissions.json')
@@ -17,7 +18,10 @@ export default function Admin() {
                 setPastWork(work);
                 setSavedPastWorkOrder(work.map((e) => e.url));
             })
-            .catch((error) => console.error('Failed to load current commissions data:', error));
+            .catch((error) => {
+                console.error('Failed to load current commissions data:', error);
+                setPastWorkLoadError(true);
+            });
     }, []);
 
     return (
@@ -30,6 +34,7 @@ export default function Admin() {
                 setPastWork={setPastWork}
                 savedOrder={savedPastWorkOrder}
                 setSavedOrder={setSavedPastWorkOrder}
+                loadError={pastWorkLoadError}
             />
             <AdminTos />
             <AdminQueue />

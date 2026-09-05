@@ -7,7 +7,10 @@ import { fileURLToPath } from 'node:url';
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 test('_redirects rules do not shadow the built client bundle or any known route', () => {
-    const content = readFileSync(join(projectRoot, '_redirects'), 'utf8');
+    // Read from the build output: Cloudflare Pages only honours `_redirects` when it
+    // lands in `pages_build_output_dir`, so asserting here also gate-checks that the
+    // source file (public/_redirects) is actually being deployed.
+    const content = readFileSync(join(projectRoot, 'dist/client/_redirects'), 'utf8');
     const prefixes = content
         .split('\n')
         .map((l) => l.trim())

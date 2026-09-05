@@ -24,7 +24,6 @@ test('renders "Add tier" and "Save Commission Info" buttons in the initial SSR s
 });
 
 test('renders no tier rows in the initial (no-data) SSR state', () => {
-    assert.doesNotMatch(html, /className="tier-row"/);
     assert.doesNotMatch(html, /class="tier-row"/);
 });
 

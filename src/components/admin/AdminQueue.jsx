@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-
-const CONFIRM_MESSAGE = 'This will be published live and permanently recorded in git history. Continue?';
+import { CONFIRM_MESSAGE } from './constants.js';
 
 export default function AdminQueue() {
     const [columns, setColumns] = useState([]);

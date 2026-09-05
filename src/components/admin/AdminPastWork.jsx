@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { CONFIRM_MESSAGE } from './constants.js';
 
-const CONFIRM_MESSAGE = 'This will be published live and permanently recorded in git history. Continue?';
+const LOAD_ERROR_MESSAGE = 'Could not load current commissions data — reload before editing.';
 
 function isOrderDirty(pastWork, savedOrder) {
     if (pastWork.length !== savedOrder.length) return true;
     return pastWork.some((entry, i) => entry.url !== savedOrder[i]);
 }
 
-export default function AdminPastWork({ pastWork, setPastWork, savedOrder, setSavedOrder }) {
+export default function AdminPastWork({ pastWork, setPastWork, savedOrder, setSavedOrder, loadError }) {
     const [orderStatus, setOrderStatus] = useState({ message: '', isError: false });
     const [itemStatus, setItemStatus] = useState({ message: '', isError: false });
     const [caption, setCaption] = useState('');
@@ -117,6 +118,8 @@ export default function AdminPastWork({ pastWork, setPastWork, savedOrder, setSa
     }
 
     const orderDirty = isOrderDirty(pastWork, savedOrder);
+    const shownOrderStatus = loadError ? { message: LOAD_ERROR_MESSAGE, isError: true } : orderStatus;
+    const shownItemStatus = loadError ? { message: LOAD_ERROR_MESSAGE, isError: true } : itemStatus;
 
     return (
         <>
@@ -136,8 +139,8 @@ export default function AdminPastWork({ pastWork, setPastWork, savedOrder, setSa
                         </div>
                     ))}
                 </div>
-                <button type="button" id="past-work-save-order" disabled={!orderDirty} onClick={saveOrder}>Save Order</button>
-                <p className={`admin-status ${orderStatus.isError ? 'error' : 'success'}`}>{orderStatus.message}</p>
+                <button type="button" id="past-work-save-order" disabled={!orderDirty || Boolean(loadError)} onClick={saveOrder}>Save Order</button>
+                <p className={`admin-status ${shownOrderStatus.isError ? 'error' : 'success'}`}>{shownOrderStatus.message}</p>
             </section>
 
             <section className="admin-panel">
@@ -152,8 +155,8 @@ export default function AdminPastWork({ pastWork, setPastWork, savedOrder, setSa
                     <label><input type="checkbox" checked={nsfw} onChange={(e) => setNsfw(e.target.checked)} /> NSFW</label>
                     <label><input type="checkbox" checked={giftArt} onChange={(e) => setGiftArt(e.target.checked)} /> Gift art (not commissioned)</label>
 
-                    <button type="submit">Publish Past Work</button>
-                    <p className={`admin-status ${itemStatus.isError ? 'error' : 'success'}`}>{itemStatus.message}</p>
+                    <button type="submit" disabled={Boolean(loadError)}>Publish Past Work</button>
+                    <p className={`admin-status ${shownItemStatus.isError ? 'error' : 'success'}`}>{shownItemStatus.message}</p>
                 </form>
             </section>
         </>

@@ -21,9 +21,7 @@ test('renders the required queue-card-title field', () => {
 });
 
 test('renders no column or card rows in the initial (no-data) SSR state', () => {
-    assert.doesNotMatch(html, /className="image-row"/);
     assert.doesNotMatch(html, /class="image-row"/);
-    assert.doesNotMatch(html, /className="past-work-list-row"/);
     assert.doesNotMatch(html, /class="past-work-list-row"/);
 });
 

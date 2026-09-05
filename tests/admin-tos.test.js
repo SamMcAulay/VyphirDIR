@@ -15,7 +15,6 @@ test('renders "Add point" and "Save TOS" buttons in the initial SSR state', () =
 });
 
 test('renders no point rows in the initial (no-data) SSR state', () => {
-    assert.doesNotMatch(html, /className="tos-point-row"/);
     assert.doesNotMatch(html, /class="tos-point-row"/);
 });
 
