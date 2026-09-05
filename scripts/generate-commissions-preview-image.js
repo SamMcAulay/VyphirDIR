@@ -4,14 +4,12 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import sharp from 'sharp';
 import { GIFEncoder, quantize, applyPalette } from 'gifenc/dist/gifenc.esm.js';
-import { escapeHtml } from '../shared/escape-html.js';
 
 const MAX_IMAGES = 9;
 const FRAME_SIZE = 720;
 const FRAME_DELAY_MS = 1750;
 const PAD_COLOR = '#120a0d';
 const FALLBACK_IMAGE = 'https://f2.toyhou.se/file/f2-toyhou-se/images/113402324_irRXncxlu389pbc.png?1768418401';
-const DESCRIPTION = 'Examples! See full catalogue on the site!';
 
 export function selectPreviewPieces(pastWork) {
     return (pastWork || []).filter((item) => !item.nsfw).slice(0, MAX_IMAGES);
@@ -37,45 +35,35 @@ export function encodeGif(frameBuffers, { delay = FRAME_DELAY_MS } = {}) {
     return Buffer.from(gif.bytes());
 }
 
-export async function generateCommissionsPreview({ dataPath, templatePath, outDir, fetchImage = fetch }) {
-    const [dataRaw, template] = await Promise.all([
-        readFile(dataPath, 'utf8'),
-        readFile(templatePath, 'utf8'),
-    ]);
+export async function generateCommissionsPreviewImage({ dataPath, outDir, fetchImage = fetch }) {
+    const dataRaw = await readFile(dataPath, 'utf8');
     const data = JSON.parse(dataRaw);
     const pieces = selectPreviewPieces(data.pastWork);
 
-    let ogImage = FALLBACK_IMAGE;
-
-    if (pieces.length > 0) {
-        const frames = [];
-        for (const piece of pieces) {
-            const response = await fetchImage(piece.url);
-            if (!response.ok) throw new Error(`Failed to fetch preview image: ${piece.url}`);
-            const buffer = Buffer.from(await response.arrayBuffer());
-            frames.push(await renderFrame(buffer));
-        }
-        const gifBytes = encodeGif(frames);
-        const hash = createHash('sha1').update(gifBytes).digest('hex').slice(0, 10);
-        await writeFile(join(outDir, 'preview.gif'), gifBytes);
-        ogImage = `https://vyphir.com/commissions/preview.gif?v=${hash}`;
+    if (pieces.length === 0) {
+        return { pieceCount: 0, ogImage: FALLBACK_IMAGE };
     }
 
-    const html = template
-        .replace(/__OG_IMAGE__/g, escapeHtml(ogImage))
-        .replace(/__OG_DESCRIPTION__/g, escapeHtml(DESCRIPTION));
+    const frames = [];
+    for (const piece of pieces) {
+        const response = await fetchImage(piece.url);
+        if (!response.ok) throw new Error(`Failed to fetch preview image: ${piece.url}`);
+        const buffer = Buffer.from(await response.arrayBuffer());
+        frames.push(await renderFrame(buffer));
+    }
+    const gifBytes = encodeGif(frames);
+    const hash = createHash('sha1').update(gifBytes).digest('hex').slice(0, 10);
+    await writeFile(join(outDir, 'preview.gif'), gifBytes);
 
-    await writeFile(join(outDir, 'index.html'), html);
-    return { pieceCount: pieces.length, ogImage };
+    return { pieceCount: pieces.length, ogImage: `https://vyphir.com/commissions/preview.gif?v=${hash}` };
 }
 
 const isMain = process.argv[1] === fileURLToPath(import.meta.url);
 if (isMain) {
     const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
-    generateCommissionsPreview({
+    generateCommissionsPreviewImage({
         dataPath: join(projectRoot, 'data', 'commissions.json'),
-        templatePath: join(projectRoot, 'templates', 'commissions.html'),
-        outDir: join(projectRoot, 'commissions'),
+        outDir: join(projectRoot, 'dist', 'client', 'commissions'),
     }).then(({ pieceCount, ogImage }) => {
         console.log(`Generated commissions preview (${pieceCount} piece(s)): ${ogImage}`);
     });

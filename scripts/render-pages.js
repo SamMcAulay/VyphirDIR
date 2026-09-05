@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { escapeHtml } from '../shared/escape-html.js';
+import { generateCommissionsPreviewImage } from './generate-commissions-preview-image.js';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CLIENT_OUT = join(projectRoot, 'dist', 'client');
@@ -77,9 +78,19 @@ async function main() {
     const { script, css } = entryAssets(manifest);
     const { render, routes } = await import(join(projectRoot, 'dist-server', 'entry-server.js'));
 
+    await mkdir(join(CLIENT_OUT, 'commissions'), { recursive: true });
+    const { ogImage } = await generateCommissionsPreviewImage({
+        dataPath: join(projectRoot, 'data', 'commissions.json'),
+        outDir: join(CLIENT_OUT, 'commissions'),
+    });
+
     for (const route of routes) {
+        const isCommissions = route.path === '/commissions/';
+        const resolvedRoute = isCommissions
+            ? { ...route, description: 'Examples! See full catalogue on the site!', ogImage, ogImageType: 'image/gif' }
+            : route;
         const { html } = render(route.path);
-        await writeRoute({ route, html, script, css });
+        await writeRoute({ route: resolvedRoute, html, script, css });
     }
 
     await renderCharacters({ script, css });

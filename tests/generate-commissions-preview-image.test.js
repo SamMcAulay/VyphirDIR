@@ -1,15 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, writeFile, readFile, mkdir, stat } from 'node:fs/promises';
+import { mkdtemp, writeFile, mkdir, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import {
     selectPreviewPieces,
-    generateCommissionsPreview,
-} from '../scripts/generate-commissions-preview.js';
-
-const TEMPLATE = '<html><head><meta property="og:description" content="__OG_DESCRIPTION__"><meta property="og:image" content="__OG_IMAGE__"></head><body></body></html>';
+    generateCommissionsPreviewImage,
+} from '../scripts/generate-commissions-preview-image.js';
 
 function withMockedFetch(impl, run) {
     const original = globalThis.fetch;
@@ -29,12 +27,10 @@ async function tinyPngResponse() {
 async function setupProject(commissionsData) {
     const dir = await mkdtemp(join(tmpdir(), 'vyphir-comm-preview-'));
     const dataPath = join(dir, 'commissions.json');
-    const templatePath = join(dir, 'commissions.html');
     const outDir = join(dir, 'out');
     await mkdir(outDir, { recursive: true });
     await writeFile(dataPath, JSON.stringify(commissionsData));
-    await writeFile(templatePath, TEMPLATE);
-    return { dataPath, templatePath, outDir };
+    return { dataPath, outDir };
 }
 
 test('selectPreviewPieces excludes nsfw and caps at 9, preserving order', () => {
@@ -45,8 +41,8 @@ test('selectPreviewPieces excludes nsfw and caps at 9, preserving order', () => 
     assert.equal(selected[0].url, 'https://example.com/0.png');
 });
 
-test('generateCommissionsPreview writes a gif and templated index.html for real past work', async () => {
-    const { dataPath, templatePath, outDir } = await setupProject({
+test('generateCommissionsPreviewImage writes a gif for real past work', async () => {
+    const { dataPath, outDir } = await setupProject({
         pastWork: [
             { url: 'https://example.com/a.png', caption: 'Gift art for oreo!' },
             { url: 'https://example.com/b.png', caption: '' },
@@ -56,7 +52,7 @@ test('generateCommissionsPreview writes a gif and templated index.html for real 
 
     const result = await withMockedFetch(
         () => tinyPngResponse(),
-        () => generateCommissionsPreview({ dataPath, templatePath, outDir })
+        () => generateCommissionsPreviewImage({ dataPath, outDir })
     );
 
     // nsfw entry excluded from the count/frames
@@ -65,23 +61,17 @@ test('generateCommissionsPreview writes a gif and templated index.html for real 
 
     const gifStat = await stat(join(outDir, 'preview.gif'));
     assert.ok(gifStat.size > 0);
-
-    const html = await readFile(join(outDir, 'index.html'), 'utf8');
-    assert.match(html, /content="https:\/\/vyphir\.com\/commissions\/preview\.gif\?v=[0-9a-f]{10}"/);
-    assert.match(html, /Examples! See full catalogue on the site!/);
 });
 
-test('generateCommissionsPreview falls back gracefully when no eligible past work exists', async () => {
-    const { dataPath, templatePath, outDir } = await setupProject({
+test('generateCommissionsPreviewImage falls back gracefully when no eligible past work exists', async () => {
+    const { dataPath, outDir } = await setupProject({
         pastWork: [{ url: 'https://example.com/nsfw.png', caption: 'hidden', nsfw: true }],
     });
 
-    const result = await generateCommissionsPreview({ dataPath, templatePath, outDir });
+    const result = await generateCommissionsPreviewImage({ dataPath, outDir });
 
     assert.equal(result.pieceCount, 0);
     assert.match(result.ogImage, /^https:\/\/f2\.toyhou\.se\//);
 
     await assert.rejects(stat(join(outDir, 'preview.gif')));
-    const html = await readFile(join(outDir, 'index.html'), 'utf8');
-    assert.match(html, /Examples! See full catalogue on the site!/);
 });
