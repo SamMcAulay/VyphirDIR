@@ -22,6 +22,7 @@ export default function AdminCharacters() {
             .catch((error) => {
                 console.error('Failed to load current characters:', error);
                 setLoadError(true);
+                setStatus({ message: 'Could not load current character data — reload before editing.', isError: true });
             });
     }, []);
 
@@ -70,6 +71,7 @@ export default function AdminCharacters() {
         const files = Array.from(e.target.files);
         setNewFiles(files);
         setNewFileNsfw(files.map(() => false));
+        setNewThumbnailKey((prev) => (prev?.kind === 'new' ? null : prev));
     }
 
     async function handleSubmit(e) {
