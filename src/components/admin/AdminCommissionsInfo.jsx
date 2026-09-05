@@ -26,6 +26,7 @@ export default function AdminCommissionsInfo() {
             .catch((error) => {
                 console.error('Failed to load current commissions data:', error);
                 setLoadError(true);
+                setSaveStatus({ message: 'Could not load current commission data — reload before saving.', isError: true });
             });
     }, []);
 
