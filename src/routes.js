@@ -3,6 +3,7 @@ import Gallery from './pages/Gallery.jsx';
 import Commissions from './pages/Commissions.jsx';
 import Tos from './pages/Tos.jsx';
 import Queue from './pages/Queue.jsx';
+import Admin from './pages/Admin.jsx';
 
 export const routes = [
     {
@@ -16,4 +17,12 @@ export const routes = [
     { path: '/commissions/', Page: Commissions, title: 'Commissions | Vyphir' },
     { path: '/tos/', Page: Tos, title: 'Terms of Service | Vyphir' },
     { path: '/queue/', Page: Queue, title: 'Queue | Vyphir' },
+    {
+        path: '/admin/',
+        Page: Admin,
+        title: 'Admin | Vyphir',
+        robotsNoIndex: true,
+        csp: "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; object-src 'none'; base-uri 'self';",
+        extraStylesheets: ['/admin/admin.css'],
+    },
 ];
