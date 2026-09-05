@@ -6,13 +6,12 @@ import { fileURLToPath } from 'node:url';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-const ROUTABLE_TEMPLATES = [
-    'index.html',
-    'gallery/index.html',
-    'templates/commissions.html',
-    'templates/character.html',
-    'tos/index.html',
-    'queue/index.html',
+const ROUTABLE_PAGES = [
+    'dist/client/index.html',
+    'dist/client/gallery/index.html',
+    'dist/client/commissions/index.html',
+    'dist/client/tos/index.html',
+    'dist/client/queue/index.html',
 ];
 
 function extractCsp(html) {
@@ -24,41 +23,30 @@ function extractStylesheetHosts(html) {
     const hosts = new Set();
     for (const match of html.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"/g)) {
         const href = match[1];
-        if (href.startsWith('http')) {
-            hosts.add(new URL(href).host);
-        }
+        if (href.startsWith('http')) hosts.add(new URL(href).host);
     }
     return [...hosts].sort();
 }
 
-test('all routable page templates share an identical CSP', () => {
-    const csps = ROUTABLE_TEMPLATES.map((path) => ({
-        path,
-        csp: extractCsp(readFileSync(join(projectRoot, path), 'utf8')),
-    }));
-
+test('all routable built pages share an identical CSP', () => {
+    const csps = ROUTABLE_PAGES.map((path) => ({ path, csp: extractCsp(readFileSync(join(projectRoot, path), 'utf8')) }));
     const [first, ...rest] = csps;
     for (const entry of rest) {
-        assert.equal(
-            entry.csp,
-            first.csp,
-            `${entry.path}'s CSP differs from ${first.path}'s — since router.js never reloads <head> on a client-side navigation, whichever page a visitor lands on first permanently governs CSP for the whole session, so every routable template must share an identical policy`
-        );
+        assert.equal(entry.csp, first.csp, `${entry.path}'s CSP differs from ${first.path}'s`);
     }
 });
 
-test('all routable page templates load the same external stylesheet hosts', () => {
-    const hostSets = ROUTABLE_TEMPLATES.map((path) => ({
-        path,
-        hosts: extractStylesheetHosts(readFileSync(join(projectRoot, path), 'utf8')),
-    }));
-
+test('all routable built pages load the same external stylesheet hosts', () => {
+    const hostSets = ROUTABLE_PAGES.map((path) => ({ path, hosts: extractStylesheetHosts(readFileSync(join(projectRoot, path), 'utf8')) }));
     const [first, ...rest] = hostSets;
     for (const entry of rest) {
-        assert.deepEqual(
-            entry.hosts,
-            first.hosts,
-            `${entry.path} loads different external stylesheets than ${first.path} — since <head> is never re-fetched on a client-side navigation, a stylesheet missing from one template (e.g. Font Awesome) will silently fail to render if a visitor's session started on a different page`
-        );
+        assert.deepEqual(entry.hosts, first.hosts, `${entry.path} loads different external stylesheets than ${first.path}`);
     }
+});
+
+test('the admin page intentionally uses a stricter CSP than public pages', () => {
+    const adminCsp = extractCsp(readFileSync(join(projectRoot, 'dist/client/admin/index.html'), 'utf8'));
+    const publicCsp = extractCsp(readFileSync(join(projectRoot, 'dist/client/index.html'), 'utf8'));
+    assert.notEqual(adminCsp, publicCsp);
+    assert.doesNotMatch(adminCsp, /cdnjs\.cloudflare\.com/);
 });
