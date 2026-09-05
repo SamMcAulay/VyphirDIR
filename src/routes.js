@@ -1,6 +1,7 @@
 import Landing from './pages/Landing.jsx';
 import Gallery from './pages/Gallery.jsx';
 import Commissions from './pages/Commissions.jsx';
+import Tos from './pages/Tos.jsx';
 
 export const routes = [
     {
@@ -12,4 +13,5 @@ export const routes = [
     },
     { path: '/gallery/', Page: Gallery, title: 'Gallery | Vyphir' },
     { path: '/commissions/', Page: Commissions, title: 'Commissions | Vyphir' },
+    { path: '/tos/', Page: Tos, title: 'Terms of Service | Vyphir' },
 ];
