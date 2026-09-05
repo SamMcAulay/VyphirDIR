@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import AdminCharacters from '../components/admin/AdminCharacters.jsx';
 import AdminCommissionsInfo from '../components/admin/AdminCommissionsInfo.jsx';
 import AdminPastWork from '../components/admin/AdminPastWork.jsx';
+import AdminTos from '../components/admin/AdminTos.jsx';
 
 export default function Admin() {
     const [pastWork, setPastWork] = useState([]);
@@ -29,7 +30,8 @@ export default function Admin() {
                 savedOrder={savedPastWorkOrder}
                 setSavedOrder={setSavedPastWorkOrder}
             />
-            {/* AdminTos, AdminQueue inserted here by Tasks 14-15 */}
+            <AdminTos />
+            {/* AdminQueue inserted here by Task 15 */}
         </>
     );
 }
