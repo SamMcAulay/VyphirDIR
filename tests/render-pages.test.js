@@ -17,3 +17,15 @@ test('build produces a static index.html that contains the hydrated root markup'
     assert.match(html, /<div id="root">.*Sam.*<\/div>/s);
     assert.match(html, /<script type="module" src="\/assets\/entry-client[^"]*\.js">/);
 });
+
+test('build renders a static page per character with escaped bio/species/name', () => {
+    const html = readFileSync(join(projectRoot, 'dist/client/gallery/vyphir/index.html'), 'utf8');
+    assert.match(html, /<h1>Vyphir<\/h1>/);
+    assert.match(html, /Mainecoon Cat/);
+});
+
+test('nsfw character images are marked in the SSG output', () => {
+    // data/characters.json's "vyphir" entry has real nsfw:true images.
+    const html = readFileSync(join(projectRoot, 'dist/client/gallery/vyphir/index.html'), 'utf8');
+    assert.match(html, /data-nsfw="true"/);
+});

@@ -57,6 +57,21 @@ async function writeRoute({ route, html, script, css }) {
     await writeFile(join(outDir, 'index.html'), page);
 }
 
+async function renderCharacters({ script, css }) {
+    const raw = await readFile(join(projectRoot, 'data', 'characters.json'), 'utf8');
+    const { characters } = JSON.parse(raw);
+    const { renderCharacter } = await import(join(projectRoot, 'dist-server', 'entry-server.js'));
+
+    for (const character of characters) {
+        const { html } = renderCharacter(character);
+        const route = {
+            path: `/gallery/${character.slug}/`,
+            title: `${character.name} | Vyphir`,
+        };
+        await writeRoute({ route, html, script, css });
+    }
+}
+
 async function main() {
     const manifest = await loadManifest();
     const { script, css } = entryAssets(manifest);
@@ -66,6 +81,8 @@ async function main() {
         const { html } = render(route.path);
         await writeRoute({ route, html, script, css });
     }
+
+    await renderCharacters({ script, css });
 }
 
 const isMain = process.argv[1] === fileURLToPath(import.meta.url);
