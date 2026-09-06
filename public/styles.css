@@ -133,7 +133,7 @@ body {
 }
 
 
-.datapad-wrapper {
+.panel-wrapper {
     width: 100%;
     max-width: 460px;
     margin: 40px auto;
@@ -142,44 +142,31 @@ body {
     z-index: 10;
 }
 
-.datapad-wrapper--wide {
+.panel-wrapper.panel--wide {
     max-width: 700px;
 }
 
-.datapad-wrapper--xwide {
+.panel-wrapper.panel--xwide {
     max-width: 1100px;
 }
 
-.datapad-screen {
-    --frame-w: 3px;
+.panel {
     position: relative;
-    isolation: isolate;
-    background: linear-gradient(135deg, rgba(255, 105, 180, 0.75), rgba(255, 255, 255, 0.2));
-    clip-path: polygon(0 var(--notch-lg), var(--notch-lg) 0, 100% 0, 100% calc(100% - var(--notch-lg)), calc(100% - var(--notch-lg)) 100%, 0 100%);
-    filter: drop-shadow(8px 11px 0 rgba(0, 0, 0, 0.5));
-    padding: 25px 20px 40px 20px;
+    background: var(--surface);
+    border: var(--outline-w) solid var(--accent);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-pop);
+    padding: 28px 24px;
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
 
-.datapad-screen::before {
-    content: '';
-    position: absolute;
-    inset: var(--frame-w);
-    z-index: -1;
-    background: var(--bg-glass);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    clip-path: polygon(
-        0 calc(var(--notch-lg) - var(--frame-w)),
-        calc(var(--notch-lg) - var(--frame-w)) 0,
-        100% 0,
-        100% calc(100% - var(--notch-lg) + var(--frame-w)),
-        calc(100% - var(--notch-lg) + var(--frame-w)) 100%,
-        0 100%
-    );
-}
+.page-pink { --accent: var(--slime-pink); --accent-light: var(--slime-pink-light); --accent-dark: var(--slime-pink-dark); }
+.page-teal { --accent: var(--slime-teal); --accent-light: var(--slime-teal-light); --accent-dark: var(--slime-teal-dark); }
+.page-honey { --accent: var(--slime-honey); --accent-light: var(--slime-honey-light); --accent-dark: var(--slime-honey-dark); }
+.page-lavender { --accent: var(--slime-lavender); --accent-light: var(--slime-lavender-light); --accent-dark: var(--slime-lavender-dark); }
+.page-tabby { --accent: var(--slime-tabby); --accent-light: var(--slime-tabby-light); --accent-dark: var(--slime-tabby-dark); }
 
 .sys-header {
     display: flex;
