@@ -1010,3 +1010,30 @@ a.enlarge-link {
         animation: none;
     }
 }
+
+.pop-clickable {
+    transition: transform 0.08s ease;
+}
+
+.pop-clickable:active {
+    transform: scale(0.92);
+}
+
+.pop-clickable.pop-active {
+    animation: pop-bounce 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pop-bounce {
+    0% { transform: scale(0.92); }
+    60% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pop-clickable.pop-active {
+        animation: none;
+    }
+    .pop-clickable:active {
+        transform: none;
+    }
+}
