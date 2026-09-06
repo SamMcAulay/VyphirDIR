@@ -1,7 +1,6 @@
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import App from './App.jsx';
-import Background from './components/Background.jsx';
 import GalleryCharacter from './pages/GalleryCharacter.jsx';
 
 export { routes } from './routes.js';
@@ -16,11 +15,6 @@ export function render(url) {
 }
 
 export function renderCharacter(character) {
-    const html = renderToString(
-        <>
-            <Background />
-            <GalleryCharacter character={character} />
-        </>
-    );
+    const html = renderToString(<GalleryCharacter character={character} />);
     return { html };
 }
