@@ -1,13 +1,15 @@
+import Panel from '../components/Panel.jsx';
 import QueueBoard from '../components/QueueBoard.jsx';
+import WaveText from '../components/WaveText.jsx';
 
 export default function Queue() {
     return (
-        <div className="datapad-wrapper datapad-wrapper--xwide">
-            <div className="datapad-screen">
+        <div className="page-tabby">
+            <Panel xwide>
                 <a href="/" className="back-link">&larr; Back to directory</a>
-                <h1><i className="fa-solid fa-list-check" /> Commission Queue</h1>
+                <WaveText as="h1" text="Commission Queue" />
                 <div id="queue-board"><QueueBoard /></div>
-            </div>
+            </Panel>
         </div>
     );
 }

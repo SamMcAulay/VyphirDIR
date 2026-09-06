@@ -645,17 +645,7 @@ a.gallery-card {
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         scrollbar-width: thin;
-        scrollbar-color: rgba(255, 105, 180, 0.4) rgba(255, 255, 255, 0.05);
-    }
-
-    .queue-board-columns::-webkit-scrollbar {
-        height: 4px;
-    }
-    .queue-board-columns::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-    }
-    .queue-board-columns::-webkit-scrollbar-thumb {
-        background: rgba(255, 105, 180, 0.4);
+        scrollbar-color: var(--accent) var(--accent-light);
     }
 
     .queue-column {
@@ -665,9 +655,10 @@ a.gallery-card {
 }
 
 .queue-column h3 {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.9rem;
-    color: var(--white);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--accent-dark);
     margin-bottom: 10px;
 }
 
@@ -682,21 +673,23 @@ a.gallery-card {
 }
 
 .queue-card h4 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
     font-size: 0.9rem;
     margin-bottom: 4px;
 }
 
 .queue-card p {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     margin: 2px 0 0 0;
 }
 
 .queue-card-for {
-    color: var(--pink);
+    color: var(--accent-dark);
 }
 
 .queue-card-target {
-    color: var(--hot-pink);
+    color: var(--slime-teal-dark);
 }
 
 .queue-card-age {

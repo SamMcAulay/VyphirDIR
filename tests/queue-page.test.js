@@ -5,12 +5,13 @@ import Queue from '../src/pages/Queue.jsx';
 
 const html = renderToStaticMarkup(<Queue />);
 
-test('renders the Commission Queue heading', () => {
-    assert.match(html, /<h1>.*Commission Queue<\/h1>/);
+test('renders the Commission Queue heading with WaveText letter-wave markup', () => {
+    assert.match(html, /<h1 class="wave-text">.*<span class="wave-text-letter"/s);
 });
 
-test('renders the xwide datapad wrapper variant', () => {
-    assert.match(html, /class="datapad-wrapper datapad-wrapper--xwide"/);
+test('renders the page-tabby with xwide panel', () => {
+    assert.match(html, /class="page-tabby"/);
+    assert.match(html, /class="panel-wrapper panel--xwide"/);
 });
 
 test('renders a back-link to the directory', () => {
