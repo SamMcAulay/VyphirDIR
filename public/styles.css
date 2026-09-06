@@ -1037,3 +1037,19 @@ a.enlarge-link {
         transform: none;
     }
 }
+
+.decor-blob {
+    pointer-events: none;
+    animation: blob-drift 28s ease-in-out infinite;
+}
+
+@keyframes blob-drift {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(12px, -16px) rotate(6deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .decor-blob {
+        animation: none;
+    }
+}
