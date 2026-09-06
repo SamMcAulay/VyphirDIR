@@ -1,6 +1,18 @@
 import { useEffect, useState } from 'react';
 import CommissionTierList from '../components/CommissionTierList.jsx';
 import PastWorkGrid from '../components/PastWorkGrid.jsx';
+import Panel from '../components/Panel.jsx';
+import WaveText from '../components/WaveText.jsx';
+import { usePopClick } from '../hooks/usePopClick.js';
+
+function NavButton({ href, icon, children }) {
+    const pop = usePopClick();
+    return (
+        <a href={href} className={`link-btn pop-clickable ${pop.className}`.trim()} onPointerUp={pop.onPointerUp}>
+            <i className={icon} /> {children}
+        </a>
+    );
+}
 
 export default function Commissions() {
     const [data, setData] = useState(null);
@@ -17,13 +29,13 @@ export default function Commissions() {
     }, []);
 
     return (
-        <div className="datapad-wrapper datapad-wrapper--wide">
-            <div className="datapad-screen">
+        <div className="page-honey">
+            <Panel wide>
                 <a href="/" className="back-link">&larr; Back to directory</a>
-                <h1><i className="fa-solid fa-palette" /> Commissions</h1>
+                <WaveText as="h1" text="Commissions" />
                 <div className="links-grid">
-                    <a href="/queue" className="link-btn"><i className="fa-solid fa-list-check" /> Queue</a>
-                    <a href="/tos" className="link-btn"><i className="fa-solid fa-file-contract" /> Terms of Service</a>
+                    <NavButton href="/queue" icon="fa-solid fa-list-check">Queue</NavButton>
+                    <NavButton href="/tos" icon="fa-solid fa-file-contract">Terms of Service</NavButton>
                 </div>
                 {error && <p className="feed-error">&gt; DATA UNAVAILABLE.</p>}
                 {data && (
@@ -39,7 +51,7 @@ export default function Commissions() {
                         <PastWorkGrid items={data.pastWork || []} />
                     </>
                 )}
-            </div>
+            </Panel>
         </div>
     );
 }

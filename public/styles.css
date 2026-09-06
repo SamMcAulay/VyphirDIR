@@ -516,48 +516,32 @@ a.gallery-card {
 }
 
 .commission-status {
-    font-family: 'Space Mono', monospace;
-    font-weight: bold;
-    padding: 8px 16px;
-    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: var(--radius-button);
     display: inline-block;
     margin-bottom: 10px;
 }
 
 .commission-status.open {
-    background: rgba(255, 105, 180, 0.15);
-    color: var(--hot-pink);
+    background: var(--slime-teal-light);
+    color: var(--slime-teal-dark);
 }
 
 .commission-status.closed {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-cream);
+    border: 2px solid var(--text-muted);
     color: var(--text-muted);
 }
 
 .commission-special-offer {
-    position: relative;
-    isolation: isolate;
-    background: linear-gradient(135deg, var(--hot-pink), rgba(255, 105, 180, 0.3));
-    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
-    padding: 12px 15px;
+    background: var(--accent);
+    color: var(--surface);
+    border-radius: 16px;
+    padding: 12px 16px;
     margin: 15px 0;
-    font-weight: bold;
-}
-
-.commission-special-offer::before {
-    content: '';
-    position: absolute;
-    inset: var(--frame-w);
-    z-index: -1;
-    background: var(--bg-element);
-    clip-path: polygon(
-        0 calc(var(--notch-md) - var(--frame-w)),
-        calc(var(--notch-md) - var(--frame-w)) 0,
-        100% 0,
-        100% calc(100% - var(--notch-md) + var(--frame-w)),
-        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
-        0 100%
-    );
+    font-weight: 700;
 }
 
 .tier-card, .past-work-card {
@@ -593,13 +577,13 @@ a.gallery-card {
 }
 
 #commission-past-work .past-work-card p {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     margin: 0;
 }
 
 .tier-price {
-    color: var(--hot-pink);
-    font-family: 'Space Mono', monospace;
+    color: var(--accent-dark);
+    font-weight: 700;
 }
 
 .tos-point {

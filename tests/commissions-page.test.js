@@ -5,16 +5,17 @@ import Commissions from '../src/pages/Commissions.jsx';
 
 const html = renderToStaticMarkup(<Commissions />);
 
-test('renders the wide datapad wrapper variant', () => {
-    assert.match(html, /class="datapad-wrapper datapad-wrapper--wide"/);
+test('wraps the page in the honey page shell and wide Panel', () => {
+    assert.match(html, /<div class="page-honey">/);
+    assert.match(html, /<div class="panel-wrapper panel--wide"><div class="panel">/);
 });
 
 test('renders a back-link to the directory', () => {
     assert.match(html, /<a href="\/" class="back-link">/);
 });
 
-test('renders the Commissions heading', () => {
-    assert.match(html, /<h1>.*Commissions<\/h1>/);
+test('renders the Commissions heading with WaveText letter-wave markup', () => {
+    assert.match(html, /<h1 class="wave-text">.*<span class="wave-text-letter"/s);
 });
 
 test('renders the Queue and Terms of Service nav links', () => {
