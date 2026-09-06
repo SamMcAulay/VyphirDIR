@@ -1,47 +1,37 @@
 :root {
-    --bg-dark: #120a0d; 
-    --white: #ffffff;
-    --text-light: #f5f5f5;
-    --text-muted: #b0b0b0;
-    --pink: #ffb6c1;
-    --hot-pink: #ff69b4;
-    --red: #ff4d4d;
-    --bg-glass: rgba(15, 6, 10, 0.55);
-    --bg-element: rgba(15, 6, 10, 0.5);
-    --notch-lg: 26px;
-    --notch-md: 15px;
-    --notch-sm: 9px;
-    --frame-w: 2px;
-}
+    --bg-cream: #FFF6E9;
+    --surface: #FFFFFF;
+    --text-ink: #3A2A24;
+    --text-muted: #8A7368;
+    --outline-w: 3px;
+    --radius-panel: 32px;
+    --radius-button: 999px;
 
-@view-transition {
-    navigation: auto;
-}
+    --slime-pink: #FF6FA0;
+    --slime-pink-light: #FFD3E4;
+    --slime-pink-dark: #E14C82;
 
-.datapad-screen {
-    view-transition-name: main-panel;
-}
+    --slime-teal: #23C9B7;
+    --slime-teal-light: #C6F5EF;
+    --slime-teal-dark: #189E90;
 
-::view-transition-group(main-panel) {
-    animation-duration: 0.9s;
-    animation-timing-function: steps(2, jump-none);
-}
+    --slime-honey: #FFC93C;
+    --slime-honey-light: #FFEDB0;
+    --slime-honey-dark: #E0A800;
 
-::view-transition-old(main-panel) {
-    animation: panel-flip-out 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
+    --slime-lavender: #B98CFF;
+    --slime-lavender-light: #E7D8FF;
+    --slime-lavender-dark: #8F5FE0;
 
-::view-transition-new(main-panel) {
-    animation: panel-flip-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.45s both;
-}
+    --slime-tabby: #FF9A44;
+    --slime-tabby-light: #FFE0BE;
+    --slime-tabby-dark: #E07A1F;
 
-@keyframes panel-flip-out {
-    to { transform: perspective(1800px) rotateY(90deg); }
-}
+    --accent: var(--slime-pink);
+    --accent-light: var(--slime-pink-light);
+    --accent-dark: var(--slime-pink-dark);
 
-@keyframes panel-flip-in {
-    from { transform: perspective(1800px) rotateY(-90deg); }
-    to   { transform: perspective(1800px) rotateY(0deg); }
+    --shadow-pop: 6px 6px 0 var(--accent-dark);
 }
 
 * {
@@ -51,7 +41,7 @@
 }
 
 input, select, textarea, button {
-    font-family: 'Space Mono', monospace;
+    font-family: 'Nunito', sans-serif;
     font-size: inherit;
     color: inherit;
     background: transparent;
@@ -62,20 +52,20 @@ input, select, textarea, button {
 }
 
 input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    border: 1px solid rgba(255, 105, 180, 0.5);
-    border-radius: 0;
-    background: rgba(255, 255, 255, 0.05);
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    background: var(--surface);
     cursor: pointer;
     position: relative;
     vertical-align: middle;
 }
 
 input[type="checkbox"]:checked {
-    background: var(--hot-pink);
-    border-color: var(--hot-pink);
+    background: var(--accent);
+    border-color: var(--accent);
 }
 
 input[type="checkbox"]:checked::after {
@@ -84,25 +74,25 @@ input[type="checkbox"]:checked::after {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--bg-dark);
-    font-size: 11px;
+    color: var(--surface);
+    font-size: 12px;
     line-height: 1;
 }
 
 input[type="radio"] {
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    border: 1px solid rgba(255, 105, 180, 0.5);
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    border: 2px solid var(--accent);
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--surface);
     cursor: pointer;
     position: relative;
     vertical-align: middle;
 }
 
 input[type="radio"]:checked {
-    border-color: var(--hot-pink);
+    border-color: var(--accent);
 }
 
 input[type="radio"]:checked::after {
@@ -111,20 +101,20 @@ input[type="radio"]:checked::after {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
-    background: var(--hot-pink);
+    background: var(--accent);
 }
 
 input[type="file"]::file-selector-button,
 input[type="file"]::-webkit-file-upload-button {
-    font-family: 'Space Mono', monospace;
-    font-weight: bold;
-    padding: 8px 14px;
-    border-radius: 6px;
-    background: var(--hot-pink);
-    color: var(--bg-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: var(--radius-button);
+    background: var(--accent);
+    color: var(--surface);
     border: none;
     cursor: pointer;
     margin-right: 10px;
@@ -132,24 +122,16 @@ input[type="file"]::-webkit-file-upload-button {
 
 input[type="file"]::file-selector-button:hover,
 input[type="file"]::-webkit-file-upload-button:hover {
-    background: var(--pink);
+    background: var(--accent-dark);
 }
 
 body {
-    font-family: 'Quicksand', sans-serif;
-    color: var(--text-light);
-    overflow-x: hidden; 
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg-cream);
+    color: var(--text-ink);
+    overflow-x: hidden;
 }
 
-#webgl-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    pointer-events: none;
-}
 
 .datapad-wrapper {
     width: 100%;
