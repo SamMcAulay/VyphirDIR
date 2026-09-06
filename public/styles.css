@@ -989,3 +989,24 @@ a.enlarge-link {
     aspect-ratio: 1;
     object-fit: cover;
 }
+
+.wave-text-letter {
+    display: inline-block;
+}
+
+.wave-text:hover .wave-text-letter {
+    animation: wave-bounce 0.6s ease-in-out;
+    animation-delay: calc(var(--i) * 0.04s);
+}
+
+@keyframes wave-bounce {
+    0%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+    60% { transform: translateY(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wave-text:hover .wave-text-letter {
+        animation: none;
+    }
+}
