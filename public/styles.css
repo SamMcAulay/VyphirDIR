@@ -591,13 +591,14 @@ a.gallery-card {
 }
 
 .tos-point h3 {
-    font-family: 'Space Mono', monospace;
-    font-size: 1rem;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
     margin-bottom: 6px;
 }
 
 .tos-point-number {
-    color: var(--hot-pink);
+    color: var(--accent-dark);
 }
 
 .tos-bullets {
@@ -607,12 +608,12 @@ a.gallery-card {
 }
 
 .tos-bullets li {
-    padding: 3px 0;
+    padding: 4px 0;
 }
 
 .tos-bullet-plain::before {
     content: '\2022';
-    color: var(--hot-pink);
+    color: var(--accent-dark);
     margin-right: 8px;
 }
 
@@ -623,11 +624,11 @@ a.gallery-card {
 }
 
 .tos-bullet-yes i {
-    color: #4caf50;
+    color: var(--slime-teal-dark);
 }
 
 .tos-bullet-no i {
-    color: var(--red);
+    color: var(--slime-tabby-dark);
 }
 
 .queue-board-columns {

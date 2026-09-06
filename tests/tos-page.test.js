@@ -6,11 +6,16 @@ import Tos from '../src/pages/Tos.jsx';
 const html = renderToStaticMarkup(<Tos />);
 
 test('renders the Terms of Service heading', () => {
-    assert.match(html, /<h1>.*Terms of Service<\/h1>/);
+    assert.match(html, /<h1 class="wave-text"><span class="wave-text-letter"[^>]*>T<\/span>/);
+    assert.match(html, /wave-text-letter.*e.*r.*m.*s/s);
 });
 
-test('renders the wide datapad wrapper variant', () => {
-    assert.match(html, /class="datapad-wrapper datapad-wrapper--wide"/);
+test('renders the page-lavender container', () => {
+    assert.match(html, /class="page-lavender"/);
+});
+
+test('renders a wide panel', () => {
+    assert.match(html, /class="panel-wrapper panel--wide"/);
 });
 
 test('renders a back-link to the directory', () => {
