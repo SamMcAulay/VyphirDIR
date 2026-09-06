@@ -452,7 +452,7 @@ a.gallery-card {
 
 .char-species {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     margin-top: 4px;
 }
 
@@ -755,36 +755,15 @@ a.enlarge-link {
 }
 
 .gallery-index-card {
-    position: relative;
-    isolation: isolate;
-    background: linear-gradient(135deg, rgba(255, 105, 180, 0.45), rgba(255, 255, 255, 0.14));
-    clip-path: polygon(0 var(--notch-md), var(--notch-md) 0, 100% 0, 100% calc(100% - var(--notch-md)), calc(100% - var(--notch-md)) 100%, 0 100%);
+    background: var(--accent-light);
+    border: 2px solid var(--accent);
+    border-radius: 20px;
     overflow: hidden;
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-}
-
-.gallery-index-card::before {
-    content: '';
-    position: absolute;
-    inset: var(--frame-w);
-    z-index: -1;
-    background: var(--bg-element);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    clip-path: polygon(
-        0 calc(var(--notch-md) - var(--frame-w)),
-        calc(var(--notch-md) - var(--frame-w)) 0,
-        100% 0,
-        100% calc(100% - var(--notch-md) + var(--frame-w)),
-        calc(100% - var(--notch-md) + var(--frame-w)) 100%,
-        0 100%
-    );
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .gallery-index-card:hover {
-    background: linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 255, 255, 0.3));
-    transform: translateY(-4px) scale(1.04);
-    box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.5);
+    transform: translateY(-4px) scale(1.03);
 }
 
 .gallery-index-card-main {
@@ -798,15 +777,16 @@ a.enlarge-link {
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
-    border-radius: 0;
+    border-radius: 14px;
     margin-bottom: 10px;
     display: block;
 }
 
 .gallery-index-card-main h3 {
-    color: var(--hot-pink);
-    font-family: 'Space Mono', monospace;
-    font-size: 1rem;
+    color: var(--accent-dark);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
     margin-bottom: 6px;
 }
 
@@ -827,6 +807,7 @@ a.enlarge-link {
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .wave-text-letter {
