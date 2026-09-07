@@ -16,13 +16,23 @@ test('renders spaces as non-breaking spaces so they do not collapse', () => {
 
 test('renders with the given tag name', () => {
     const html = renderToStaticMarkup(<WaveText text="Hi" as="h1" />);
-    assert.match(html, /^<h1 class="wave-text">/);
+    assert.match(html, /^<h1 class="wave-text" aria-label="Hi">/);
     assert.match(html, /<\/h1>$/);
 });
 
 test('defaults to a span wrapper', () => {
     const html = renderToStaticMarkup(<WaveText text="Hi" />);
-    assert.match(html, /^<span class="wave-text">/);
+    assert.match(html, /^<span class="wave-text" aria-label="Hi">/);
+});
+
+test('marks letter spans as aria-hidden', () => {
+    const html = renderToStaticMarkup(<WaveText text="Hi" />);
+    assert.match(html, /class="wave-text-letter" style="[^"]*" aria-hidden="true"/);
+});
+
+test('exposes the full string via aria-label for multi-word text', () => {
+    const html = renderToStaticMarkup(<WaveText text="a b" />);
+    assert.match(html, /aria-label="a b"/);
 });
 
 test('appends an extra className', () => {

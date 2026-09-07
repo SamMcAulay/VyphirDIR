@@ -15,7 +15,7 @@ test('renders a back-link to the directory', () => {
 });
 
 test('renders the Commissions heading with WaveText letter-wave markup', () => {
-    assert.match(html, /<h1 class="wave-text">.*<span class="wave-text-letter"/s);
+    assert.match(html, /<h1 class="wave-text" aria-label="[^"]*">.*<span class="wave-text-letter"/s);
 });
 
 test('renders the Queue and Terms of Service nav links', () => {

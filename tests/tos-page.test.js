@@ -6,7 +6,7 @@ import Tos from '../src/pages/Tos.jsx';
 const html = renderToStaticMarkup(<Tos />);
 
 test('renders the Terms of Service heading', () => {
-    assert.match(html, /<h1 class="wave-text"><span class="wave-text-letter"[^>]*>T<\/span>/);
+    assert.match(html, /<h1 class="wave-text" aria-label="[^"]*"><span class="wave-text-letter"[^>]*>T<\/span>/);
     assert.match(html, /wave-text-letter.*e.*r.*m.*s/s);
 });
 

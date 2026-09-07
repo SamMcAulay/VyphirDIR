@@ -1,18 +1,10 @@
 import BlueskyFeed from '../components/BlueskyFeed.jsx';
 import CharacterGalleryStrip from '../components/CharacterGalleryStrip.jsx';
 import CommissionsPreviewStrip from '../components/CommissionsPreviewStrip.jsx';
+import LinkButton from '../components/LinkButton.jsx';
 import Panel from '../components/Panel.jsx';
 import WaveText from '../components/WaveText.jsx';
 import { usePopClick } from '../hooks/usePopClick.js';
-
-function LinkButton({ href, icon, children }) {
-    const pop = usePopClick();
-    return (
-        <a href={href} className={`link-btn pop-clickable ${pop.className}`.trim()} onPointerUp={pop.onPointerUp}>
-            <i className={icon} /> {children}
-        </a>
-    );
-}
 
 function CtaButton({ href, icon, children }) {
     const pop = usePopClick();

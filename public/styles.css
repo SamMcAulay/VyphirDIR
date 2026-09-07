@@ -132,8 +132,12 @@ body {
     overflow-x: hidden;
 }
 
+h1, h2, h3 {
+    font-family: 'Fredoka', sans-serif;
+}
 
-.panel-wrapper {
+
+.panel-wrapper, .datapad-wrapper {
     width: 100%;
     max-width: 460px;
     margin: 40px auto;
@@ -150,7 +154,7 @@ body {
     max-width: 1100px;
 }
 
-.panel {
+.panel, .datapad-screen {
     position: relative;
     background: var(--surface);
     border: var(--outline-w) solid var(--accent);
@@ -162,11 +166,15 @@ body {
     gap: 25px;
 }
 
-.page-pink { --accent: var(--slime-pink); --accent-light: var(--slime-pink-light); --accent-dark: var(--slime-pink-dark); }
-.page-teal { --accent: var(--slime-teal); --accent-light: var(--slime-teal-light); --accent-dark: var(--slime-teal-dark); }
-.page-honey { --accent: var(--slime-honey); --accent-light: var(--slime-honey-light); --accent-dark: var(--slime-honey-dark); }
-.page-lavender { --accent: var(--slime-lavender); --accent-light: var(--slime-lavender-light); --accent-dark: var(--slime-lavender-dark); }
-.page-tabby { --accent: var(--slime-tabby); --accent-light: var(--slime-tabby-light); --accent-dark: var(--slime-tabby-dark); }
+#webgl-canvas {
+    display: none;
+}
+
+.page-pink { --accent: var(--slime-pink); --accent-light: var(--slime-pink-light); --accent-dark: var(--slime-pink-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
+.page-teal { --accent: var(--slime-teal); --accent-light: var(--slime-teal-light); --accent-dark: var(--slime-teal-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
+.page-honey { --accent: var(--slime-honey); --accent-light: var(--slime-honey-light); --accent-dark: var(--slime-honey-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
+.page-lavender { --accent: var(--slime-lavender); --accent-light: var(--slime-lavender-light); --accent-dark: var(--slime-lavender-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
+.page-tabby { --accent: var(--slime-tabby); --accent-light: var(--slime-tabby-light); --accent-dark: var(--slime-tabby-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
 
 .sys-header {
     display: flex;
@@ -326,9 +334,6 @@ body {
     font-size: 1.1rem;
     color: var(--text-ink);
     margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .section-title i {

@@ -25,7 +25,7 @@ test('build renders a static page per character with escaped bio/species/name', 
     // WaveText renders each character of the h1 as its own
     // <span class="wave-text-letter">, so strip tags to recover the plain text.
     const text = html.replace(/<[^>]+>/g, '');
-    assert.match(html, /<h1 class="wave-text">.*<span class="wave-text-letter"/s);
+    assert.match(html, /<h1 class="wave-text" aria-label="[^"]*">.*<span class="wave-text-letter"/s);
     assert.match(text, /Vyphir/);
     assert.match(html, /Mainecoon Cat/);
 });

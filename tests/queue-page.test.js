@@ -6,7 +6,7 @@ import Queue from '../src/pages/Queue.jsx';
 const html = renderToStaticMarkup(<Queue />);
 
 test('renders the Commission Queue heading with WaveText letter-wave markup', () => {
-    assert.match(html, /<h1 class="wave-text">.*<span class="wave-text-letter"/s);
+    assert.match(html, /<h1 class="wave-text" aria-label="[^"]*">.*<span class="wave-text-letter"/s);
 });
 
 test('renders the page-tabby with xwide panel', () => {

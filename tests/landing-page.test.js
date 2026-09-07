@@ -34,7 +34,7 @@ test('wraps the page in the pink page shell and Panel, and renders every section
 });
 
 test('renders the profile header content with WaveText letter-wave markup on the h1', () => {
-    assert.match(html, /<h1 class="wave-text">.*<span class="wave-text-letter"/s);
+    assert.match(html, /<h1 class="wave-text" aria-label="[^"]*">.*<span class="wave-text-letter"/s);
     assert.match(text, /Sam/);
     assert.match(text, /Genius, billionaire, playboy, philanthropist, cat/);
 });
