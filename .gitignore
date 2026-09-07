@@ -1,5 +1,6 @@
 node_modules/
 .wrangler/
+.superpowers/
 gallery/*/
 commissions/index.html
 commissions/preview.gif
