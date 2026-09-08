@@ -67,9 +67,10 @@ test('no longer renders the Panel wrapper, the bluesky feed or the preview strip
     assert.doesNotMatch(html, /panel-wrapper/);
     // Note: not a bare /bsky/i check — the required Bluesky nav link
     // (https://bsky.app/profile/samisaderp.bsky.social) legitimately contains
-    // "bsky". These target the retired BlueskyFeed component specifically.
-    assert.doesNotMatch(html, /id="bsky-feed"/);
-    assert.doesNotMatch(html, /bsky-init-heading/);
+    // "bsky". These target BlueskyFeed's actual rendered output instead:
+    // renderToStaticMarkup never runs its useEffect fetch, so mounting it
+    // would always SSR the loading-placeholder markup.
+    assert.doesNotMatch(html, /feed-loading-placeholder/);
     assert.doesNotMatch(html, /gallery-container/);
     assert.doesNotMatch(html, /commissions-preview-grid/);
 });
