@@ -3,49 +3,73 @@ import assert from 'node:assert/strict';
 import { renderToStaticMarkup } from 'react-dom/server';
 import Landing from '../src/pages/Landing.jsx';
 
-const html = renderToStaticMarkup(<Landing />);
+const PREVIEWS = { gallery: ['g1.png', 'g2.png'], commissions: ['c1.png', 'c2.png'] };
 
-// WaveText renders each character of a heading as its own
-// <span class="wave-text-letter">, splitting words like "Character Archives"
-// across tags. Stripping tags recovers the plain-text content so headings and
-// copy can still be asserted on as whole strings.
-const text = html.replace(/<[^>]+>/g, '');
-
-test('renders every static outbound profile link', () => {
-    assert.match(html, /href="https:\/\/www\.instagram\.com\/vyphir"/);
-    assert.match(html, /href="https:\/\/x\.com\/Vyphirr"/);
-    assert.match(html, /href="https:\/\/bsky\.app\/profile\/samisaderp\.bsky\.social"/);
-    assert.match(html, /href="https:\/\/t\.me\/Samisaderp#?"/);
-    assert.match(html, /href="https:\/\/toyhou\.se\/samisaderp\/characters"/);
-    assert.match(html, /href="https:\/\/steamcommunity\.com\/profiles\/76561199191219060\/?"/);
+test('renders exactly eight nav links in spec order', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    const hrefs = [...html.matchAll(/<a class="hub-item"[^>]*href="([^"]+)"/g)].map((m) => m[1]);
+    assert.deepEqual(hrefs, [
+        '/gallery/',
+        '/commissions/',
+        'https://www.instagram.com/vyphir',
+        'https://x.com/Vyphirr',
+        'https://bsky.app/profile/samisaderp.bsky.social',
+        'https://t.me/Samisaderp#',
+        'https://toyhou.se/samisaderp/characters',
+        'https://steamcommunity.com/profiles/76561199191219060/',
+    ]);
 });
 
-test('renders the internal navigation links to the gallery and commissions pages', () => {
-    assert.match(html, /href="\/gallery\/"/);
-    assert.match(html, /href="\/commissions\/"/);
+test('wraps the nav links in a nav element', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    assert.match(html, /<nav class="hub-nav">/);
 });
 
-test('wraps the page in the pink page shell and Panel, and renders every section heading', () => {
-    assert.match(html, /<div class="page-pink">/);
-    assert.match(html, /<div class="panel-wrapper"><div class="panel">/);
-    assert.match(text, /Character\sArchives/);
-    assert.match(text, /Commissions/);
-    assert.match(text, /Comms\sFeed/);
+test('external links open in a new tab with a safe rel', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    const externals = html.match(/<a class="hub-item"[^>]*href="https:\/\/[^"]+"[^>]*>/g) || [];
+    assert.equal(externals.length, 6);
+    for (const tag of externals) {
+        assert.match(tag, /target="_blank"/);
+        assert.match(tag, /rel="noopener noreferrer"/);
+    }
 });
 
-test('renders the profile header content with WaveText letter-wave markup on the h1', () => {
-    assert.match(html, /<h1 class="wave-text" aria-label="[^"]*">.*<span class="wave-text-letter"/s);
-    assert.match(text, /Sam/);
-    assert.match(text, /Genius, billionaire, playboy, philanthropist, cat/);
+test('the photo is a link home labelled Home', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    assert.match(html, /<a class="hub-photo" href="\/" aria-label="Home">/);
 });
 
-test('renders empty gallery/commissions containers server-side (populated client-side via fetch)', () => {
-    assert.match(html, /id="character-gallery"/);
-    assert.match(html, /id="commissions-preview"/);
+test('renders the preview images inside the gallery and commissions blobs', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    for (const url of ['g1.png', 'g2.png', 'c1.png', 'c2.png']) {
+        assert.match(html, new RegExp(`href="${url}"`));
+    }
 });
 
-test('renders the Bluesky feed heading and loading placeholder server-side', () => {
-    assert.match(text, /Latest\sfrom\sBluesky/);
-    assert.match(html, /id="bsky-feed"/);
-    assert.match(html, /class="feed-loading-placeholder"/);
+test('falls back to a flat blob when a preview set is empty', () => {
+    const html = renderToStaticMarkup(<Landing previews={{ gallery: [], commissions: [] }} />);
+    assert.doesNotMatch(html, /<image /);
+});
+
+test('decorative slabs and blobs are hidden from assistive tech', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    const slabs = html.match(/<div class="hub-slab[^"]*"[^>]*>/g) || [];
+    assert.equal(slabs.length, 3);
+    for (const tag of slabs) assert.match(tag, /aria-hidden="true"/);
+    for (const tag of html.match(/<svg class="hub-blob"[^>]*>/g) || []) {
+        assert.match(tag, /aria-hidden="true"/);
+    }
+});
+
+test('no longer renders the Panel wrapper, the bluesky feed or the preview strips', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    assert.doesNotMatch(html, /panel-wrapper/);
+    // Note: not a bare /bsky/i check — the required Bluesky nav link
+    // (https://bsky.app/profile/samisaderp.bsky.social) legitimately contains
+    // "bsky". These target the retired BlueskyFeed component specifically.
+    assert.doesNotMatch(html, /id="bsky-feed"/);
+    assert.doesNotMatch(html, /bsky-init-heading/);
+    assert.doesNotMatch(html, /gallery-container/);
+    assert.doesNotMatch(html, /commissions-preview-grid/);
 });
