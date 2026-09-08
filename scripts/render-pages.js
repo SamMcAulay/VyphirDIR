@@ -3,6 +3,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { escapeHtml } from '../shared/escape-html.js';
 import { generateCommissionsPreviewImage } from './generate-commissions-preview-image.js';
+import { selectLandingPreviews } from '../shared/landing-previews.js';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CLIENT_OUT = join(projectRoot, 'dist', 'client');
@@ -23,7 +24,7 @@ function entryAssets(manifest) {
     return { script: `/${entry.file}`, css: css.map((href) => `/${href}`) };
 }
 
-function renderShell({ path, title, description, ogImage, ogImageType, robotsNoIndex, csp, extraStylesheets, embeddedData, appHtml, script, css }) {
+function renderShell({ path, title, description, ogImage, ogImageType, robotsNoIndex, csp, extraStylesheets, embeddedData, previewData, appHtml, script, css }) {
     const ogTags = description
         ? `
     <meta property="og:type" content="website">
@@ -38,7 +39,9 @@ function renderShell({ path, title, description, ogImage, ogImageType, robotsNoI
 
     const effectiveCsp = csp || CSP;
     const allowsFontAwesome = effectiveCsp.includes('cdnjs.cloudflare.com');
-    const rootAttrs = embeddedData ? ` data-character="${escapeHtml(JSON.stringify(embeddedData))}"` : '';
+    const characterAttr = embeddedData ? ` data-character="${escapeHtml(JSON.stringify(embeddedData))}"` : '';
+    const previewsAttr = previewData ? ` data-previews="${escapeHtml(JSON.stringify(previewData))}"` : '';
+    const rootAttrs = `${characterAttr}${previewsAttr}`;
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -99,7 +102,10 @@ async function main() {
 
     const manifest = await loadManifest();
     const { script, css } = entryAssets(manifest);
-    const { render, routes } = await import(join(projectRoot, 'dist-server', 'entry-server.js'));
+    const { render, routes, renderLanding } = await import(join(projectRoot, 'dist-server', 'entry-server.js'));
+    const charactersRaw = await readFile(join(projectRoot, 'data', 'characters.json'), 'utf8');
+    const commissionsRaw = await readFile(join(projectRoot, 'data', 'commissions.json'), 'utf8');
+    const landingPreviews = selectLandingPreviews(JSON.parse(charactersRaw), JSON.parse(commissionsRaw));
 
     await mkdir(join(CLIENT_OUT, 'commissions'), { recursive: true });
     const { ogImage } = await generateCommissionsPreviewImage({
@@ -109,11 +115,13 @@ async function main() {
 
     for (const route of routes) {
         const isCommissions = route.path === '/commissions/';
+        const isLanding = route.path === '/';
         const resolvedRoute = isCommissions
             ? { ...route, description: 'Examples! See full catalogue on the site!', ogImage, ogImageType: 'image/gif' }
             : route;
-        const { html } = render(route.path);
-        await writeRoute({ route: resolvedRoute, html, script, css });
+        const routeWithData = isLanding ? { ...resolvedRoute, previewData: landingPreviews } : resolvedRoute;
+        const { html } = isLanding ? renderLanding(landingPreviews) : render(route.path);
+        await writeRoute({ route: routeWithData, html, script, css });
     }
 
     await renderCharacters({ script, css });

@@ -7,6 +7,11 @@ import { fileURLToPath } from 'node:url';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 
+function readBuiltPage(path) {
+    const relativeDir = path === '/' ? '' : path.replace(/^\//, '');
+    return readFileSync(join(projectRoot, 'dist/client', relativeDir, 'index.html'), 'utf8');
+}
+
 test('build produces a static index.html that contains the hydrated root markup', () => {
     execSync('npm run build:client && npm run build:server', { cwd: projectRoot, stdio: 'inherit' });
     execSync('node scripts/render-pages.js', { cwd: projectRoot, stdio: 'inherit' });
@@ -14,7 +19,7 @@ test('build produces a static index.html that contains the hydrated root markup'
     const outPath = join(projectRoot, 'dist/client/index.html');
     assert.ok(existsSync(outPath), 'dist/client/index.html should exist after build');
     const html = readFileSync(outPath, 'utf8');
-    assert.match(html, /<div id="root">.*Sam.*<\/div>/s);
+    assert.match(html, /<div id="root"[^>]*>.*Sam.*<\/div>/s);
     assert.match(html, /<script type="module" src="\/assets\/entry-client[^"]*\.js">/);
 });
 
@@ -34,4 +39,20 @@ test('nsfw character images are marked in the SSG output', () => {
     // data/characters.json's "vyphir" entry has real nsfw:true images.
     const html = readFileSync(join(projectRoot, 'dist/client/gallery/vyphir/index.html'), 'utf8');
     assert.match(html, /data-nsfw="true"/);
+});
+
+test('the landing page embeds preview data on #root', () => {
+    const html = readBuiltPage('/');
+    assert.match(html, /<div id="root" data-previews="/);
+});
+
+test('the landing page bakes in preview image urls', () => {
+    const html = readBuiltPage('/');
+    assert.match(html, /res\.cloudinary\.com/);
+});
+
+test('no other routable page carries preview data', () => {
+    for (const path of ['/gallery/', '/commissions/', '/tos/', '/queue/']) {
+        assert.doesNotMatch(readBuiltPage(path), /data-previews=/);
+    }
 });
