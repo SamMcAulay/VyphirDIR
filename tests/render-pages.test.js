@@ -19,7 +19,12 @@ test('build produces a static index.html that contains the hydrated root markup'
     const outPath = join(projectRoot, 'dist/client/index.html');
     assert.ok(existsSync(outPath), 'dist/client/index.html should exist after build');
     const html = readFileSync(outPath, 'utf8');
-    assert.match(html, /<div id="root"[^>]*>.*Sam.*<\/div>/s);
+    // Assert on markup the hub actually owns. The previous check looked for
+    // "Sam" inside #root, which matched the old profile card's name text; the
+    // only "Sam" left on this page is inside the samisaderp social hrefs, so
+    // it no longer meant what it read as.
+    assert.match(html, /<div id="root"[^>]*>.*<nav class="hub-nav">.*<\/div>/s);
+    assert.match(html, /<a class="hub-photo" href="\/" aria-label="Home">/);
     assert.match(html, /<script type="module" src="\/assets\/entry-client[^"]*\.js">/);
 });
 
@@ -54,5 +59,36 @@ test('the landing page bakes in preview image urls', () => {
 test('no other routable page carries preview data', () => {
     for (const path of ['/gallery/', '/commissions/', '/tos/', '/queue/']) {
         assert.doesNotMatch(readBuiltPage(path), /data-previews=/);
+    }
+});
+
+/*
+ * Spec section 7, bullet 4: an end-to-end guard that the built front page is
+ * NSFW-free. shared/landing-previews.js is unit-tested in
+ * tests/landing-previews.test.js, but nothing there proves the filter
+ * survived the build -- this reads the same source data the SSG reads and
+ * asserts every nsfw:true URL is absent from dist/client/index.html.
+ */
+function nsfwUrlsFromSourceData() {
+    const characters = JSON.parse(readFileSync(join(projectRoot, 'data/characters.json'), 'utf8'));
+    const commissions = JSON.parse(readFileSync(join(projectRoot, 'data/commissions.json'), 'utf8'));
+    const urls = new Set();
+    for (const character of characters.characters || []) {
+        for (const image of character.images || []) {
+            if (image?.nsfw && image?.url) urls.add(image.url);
+        }
+    }
+    for (const item of commissions.pastWork || []) {
+        if (item?.nsfw && item?.url) urls.add(item.url);
+    }
+    return [...urls];
+}
+
+test('the built landing page contains no nsfw-flagged image url', () => {
+    const html = readBuiltPage('/');
+    const nsfwUrls = nsfwUrlsFromSourceData();
+    assert.ok(nsfwUrls.length > 0, 'fixture data must contain at least one nsfw entry for this to mean anything');
+    for (const url of nsfwUrls) {
+        assert.doesNotMatch(html, new RegExp(url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     }
 });

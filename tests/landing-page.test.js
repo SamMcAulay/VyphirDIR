@@ -20,9 +20,46 @@ test('renders exactly eight nav links in spec order', () => {
     ]);
 });
 
-test('wraps the nav links in a nav element', () => {
+test('wraps all eight nav links inside the nav element', () => {
     const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
-    assert.match(html, /<nav class="hub-nav">/);
+    const nav = html.match(/<nav class="hub-nav">([\s\S]*?)<\/nav>/);
+    assert.ok(nav, 'expected a <nav class="hub-nav"> element');
+    assert.equal((nav[1].match(/<a class="hub-item/g) || []).length, 8);
+    // ...and none stranded outside it.
+    assert.equal((html.match(/<a class="hub-item/g) || []).length, 8);
+});
+
+// The hub-item--<key> modifier is the ONLY link between this markup and the
+// per-item geometry in public/styles.css (left/top/--rot/--fs/--c/--stroke/
+// --blobw/--blobx). The site's CSP has no 'unsafe-inline', so inline style
+// attributes are silently dropped and cannot be used instead. If this class
+// ever stops being emitted, all eight items collapse onto the hub anchor
+// with no other test noticing -- hence an exact, ordered assertion.
+test('emits the geometry-keying hub-item modifier class for every item, in order', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    const classes = [...html.matchAll(/<a class="hub-item (hub-item--[a-z]+)"/g)].map((m) => m[1]);
+    assert.deepEqual(classes, [
+        'hub-item--gallery',
+        'hub-item--commissions',
+        'hub-item--instagram',
+        'hub-item--twitter',
+        'hub-item--bluesky',
+        'hub-item--telegram',
+        'hub-item--toyhouse',
+        'hub-item--steam',
+    ]);
+});
+
+test('renders a single top-level heading naming the site', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    // Matches the <title> for '/' in src/routes.js.
+    assert.match(html, /<h1 class="sr-only">Sam(&#x27;|')s Directory<\/h1>/);
+});
+
+test('the preview tints use the per-item opacity from the spec', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    const opacities = [...html.matchAll(/<rect [^>]*opacity="([^"]+)"/g)].map((m) => m[1]);
+    assert.deepEqual(opacities, ['.34', '.32']);
 });
 
 test('external links open in a new tab with a safe rel', () => {
