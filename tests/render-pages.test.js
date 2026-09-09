@@ -38,6 +38,9 @@ test('build renders a static page per character with escaped bio/species/name', 
     assert.match(html, /<h1 class="wave-text" aria-label="[^"]*">.*<span class="wave-text-letter"/s);
     assert.match(text, /Vyphir/);
     assert.match(html, /Mainecoon Cat/);
+    // The character page's back-link goes to the gallery index, not '/':
+    // the landing hub no longer lists any characters.
+    assert.match(html, /<a href="\/gallery\/" class="back-link">/);
 });
 
 test('nsfw character images are marked in the SSG output', () => {
