@@ -6,7 +6,7 @@ export default function GalleryCharacter({ character }) {
     return (
         <div className="page-teal">
             <Panel>
-                <a href="/" className="back-link">&larr; Back to directory</a>
+                <a href="/gallery/" className="back-link">&larr; Back to the gallery</a>
                 <div className="profile">
                     <WaveText as="h1" text={character.name} />
                     <p className="char-species">{character.species}</p>

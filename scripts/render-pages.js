@@ -3,6 +3,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { escapeHtml } from '../shared/escape-html.js';
 import { generateCommissionsPreviewImage } from './generate-commissions-preview-image.js';
+import { selectLandingPreviews } from '../shared/landing-previews.js';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CLIENT_OUT = join(projectRoot, 'dist', 'client');
@@ -10,7 +11,7 @@ const CLIENT_OUT = join(projectRoot, 'dist', 'client');
 const SITE_ORIGIN = 'https://vyphir.com';
 const FAVICON = `<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">`;
 
-const CSP = "default-src 'self'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; connect-src 'self' https://public.api.bsky.app; object-src 'none'; base-uri 'self';";
+const CSP = "default-src 'self'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; connect-src 'self'; object-src 'none'; base-uri 'self';";
 
 async function loadManifest() {
     const raw = await readFile(join(CLIENT_OUT, '.vite', 'manifest.json'), 'utf8');
@@ -23,7 +24,7 @@ function entryAssets(manifest) {
     return { script: `/${entry.file}`, css: css.map((href) => `/${href}`) };
 }
 
-function renderShell({ path, title, description, ogImage, ogImageType, robotsNoIndex, csp, extraStylesheets, embeddedData, appHtml, script, css }) {
+function renderShell({ path, title, description, ogImage, ogImageType, robotsNoIndex, csp, extraStylesheets, embeddedData, previewData, appHtml, script, css }) {
     const ogTags = description
         ? `
     <meta property="og:type" content="website">
@@ -38,7 +39,9 @@ function renderShell({ path, title, description, ogImage, ogImageType, robotsNoI
 
     const effectiveCsp = csp || CSP;
     const allowsFontAwesome = effectiveCsp.includes('cdnjs.cloudflare.com');
-    const rootAttrs = embeddedData ? ` data-character="${escapeHtml(JSON.stringify(embeddedData))}"` : '';
+    const characterAttr = embeddedData ? ` data-character="${escapeHtml(JSON.stringify(embeddedData))}"` : '';
+    const previewsAttr = previewData ? ` data-previews="${escapeHtml(JSON.stringify(previewData))}"` : '';
+    const rootAttrs = `${characterAttr}${previewsAttr}`;
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -99,7 +102,10 @@ async function main() {
 
     const manifest = await loadManifest();
     const { script, css } = entryAssets(manifest);
-    const { render, routes } = await import(join(projectRoot, 'dist-server', 'entry-server.js'));
+    const { render, routes, renderLanding } = await import(join(projectRoot, 'dist-server', 'entry-server.js'));
+    const charactersRaw = await readFile(join(projectRoot, 'data', 'characters.json'), 'utf8');
+    const commissionsRaw = await readFile(join(projectRoot, 'data', 'commissions.json'), 'utf8');
+    const landingPreviews = selectLandingPreviews(JSON.parse(charactersRaw), JSON.parse(commissionsRaw));
 
     await mkdir(join(CLIENT_OUT, 'commissions'), { recursive: true });
     const { ogImage } = await generateCommissionsPreviewImage({
@@ -109,11 +115,27 @@ async function main() {
 
     for (const route of routes) {
         const isCommissions = route.path === '/commissions/';
+        const isLanding = route.path === '/';
         const resolvedRoute = isCommissions
             ? { ...route, description: 'Examples! See full catalogue on the site!', ogImage, ogImageType: 'image/gif' }
             : route;
-        const { html } = render(route.path);
-        await writeRoute({ route: resolvedRoute, html, script, css });
+        const routeWithData = isLanding ? { ...resolvedRoute, previewData: landingPreviews } : resolvedRoute;
+        /*
+         * '/' deliberately bypasses the router: renderLanding() renders
+         * <Landing> directly with the build-time preview data instead of
+         * going through <App>/<StaticRouter>, because the router has no way
+         * to hand a page props. The data is also written onto #root as
+         * data-previews, which Landing reads back once at hydration (see the
+         * comment above readEmbeddedPreviews in src/pages/Landing.jsx).
+         *
+         * Both halves are correct only while every navigation on this site is
+         * a full-page <a> that reloads the document. If in-app client-side
+         * routing to '/' is ever added, App would render Landing with no
+         * previews prop and no fresh #root read, and the hub would silently
+         * fall back to flat blobs.
+         */
+        const { html } = isLanding ? renderLanding(landingPreviews) : render(route.path);
+        await writeRoute({ route: routeWithData, html, script, css });
     }
 
     await renderCharacters({ script, css });
