@@ -231,10 +231,6 @@ h1, h2, h3 {
     color: var(--accent-dark);
 }
 
-.commissions-cta i {
-    font-size: 1.1rem;
-}
-
 .gallery-empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -254,35 +250,6 @@ h1, h2, h3 {
 
 .section-title i {
     color: var(--accent-dark);
-}
-
-.feed-entry {
-    border-bottom: 2px dashed var(--accent);
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-}
-
-.feed-entry-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-}
-
-.feed-handle {
-    color: var(--accent-dark);
-    font-weight: 700;
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.85rem;
-}
-
-.feed-date {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-}
-
-.feed-text {
-    font-size: 0.9rem;
-    line-height: 1.4;
 }
 
 .feed-error {
