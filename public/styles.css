@@ -170,6 +170,19 @@ h1, h2, h3 {
     display: none;
 }
 
+/* Off-screen for sighted users, still announced by screen readers. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .page-pink { --accent: var(--slime-pink); --accent-light: var(--slime-pink-light); --accent-dark: var(--slime-pink-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
 .page-teal { --accent: var(--slime-teal); --accent-light: var(--slime-teal-light); --accent-dark: var(--slime-teal-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
 .page-honey { --accent: var(--slime-honey); --accent-light: var(--slime-honey-light); --accent-dark: var(--slime-honey-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
@@ -668,7 +681,23 @@ a.enlarge-link {
     z-index: 15;
     white-space: nowrap;
     text-decoration: none;
-    outline: none;
+}
+
+/*
+ * Fix wave, Finding 1 (WCAG 2.4.7): .hub-item used to set `outline: none`,
+ * on the assumption that the scale/opacity emphasis below was the focus
+ * indicator. It is not a sufficient one on its own -- the mobile block
+ * (max-width: 899px) cancels both the transform and the sibling dimming, and
+ * `prefers-reduced-motion: reduce` cancels the transform on the focused
+ * element itself, leaving a focused link pixel-identical to an unfocused one
+ * in both cases. A single explicit outline here covers every width and both
+ * motion preferences; the emphasis treatment stays as an enhancement on top.
+ * Deliberately NOT repeated inside the mobile / reduced-motion blocks: they
+ * never override `outline`, so a copy there would be dead CSS (spec section 8).
+ */
+.hub-item:focus-visible {
+    outline: 3px solid var(--text-ink);
+    outline-offset: 4px;
 }
 
 /*

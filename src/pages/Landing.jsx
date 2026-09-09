@@ -71,6 +71,8 @@ export default function Landing({ previews }) {
 
     return (
         <div className="page-pink hub">
+            <h1 className="sr-only">Sam's Directory</h1>
+
             <div className="hub-slab hub-slab--teal" aria-hidden="true" />
             <div className="hub-slab hub-slab--pink" aria-hidden="true" />
             <div className="hub-slab hub-slab--honey" aria-hidden="true" />
