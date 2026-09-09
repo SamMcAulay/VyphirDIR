@@ -1,25 +1,36 @@
 import { useState } from 'react';
-
-const BLOB_PATHS = {
-    1: 'M45,10 C80,0 130,5 160,35 C190,65 195,115 170,150 C145,185 90,195 55,175 C20,155 5,110 15,70 C22,45 25,18 45,10 Z',
-    2: 'M60,15 C100,-5 150,15 175,55 C195,90 185,140 150,170 C115,198 55,195 25,160 C0,130 5,80 25,50 C35,35 45,22 60,15 Z',
-    3: 'M90,5 C130,0 175,25 185,65 C195,105 175,150 135,175 C95,198 45,190 20,155 C-5,120 5,70 35,40 C55,20 70,8 90,5 Z',
-    4: 'M50,25 C85,0 140,0 170,30 C200,60 195,110 165,145 C135,180 75,190 40,165 C5,140 0,90 15,60 C25,40 35,32 50,25 Z',
-};
+import { BLOB_PATHS } from '../components/decor/blob-paths.js';
 
 const ITEMS = [
-    { key: 'gallery', label: 'Gallery', href: '/gallery/', external: false, blob: 1, tint: '#C6F5EF', flat: '#C6F5EF', preview: 'gallery' },
-    { key: 'commissions', label: 'Commissions', href: '/commissions/', external: false, blob: 3, tint: '#FFEDB0', flat: '#FFEDB0', preview: 'commissions' },
-    { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/vyphir', external: true, blob: 2, flat: '#FFD3E4' },
-    { key: 'twitter', label: 'Twitter', href: 'https://x.com/Vyphirr', external: true, blob: 4, flat: '#E7D8FF' },
-    { key: 'bluesky', label: 'Bluesky', href: 'https://bsky.app/profile/samisaderp.bsky.social', external: true, blob: 1, flat: '#C6F5EF' },
-    { key: 'telegram', label: 'Telegram', href: 'https://t.me/Samisaderp#', external: true, blob: 2, flat: '#FFE0BE' },
-    { key: 'toyhouse', label: 'Toyhouse', href: 'https://toyhou.se/samisaderp/characters', external: true, blob: 3, flat: '#FFD3E4' },
-    { key: 'steam', label: 'Steam', href: 'https://steamcommunity.com/profiles/76561199191219060/', external: true, blob: 4, flat: '#E7D8FF' },
+    { key: 'gallery', label: 'Gallery', href: '/gallery/', external: false, blob: 1, tint: 'var(--slime-teal-light)', tintOpacity: '.34', flat: 'var(--slime-teal-light)', preview: 'gallery' },
+    { key: 'commissions', label: 'Commissions', href: '/commissions/', external: false, blob: 3, tint: 'var(--slime-honey-light)', tintOpacity: '.32', flat: 'var(--slime-honey-light)', preview: 'commissions' },
+    { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/vyphir', external: true, blob: 2, flat: 'var(--slime-pink-light)' },
+    { key: 'twitter', label: 'Twitter', href: 'https://x.com/Vyphirr', external: true, blob: 4, flat: 'var(--slime-lavender-light)' },
+    { key: 'bluesky', label: 'Bluesky', href: 'https://bsky.app/profile/samisaderp.bsky.social', external: true, blob: 1, flat: 'var(--slime-teal-light)' },
+    { key: 'telegram', label: 'Telegram', href: 'https://t.me/Samisaderp#', external: true, blob: 2, flat: 'var(--slime-tabby-light)' },
+    { key: 'toyhouse', label: 'Toyhouse', href: 'https://toyhou.se/samisaderp/characters', external: true, blob: 3, flat: 'var(--slime-pink-light)' },
+    { key: 'steam', label: 'Steam', href: 'https://steamcommunity.com/profiles/76561199191219060/', external: true, blob: 4, flat: 'var(--slime-lavender-light)' },
 ];
 
 const PHOTO_URL = 'https://f2.toyhou.se/file/f2-toyhou-se/images/113402324_irRXncxlu389pbc.png?1768418401';
 
+/*
+ * Preview art is baked into the page at build time (spec section 4): the SSG
+ * writes it onto #root as data-previews and this reads it back ONCE, at
+ * hydration, via useState's lazy initialiser.
+ *
+ * That is correct only while every route change on this site is a full-page
+ * <a> navigation, which reloads the document and so re-runs this with the
+ * new page's #root. `renderLanding` in scripts/render-pages.js deliberately
+ * bypasses the router for '/' for the same reason -- it renders <Landing>
+ * directly with the preview data instead of going through <App>.
+ *
+ * If in-app client-side routing to '/' is ever added, both halves break
+ * together: no document reload means no fresh #root read, so Landing would
+ * mount with empty preview sets and silently fall back to flat blobs. Fixing
+ * that means threading the preview data through the router (a loader, or a
+ * module-level cache captured on first load), not patching it here.
+ */
 function readEmbeddedPreviews() {
     if (typeof document === 'undefined') return null;
     const raw = document.getElementById('root')?.dataset.previews;
@@ -50,9 +61,9 @@ function PreviewBlob({ item, images }) {
                         preserveAspectRatio="xMidYMid slice"
                     />
                 ))}
-                <rect x="0" y="0" width="200" height="200" fill={item.tint} opacity=".33" />
+                <rect x="0" y="0" width="200" height="200" fill={item.tint} opacity={item.tintOpacity} />
             </g>
-            <path d={path} fill="none" stroke="#3A2A24" strokeWidth="4" />
+            <path d={path} fill="none" stroke="var(--text-ink)" strokeWidth="4" />
         </svg>
     );
 }
@@ -70,7 +81,7 @@ export default function Landing({ previews }) {
     const data = previews || embedded || { gallery: [], commissions: [] };
 
     return (
-        <div className="page-pink hub">
+        <div className="hub">
             <h1 className="sr-only">Sam's Directory</h1>
 
             <div className="hub-slab hub-slab--teal" aria-hidden="true" />

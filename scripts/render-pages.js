@@ -11,7 +11,7 @@ const CLIENT_OUT = join(projectRoot, 'dist', 'client');
 const SITE_ORIGIN = 'https://vyphir.com';
 const FAVICON = `<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">`;
 
-const CSP = "default-src 'self'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; connect-src 'self' https://public.api.bsky.app; object-src 'none'; base-uri 'self';";
+const CSP = "default-src 'self'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; connect-src 'self'; object-src 'none'; base-uri 'self';";
 
 async function loadManifest() {
     const raw = await readFile(join(CLIENT_OUT, '.vite', 'manifest.json'), 'utf8');
@@ -120,6 +120,20 @@ async function main() {
             ? { ...route, description: 'Examples! See full catalogue on the site!', ogImage, ogImageType: 'image/gif' }
             : route;
         const routeWithData = isLanding ? { ...resolvedRoute, previewData: landingPreviews } : resolvedRoute;
+        /*
+         * '/' deliberately bypasses the router: renderLanding() renders
+         * <Landing> directly with the build-time preview data instead of
+         * going through <App>/<StaticRouter>, because the router has no way
+         * to hand a page props. The data is also written onto #root as
+         * data-previews, which Landing reads back once at hydration (see the
+         * comment above readEmbeddedPreviews in src/pages/Landing.jsx).
+         *
+         * Both halves are correct only while every navigation on this site is
+         * a full-page <a> that reloads the document. If in-app client-side
+         * routing to '/' is ever added, App would render Landing with no
+         * previews prop and no fresh #root read, and the hub would silently
+         * fall back to flat blobs.
+         */
         const { html } = isLanding ? renderLanding(landingPreviews) : render(route.path);
         await writeRoute({ route: routeWithData, html, script, css });
     }

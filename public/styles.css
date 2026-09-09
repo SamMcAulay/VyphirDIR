@@ -189,11 +189,6 @@ h1, h2, h3 {
 .page-lavender { --accent: var(--slime-lavender); --accent-light: var(--slime-lavender-light); --accent-dark: var(--slime-lavender-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
 .page-tabby { --accent: var(--slime-tabby); --accent-light: var(--slime-tabby-light); --accent-dark: var(--slime-tabby-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
 
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-}
-
 .profile {
     text-align: center;
 }
@@ -716,35 +711,35 @@ a.enlarge-link {
  */
 .hub-item--gallery {
     left: -113px; top: -106px;
-    --rot: 43deg; --fs: 44px; --c: #23C9B7; --stroke: 3px; --blobw: 360px; --blobx: 34%;
+    --rot: 43deg; --fs: 44px; --c: var(--slime-teal); --stroke: 3px; --blobw: 360px; --blobx: 34%;
 }
 .hub-item--commissions {
     left: -142px; top: -62px;
-    --rot: 23deg; --fs: 44px; --c: #FFC93C; --stroke: 3px; --blobw: 420px; --blobx: 32%;
+    --rot: 23deg; --fs: 44px; --c: var(--slime-honey); --stroke: 3px; --blobw: 420px; --blobx: 32%;
 }
 .hub-item--instagram {
     left: -154px; top: -21px;
-    --rot: 8deg; --fs: 26px; --c: #FF6FA0; --stroke: 2px; --blobw: 170px;
+    --rot: 8deg; --fs: 26px; --c: var(--slime-pink); --stroke: 2px; --blobw: 170px;
 }
 .hub-item--twitter {
     left: -155px; top: 10px;
-    --rot: -4deg; --fs: 24px; --c: #B98CFF; --stroke: 2px; --blobw: 150px;
+    --rot: -4deg; --fs: 24px; --c: var(--slime-lavender); --stroke: 2px; --blobw: 150px;
 }
 .hub-item--bluesky {
     left: -150px; top: 39px;
-    --rot: -15deg; --fs: 23px; --c: #23C9B7; --stroke: 2px; --blobw: 145px;
+    --rot: -15deg; --fs: 23px; --c: var(--slime-teal); --stroke: 2px; --blobw: 145px;
 }
 .hub-item--telegram {
     left: -141px; top: 64px;
-    --rot: -25deg; --fs: 21px; --c: #FF9A44; --stroke: 2px; --blobw: 135px;
+    --rot: -25deg; --fs: 21px; --c: var(--slime-tabby); --stroke: 2px; --blobw: 135px;
 }
 .hub-item--toyhouse {
     left: -129px; top: 87px;
-    --rot: -34deg; --fs: 20px; --c: #FF6FA0; --stroke: 2px; --blobw: 125px;
+    --rot: -34deg; --fs: 20px; --c: var(--slime-pink); --stroke: 2px; --blobw: 125px;
 }
 .hub-item--steam {
     left: -113px; top: 106px;
-    --rot: -43deg; --fs: 19px; --c: #B98CFF; --stroke: 2px; --blobw: 115px;
+    --rot: -43deg; --fs: 19px; --c: var(--slime-lavender); --stroke: 2px; --blobw: 115px;
 }
 
 .hub-word {
