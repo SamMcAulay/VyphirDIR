@@ -95,3 +95,24 @@ test('the built landing page contains no nsfw-flagged image url', () => {
         assert.doesNotMatch(html, new RegExp(url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     }
 });
+
+/*
+ * The CSP served with every page is `style-src 'self'` with no
+ * 'unsafe-inline' and no style-src-attr, so the browser silently discards
+ * inline style attributes -- they are dead weight that looks like working
+ * code. This has already caused two real bugs: the landing hub's item
+ * geometry, and WaveText's per-letter animation delay. Both moved into
+ * public/styles.css. Admin is excluded: it is a separate, unmigrated
+ * surface outside this stylesheet's scope.
+ */
+test('no built page carries an inline style attribute the CSP would drop', () => {
+    const pages = [
+        '/', '/gallery/', '/commissions/', '/tos/', '/queue/',
+        '/gallery/vyphir/', '/gallery/pharron/',
+    ];
+    for (const path of pages) {
+        const html = readBuiltPage(path);
+        const offenders = html.match(/\sstyle="[^"]*"/g) || [];
+        assert.deepEqual(offenders, [], `${path} carries inline style attributes: ${offenders.join(', ')}`);
+    }
+});

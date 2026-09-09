@@ -942,8 +942,52 @@ a.enlarge-link {
 
 .wave-text:hover .wave-text-letter {
     animation: wave-bounce 0.6s ease-in-out;
-    animation-delay: calc(var(--i) * 0.04s);
 }
+
+/*
+ * The stagger lives here, not on the elements. The site's CSP is
+ * `style-src 'self'` with no 'unsafe-inline' and no style-src-attr, so the
+ * browser silently discards inline style attributes: WaveText used to
+ * carry each letter's index as style="--i:3", which made
+ * `animation-delay: calc(var(--i) * .04s)` invalid at computed-value time
+ * and left every letter at the initial 0s -- the heading bounced all at
+ * once instead of waving. :nth-child() needs no markup and no custom
+ * property, so it survives the policy. Letters past the 32nd all share the
+ * last delay rather than falling back to 0s and breaking the wave again.
+ */
+.wave-text:hover .wave-text-letter:nth-child(1) { animation-delay: 0s; }
+.wave-text:hover .wave-text-letter:nth-child(2) { animation-delay: .04s; }
+.wave-text:hover .wave-text-letter:nth-child(3) { animation-delay: .08s; }
+.wave-text:hover .wave-text-letter:nth-child(4) { animation-delay: .12s; }
+.wave-text:hover .wave-text-letter:nth-child(5) { animation-delay: .16s; }
+.wave-text:hover .wave-text-letter:nth-child(6) { animation-delay: .2s; }
+.wave-text:hover .wave-text-letter:nth-child(7) { animation-delay: .24s; }
+.wave-text:hover .wave-text-letter:nth-child(8) { animation-delay: .28s; }
+.wave-text:hover .wave-text-letter:nth-child(9) { animation-delay: .32s; }
+.wave-text:hover .wave-text-letter:nth-child(10) { animation-delay: .36s; }
+.wave-text:hover .wave-text-letter:nth-child(11) { animation-delay: .4s; }
+.wave-text:hover .wave-text-letter:nth-child(12) { animation-delay: .44s; }
+.wave-text:hover .wave-text-letter:nth-child(13) { animation-delay: .48s; }
+.wave-text:hover .wave-text-letter:nth-child(14) { animation-delay: .52s; }
+.wave-text:hover .wave-text-letter:nth-child(15) { animation-delay: .56s; }
+.wave-text:hover .wave-text-letter:nth-child(16) { animation-delay: .6s; }
+.wave-text:hover .wave-text-letter:nth-child(17) { animation-delay: .64s; }
+.wave-text:hover .wave-text-letter:nth-child(18) { animation-delay: .68s; }
+.wave-text:hover .wave-text-letter:nth-child(19) { animation-delay: .72s; }
+.wave-text:hover .wave-text-letter:nth-child(20) { animation-delay: .76s; }
+.wave-text:hover .wave-text-letter:nth-child(21) { animation-delay: .8s; }
+.wave-text:hover .wave-text-letter:nth-child(22) { animation-delay: .84s; }
+.wave-text:hover .wave-text-letter:nth-child(23) { animation-delay: .88s; }
+.wave-text:hover .wave-text-letter:nth-child(24) { animation-delay: .92s; }
+.wave-text:hover .wave-text-letter:nth-child(25) { animation-delay: .96s; }
+.wave-text:hover .wave-text-letter:nth-child(26) { animation-delay: 1s; }
+.wave-text:hover .wave-text-letter:nth-child(27) { animation-delay: 1.04s; }
+.wave-text:hover .wave-text-letter:nth-child(28) { animation-delay: 1.08s; }
+.wave-text:hover .wave-text-letter:nth-child(29) { animation-delay: 1.12s; }
+.wave-text:hover .wave-text-letter:nth-child(30) { animation-delay: 1.16s; }
+.wave-text:hover .wave-text-letter:nth-child(31) { animation-delay: 1.2s; }
+.wave-text:hover .wave-text-letter:nth-child(32) { animation-delay: 1.24s; }
+.wave-text:hover .wave-text-letter:nth-child(n+33) { animation-delay: 1.28s; }
 
 @keyframes wave-bounce {
     0%, 100% { transform: translateY(0); }
