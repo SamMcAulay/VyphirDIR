@@ -14,7 +14,7 @@
 
 ## 1. Composition (desktop)
 
-Full-bleed: Landing drops its `Panel` wrapper. Three angular colour slabs sit behind everything, then a hub anchor positioned at `left: 72%; top: 50%` from which the photo and all words are placed in polar coordinates.
+Full-bleed: Landing drops its `Panel` wrapper. Three angular colour slabs sit behind everything, then a hub anchor positioned at `left: 72%; top: 58%` from which the photo and all words are placed in polar coordinates. The anchor is below centre because the composition is top-heavy on hover: only Gallery and Commissions carry large preview blobs and both sit in the upper half. 58% also balances the resting composition, whose bounding box otherwise sat above centre because the words reach further up-left than down-left.
 
 **Slabs** (decorative, `aria-hidden`):
 
@@ -30,8 +30,8 @@ Full-bleed: Landing drops its `Panel` wrapper. Three angular colour slabs sit be
 
 | Word | href | left | top | --rot | font-size | colour | text-stroke | blob px | blob x-bias |
 |---|---|---|---|---|---|---|---|---|---|
-| Gallery | `/gallery/` | -113px | -106px | 43deg | 44px | `#23C9B7` | 3px | 360 | 34% |
-| Commissions | `/commissions/` | -142px | -62px | 23deg | 44px | `#FFC93C` | 3px | 420 | 32% |
+| Gallery | `/gallery/` | -113px | -106px | 43deg | 44px | `#23C9B7` | 3px | 290 | 34% |
+| Commissions | `/commissions/` | -142px | -62px | 23deg | 44px | `#FFC93C` | 3px | 338 | 32% |
 | Instagram | `https://www.instagram.com/vyphir` | -154px | -21px | 8deg | 26px | `#FF6FA0` | 2px | 170 | 50% |
 | Twitter | `https://x.com/Vyphirr` | -155px | 10px | -4deg | 24px | `#B98CFF` | 2px | 150 | 50% |
 | Bluesky | `https://bsky.app/profile/samisaderp.bsky.social` | -150px | 39px | -15deg | 23px | `#23C9B7` | 2px | 145 | 50% |
@@ -43,11 +43,21 @@ Word type: Fredoka 700, uppercase, `line-height: 1`, `letter-spacing: -.5px`, `-
 
 External links (all six socials) get `target="_blank"` and `rel="noopener noreferrer"`, matching the current Landing behaviour.
 
-**Scaling:** the hub is scaled as one unit rather than re-laid out. Below the base size: `scale(0.82)` between 1000px and 1199px, `scale(0.72)` between 900px and 999px, and below 900px the mobile layout in §3 takes over. At the base size: `scale(1)` between 1200px and 1399px.
+**Scaling:** the hub is scaled as one unit rather than re-laid out. Width-based steps below the base size: `scale(0.82)` between 1000px and 1199px, `scale(0.72)` between 900px and 999px, and below 900px the mobile layout in §3 takes over.
 
-Above the base size the fan keeps pace with the canvas, so it does not huddle against the right edge on a large monitor — `scale(1.12)` from 1400px, `scale(1.24)` from 1550px, `scale(1.4)` from 1750px, `scale(1.55)` from 2000px, `scale(1.7)` from 2400px. Each of these five steps additionally requires a minimum viewport height (650/720/810/900/990px respectively), because the hub grows in both axes: on a short wide window no step matches and the hub falls back to `scale(1)` rather than growing past the viewport. The steps hold the fan at roughly 37–43% of the viewport width, the proportion it has at 1100–1280px.
+Above 1200px the scale is governed by **both** width and height, because height is the binding constraint. The hovered Gallery blob reaches roughly 449px above the anchor at `scale(1)`, and the anchor sits at 58% of the viewport, so a given scale only fits once the height clears about `790px × scale`. The rules are written as paired `min-width`/`min-height` conditions in ascending order with no `max-width`, so the largest step whose two conditions both hold wins, and a window too short for a step falls back to the largest it can afford:
 
-> **Known trade-off, unresolved.** The preview blobs (§4) are large relative to the fan and are biased outward from the photo, which carries them upward. `.hub` is `overflow: hidden`, so above the base size a hovered Gallery or Commissions blob is clipped flat against the top of the viewport — about 15–21% of the blob's height at 1440×900, 1920×1080 and 2560×1440. At `scale(1)` this affected only shorter viewports; 1920×1080 and 2560×1440 previously showed no clipping at all. Resolving it means re-tuning the blobs rather than the fan: relaxing the §4 x-bias (now less necessary, since the photo occludes the blob by stacking order rather than by position), adding a matching y-bias, or shrinking `--blobw` at the upper steps.
+| Step | Requires | Holds at |
+|---|---|---|
+| `scale(0.8)` | ≥1200px wide, ≤710px tall | very short windows |
+| `scale(0.9)` | ≥1200px wide, ≤819px tall | 1280×720 |
+| `scale(1)` | ≥1200px wide | 1280×900 |
+| `scale(1.12)` | ≥1400px wide, ≥890px tall | 1440×900, 1600×900 |
+| `scale(1.36)` | ≥1750px wide, ≥1075px tall | 1920×1080 |
+| `scale(1.5)` | ≥2000px wide, ≥1185px tall | 2100×1200 |
+| `scale(1.75)` | ≥2400px wide, ≥1385px tall | 2560×1440 |
+
+This holds the fan at roughly 36–43% of the viewport width from 1100px to 2560px — the proportion the design has at the widths it reads best — while guaranteeing the hovered preview blob stays inside the viewport. Verified in Chromium at twelve viewport sizes from 1280×680 to 3440×1440: no clipping on any edge, at rest or on hover, at any of them.
 
 ## 2. Hover and focus behaviour
 
