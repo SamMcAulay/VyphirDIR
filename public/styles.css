@@ -803,6 +803,36 @@ a.enlarge-link {
     50% { transform: translate(-50%, -50%) scale(1.05) rotate(9deg); }
 }
 
+/*
+ * The hub scales as one unit rather than re-laying out, so the fan keeps
+ * pace with the canvas instead of huddling against the right edge on a big
+ * monitor. Spec section 1 originally stopped at scale(1) for everything
+ * >=1200px, which left roughly half of a 1440-wide screen as bare slabs.
+ * The anchor is a 0x0 point, so its transform-origin is the anchor itself
+ * and every word and the photo scale about it.
+ *
+ * The steps hold the fan at roughly 37-43% of the viewport width, which is
+ * the proportion it already had at 1100-1280 -- the widths this design read
+ * best at. Each step also carries a min-height, because the fan grows in
+ * both axes: on a short wide window (an ultrawide, or a laptop with a lot
+ * of browser chrome) the height condition fails, no rule matches, and the
+ * hub falls back to scale(1) rather than growing past the viewport.
+ */
+@media (min-width: 2400px) and (min-height: 990px) {
+    .hub-anchor { transform: scale(1.7); }
+}
+@media (max-width: 2399px) and (min-width: 2000px) and (min-height: 900px) {
+    .hub-anchor { transform: scale(1.55); }
+}
+@media (max-width: 1999px) and (min-width: 1750px) and (min-height: 810px) {
+    .hub-anchor { transform: scale(1.4); }
+}
+@media (max-width: 1749px) and (min-width: 1550px) and (min-height: 720px) {
+    .hub-anchor { transform: scale(1.24); }
+}
+@media (max-width: 1549px) and (min-width: 1400px) and (min-height: 650px) {
+    .hub-anchor { transform: scale(1.12); }
+}
 @media (max-width: 1199px) and (min-width: 1000px) {
     .hub-anchor { transform: scale(.82); }
 }

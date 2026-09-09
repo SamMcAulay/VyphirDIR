@@ -43,7 +43,11 @@ Word type: Fredoka 700, uppercase, `line-height: 1`, `letter-spacing: -.5px`, `-
 
 External links (all six socials) get `target="_blank"` and `rel="noopener noreferrer"`, matching the current Landing behaviour.
 
-**Scaling for smaller desktops:** the hub is scaled as one unit rather than re-laid out — `scale(1)` at ≥1200px, `scale(0.82)` between 1000px and 1199px, `scale(0.72)` between 900px and 999px. Below 900px the mobile layout in §3 takes over.
+**Scaling:** the hub is scaled as one unit rather than re-laid out. Below the base size: `scale(0.82)` between 1000px and 1199px, `scale(0.72)` between 900px and 999px, and below 900px the mobile layout in §3 takes over. At the base size: `scale(1)` between 1200px and 1399px.
+
+Above the base size the fan keeps pace with the canvas, so it does not huddle against the right edge on a large monitor — `scale(1.12)` from 1400px, `scale(1.24)` from 1550px, `scale(1.4)` from 1750px, `scale(1.55)` from 2000px, `scale(1.7)` from 2400px. Each of these five steps additionally requires a minimum viewport height (650/720/810/900/990px respectively), because the hub grows in both axes: on a short wide window no step matches and the hub falls back to `scale(1)` rather than growing past the viewport. The steps hold the fan at roughly 37–43% of the viewport width, the proportion it has at 1100–1280px.
+
+> **Known trade-off, unresolved.** The preview blobs (§4) are large relative to the fan and are biased outward from the photo, which carries them upward. `.hub` is `overflow: hidden`, so above the base size a hovered Gallery or Commissions blob is clipped flat against the top of the viewport — about 15–21% of the blob's height at 1440×900, 1920×1080 and 2560×1440. At `scale(1)` this affected only shorter viewports; 1920×1080 and 2560×1440 previously showed no clipping at all. Resolving it means re-tuning the blobs rather than the fan: relaxing the §4 x-bias (now less necessary, since the photo occludes the blob by stacking order rather than by position), adding a matching y-bias, or shrinking `--blobw` at the upper steps.
 
 ## 2. Hover and focus behaviour
 
