@@ -1054,7 +1054,29 @@ a.enlarge-link {
      * stroke, which stays -- accepted as a minor, invisible-at-a-glance
      * approximation rather than a JSX change outside this round's
      * authorised scope.
+     *
+     * Fix round 2: the blob was centred at top:50%/left:50% of
+     * .hub-item's own box, but that box has no explicit height -- it
+     * collapses to its only in-flow child, the word (~34px). Centring a
+     * 100px blob on a 34px box overflowed ~33px above and below,
+     * colliding with the photo's margin above Gallery and with
+     * Commissions' row below, and the two blobs overlapped each other.
+     * Fixing the box, not the blob: these two items get an explicit
+     * min-height matching the blob's own height, so the blob's 50%/50%
+     * centre resolves against a box exactly as tall as the blob, and
+     * `display:flex; align-items:center` centres the word inside that
+     * same box so word and blob share one visual centre. Blob and box
+     * height are both 100px, so the blob's edges land exactly on the
+     * item's own box edges -- no overflow into the 18px row gap above or
+     * below, at any width in this branch (this is a box-height fix, not a
+     * viewport-width one).
      */
+    .hub-item--gallery,
+    .hub-item--commissions {
+        display: flex;
+        align-items: center;
+        min-height: 100px;
+    }
     .hub-item--gallery .hub-blob,
     .hub-item--commissions .hub-blob {
         display: block;
