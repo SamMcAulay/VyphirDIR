@@ -7,7 +7,7 @@ const PREVIEWS = { gallery: ['g1.png', 'g2.png'], commissions: ['c1.png', 'c2.pn
 
 test('renders exactly eight nav links in spec order', () => {
     const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
-    const hrefs = [...html.matchAll(/<a class="hub-item"[^>]*href="([^"]+)"/g)].map((m) => m[1]);
+    const hrefs = [...html.matchAll(/<a class="hub-item[^"]*"[^>]*href="([^"]+)"/g)].map((m) => m[1]);
     assert.deepEqual(hrefs, [
         '/gallery/',
         '/commissions/',
@@ -27,7 +27,7 @@ test('wraps the nav links in a nav element', () => {
 
 test('external links open in a new tab with a safe rel', () => {
     const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
-    const externals = html.match(/<a class="hub-item"[^>]*href="https:\/\/[^"]+"[^>]*>/g) || [];
+    const externals = html.match(/<a class="hub-item[^"]*"[^>]*href="https:\/\/[^"]+"[^>]*>/g) || [];
     assert.equal(externals.length, 6);
     for (const tag of externals) {
         assert.match(tag, /target="_blank"/);

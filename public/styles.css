@@ -855,47 +855,48 @@ a.enlarge-link {
 }
 
 /*
- * Deviation from task-4-brief.md: Landing.jsx (Task 3) carries each item's
- * fan position (left/top) and identity (--rot/--fs/--c/--stroke/--blobw/
+ * Deviation from task-4-brief.md, re-keyed in fix round 1 per controller
+ * ruling on Finding 4: Landing.jsx (Task 3) used to carry each item's fan
+ * position (left/top) and identity (--rot/--fs/--c/--stroke/--blobw/
  * --blobx) as an inline `style` attribute. This site's CSP has no
  * 'unsafe-inline' and no hash/nonce for style-src (see
  * scripts/render-pages.js CSP constant), so the browser silently drops
- * every inline style attribute on the page -- the fan values never reach
- * the DOM and .hub-item falls back to static position with no rotation,
- * color or size, which is the "one line of unstyled blue links" bug.
- * Restoring the values here, keyed on href, follows the same
- * attribute-selector pattern the brief already uses for the mobile
- * font-size overrides below, and needs no markup change.
+ * every inline style attribute on the page -- the fan values never reached
+ * the DOM. The initial Task 4 fix restored them via [href="..."] attribute
+ * selectors; fix round 1 replaces that with a stable `hub-item--<key>`
+ * modifier class (matching the `.hub-slab--teal` convention already used
+ * in this file) so the geometry has exactly one source of truth and does
+ * not go stale silently if an href ever changes.
  */
-.hub-item[href="/gallery/"] {
+.hub-item--gallery {
     left: -113px; top: -106px;
     --rot: 43deg; --fs: 44px; --c: #23C9B7; --stroke: 3px; --blobw: 360px; --blobx: 34%;
 }
-.hub-item[href="/commissions/"] {
+.hub-item--commissions {
     left: -142px; top: -62px;
     --rot: 23deg; --fs: 44px; --c: #FFC93C; --stroke: 3px; --blobw: 420px; --blobx: 32%;
 }
-.hub-item[href="https://www.instagram.com/vyphir"] {
+.hub-item--instagram {
     left: -154px; top: -21px;
     --rot: 8deg; --fs: 26px; --c: #FF6FA0; --stroke: 2px; --blobw: 170px;
 }
-.hub-item[href="https://x.com/Vyphirr"] {
+.hub-item--twitter {
     left: -155px; top: 10px;
     --rot: -4deg; --fs: 24px; --c: #B98CFF; --stroke: 2px; --blobw: 150px;
 }
-.hub-item[href="https://bsky.app/profile/samisaderp.bsky.social"] {
+.hub-item--bluesky {
     left: -150px; top: 39px;
     --rot: -15deg; --fs: 23px; --c: #23C9B7; --stroke: 2px; --blobw: 145px;
 }
-.hub-item[href="https://t.me/Samisaderp#"] {
+.hub-item--telegram {
     left: -141px; top: 64px;
     --rot: -25deg; --fs: 21px; --c: #FF9A44; --stroke: 2px; --blobw: 135px;
 }
-.hub-item[href="https://toyhou.se/samisaderp/characters"] {
+.hub-item--toyhouse {
     left: -129px; top: 87px;
     --rot: -34deg; --fs: 20px; --c: #FF6FA0; --stroke: 2px; --blobw: 125px;
 }
-.hub-item[href="https://steamcommunity.com/profiles/76561199191219060/"] {
+.hub-item--steam {
     left: -113px; top: 106px;
     --rot: -43deg; --fs: 19px; --c: #B98CFF; --stroke: 2px; --blobw: 115px;
 }
@@ -925,9 +926,24 @@ a.enlarge-link {
     pointer-events: none;
 }
 
+/*
+ * Deviation from task-4-brief.md, fix round 1 Finding 1 (spec section 4): the
+ * brief put the hovered/focused .hub-item at z-index: 24, above
+ * .hub-photo's 12. .hub-item establishes its own stacking context
+ * (position + z-index), so its child .hub-blob can never paint below
+ * .hub-photo no matter what z-index the blob itself carries -- the whole
+ * item, blob included, paints as one unit at the item's z-index. Spec section 4
+ * requires the photo to stay fully visible under every item's hover/
+ * focus-visible state, so the active item now drops to z-index: 8 (below
+ * the photo's 12) instead of rising above it: the photo's opaque circle
+ * then occludes whatever part of the blob would otherwise sit under the
+ * face, at every width where blobs render, without shrinking the blobs or
+ * touching their x-bias. De-emphasised siblings drop to z-index: 5 so the
+ * active item's enlarged word still paints over them, same as before.
+ */
 .hub-item:hover, .hub-item:focus-visible {
     transform: translate(-100%, -50%) rotate(var(--rot)) scale(1.18);
-    z-index: 24;
+    z-index: 8;
 }
 .hub-item:hover .hub-blob, .hub-item:focus-visible .hub-blob {
     opacity: 1;
@@ -938,6 +954,7 @@ a.enlarge-link {
 .hub-nav:has(.hub-item:focus-visible) .hub-item:not(:focus-visible) {
     transform: translate(-100%, -50%) rotate(var(--rot)) scale(.84);
     opacity: .42;
+    z-index: 5;
 }
 
 @keyframes hub-blob-pulse {
@@ -990,12 +1007,26 @@ a.enlarge-link {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 14px;
+        gap: 18px;
         width: 100%;
         max-width: 320px;
     }
     .hub-item {
-        position: static;
+        /*
+         * Deviation from task-4-brief.md: the brief used `position: static`
+         * here. Fix round 1, Finding 2 restores a decorative .hub-blob
+         * behind Gallery/Commissions on mobile, and that blob is
+         * `position: absolute` (unchanged from desktop) -- it needs a
+         * positioned containing block to anchor to instead of escaping to
+         * the viewport. `position: relative` gives its blob that
+         * containing block. Unlike `static`, `relative` does NOT ignore
+         * left/top -- without resetting them, every .hub-item--<key>'s
+         * desktop fan offset (e.g. gallery's left:-113px/top:-106px) would
+         * still apply and shove the item out of the mobile list, so both
+         * are forced back to auto here.
+         */
+        position: relative;
+        left: auto; top: auto;
         transform: none;
     }
     .hub-item:hover, .hub-item:focus-visible { transform: none; }
@@ -1005,9 +1036,41 @@ a.enlarge-link {
         opacity: 1;
     }
     .hub-item .hub-blob { display: none; }
-    .hub-item[href="/gallery/"] .hub-word { font-size: 34px; }
-    .hub-item[href="/commissions/"] .hub-word { font-size: 34px; }
+    .hub-item--gallery .hub-word,
+    .hub-item--commissions .hub-word { font-size: 34px; }
     .hub-word { font-size: 22px; }
+
+    /*
+     * Fix round 1, Finding 2 (spec section 3): there is no hover on touch, so
+     * Gallery and Commissions keep a static, non-pulsing flat blob behind
+     * their word as decoration; the other six items stay hidden above.
+     * The component itself renders whichever SVG variant the build data
+     * picked (PreviewBlob with real art, or FlatBlob) -- CSS can't swap
+     * that at a breakpoint. So on this width, force PreviewBlob to read as
+     * "flat": hide its <image> tiles and take its tint rect to full
+     * opacity. FlatBlob is untouched by this (it has no <image>/no rect
+     * to hide) and renders as designed either way. The one visible
+     * difference from a true FlatBlob is PreviewBlob's sticker outline
+     * stroke, which stays -- accepted as a minor, invisible-at-a-glance
+     * approximation rather than a JSX change outside this round's
+     * authorised scope.
+     */
+    .hub-item--gallery .hub-blob,
+    .hub-item--commissions .hub-blob {
+        display: block;
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 100px; height: 100px;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        animation: none;
+        transition: none;
+        z-index: -1;
+    }
+    .hub-item--gallery .hub-blob image,
+    .hub-item--commissions .hub-blob image { display: none; }
+    .hub-item--gallery .hub-blob rect,
+    .hub-item--commissions .hub-blob rect { opacity: 1; }
 }
 
 .wave-text-letter {

@@ -8,22 +8,14 @@ const BLOB_PATHS = {
 };
 
 const ITEMS = [
-    { key: 'gallery', label: 'Gallery', href: '/gallery/', external: false, blob: 1, tint: '#C6F5EF', flat: '#C6F5EF', preview: 'gallery',
-      style: { left: '-113px', top: '-106px', '--rot': '43deg', '--fs': '44px', '--c': '#23C9B7', '--stroke': '3px', '--blobw': '360px', '--blobx': '34%' } },
-    { key: 'commissions', label: 'Commissions', href: '/commissions/', external: false, blob: 3, tint: '#FFEDB0', flat: '#FFEDB0', preview: 'commissions',
-      style: { left: '-142px', top: '-62px', '--rot': '23deg', '--fs': '44px', '--c': '#FFC93C', '--stroke': '3px', '--blobw': '420px', '--blobx': '32%' } },
-    { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/vyphir', external: true, blob: 2, flat: '#FFD3E4',
-      style: { left: '-154px', top: '-21px', '--rot': '8deg', '--fs': '26px', '--c': '#FF6FA0', '--stroke': '2px', '--blobw': '170px' } },
-    { key: 'twitter', label: 'Twitter', href: 'https://x.com/Vyphirr', external: true, blob: 4, flat: '#E7D8FF',
-      style: { left: '-155px', top: '10px', '--rot': '-4deg', '--fs': '24px', '--c': '#B98CFF', '--stroke': '2px', '--blobw': '150px' } },
-    { key: 'bluesky', label: 'Bluesky', href: 'https://bsky.app/profile/samisaderp.bsky.social', external: true, blob: 1, flat: '#C6F5EF',
-      style: { left: '-150px', top: '39px', '--rot': '-15deg', '--fs': '23px', '--c': '#23C9B7', '--stroke': '2px', '--blobw': '145px' } },
-    { key: 'telegram', label: 'Telegram', href: 'https://t.me/Samisaderp#', external: true, blob: 2, flat: '#FFE0BE',
-      style: { left: '-141px', top: '64px', '--rot': '-25deg', '--fs': '21px', '--c': '#FF9A44', '--stroke': '2px', '--blobw': '135px' } },
-    { key: 'toyhouse', label: 'Toyhouse', href: 'https://toyhou.se/samisaderp/characters', external: true, blob: 3, flat: '#FFD3E4',
-      style: { left: '-129px', top: '87px', '--rot': '-34deg', '--fs': '20px', '--c': '#FF6FA0', '--stroke': '2px', '--blobw': '125px' } },
-    { key: 'steam', label: 'Steam', href: 'https://steamcommunity.com/profiles/76561199191219060/', external: true, blob: 4, flat: '#E7D8FF',
-      style: { left: '-113px', top: '106px', '--rot': '-43deg', '--fs': '19px', '--c': '#B98CFF', '--stroke': '2px', '--blobw': '115px' } },
+    { key: 'gallery', label: 'Gallery', href: '/gallery/', external: false, blob: 1, tint: '#C6F5EF', flat: '#C6F5EF', preview: 'gallery' },
+    { key: 'commissions', label: 'Commissions', href: '/commissions/', external: false, blob: 3, tint: '#FFEDB0', flat: '#FFEDB0', preview: 'commissions' },
+    { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/vyphir', external: true, blob: 2, flat: '#FFD3E4' },
+    { key: 'twitter', label: 'Twitter', href: 'https://x.com/Vyphirr', external: true, blob: 4, flat: '#E7D8FF' },
+    { key: 'bluesky', label: 'Bluesky', href: 'https://bsky.app/profile/samisaderp.bsky.social', external: true, blob: 1, flat: '#C6F5EF' },
+    { key: 'telegram', label: 'Telegram', href: 'https://t.me/Samisaderp#', external: true, blob: 2, flat: '#FFE0BE' },
+    { key: 'toyhouse', label: 'Toyhouse', href: 'https://toyhou.se/samisaderp/characters', external: true, blob: 3, flat: '#FFD3E4' },
+    { key: 'steam', label: 'Steam', href: 'https://steamcommunity.com/profiles/76561199191219060/', external: true, blob: 4, flat: '#E7D8FF' },
 ];
 
 const PHOTO_URL = 'https://f2.toyhou.se/file/f2-toyhou-se/images/113402324_irRXncxlu389pbc.png?1768418401';
@@ -95,7 +87,7 @@ export default function Landing({ previews }) {
                             ? { target: '_blank', rel: 'noopener noreferrer' }
                             : {};
                         return (
-                            <a className="hub-item" key={item.key} href={item.href} style={item.style} {...external}>
+                            <a className={`hub-item hub-item--${item.key}`} key={item.key} href={item.href} {...external}>
                                 {images.length > 0
                                     ? <PreviewBlob item={item} images={images} />
                                     : <FlatBlob item={item} />}
