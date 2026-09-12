@@ -996,8 +996,29 @@ a.enlarge-link {
     display: inline-block;
 }
 
-.wave-text:hover .wave-text-letter {
-    animation: wave-bounce 0.6s ease-in-out;
+/*
+ * Two trigger surfaces, one animation. A page heading waves when the heading
+ * itself is hovered. The landing hub's nav words wave from their whole link
+ * instead -- hovering a .hub-item already scales the word, reveals the blob
+ * and dims its siblings, and the wave belongs with those rather than firing
+ * off its own smaller target inside the same link. :focus-visible is listed
+ * so the keyboard gets the same treatment the pointer does, matching how
+ * .hub-blob is already revealed for both.
+ *
+ * :where() keeps the whole trigger list at zero specificity, so this rule
+ * weighs the same as a bare .wave-text-letter selector. That is what lets
+ * the reduced-motion override at the bottom of this block switch the
+ * animation off for every trigger with one short rule, and it means a new
+ * trigger surface is one more entry in this list and nothing else.
+ *
+ * Longhands, not the `animation` shorthand: the shorthand resets
+ * animation-delay to 0s, which would wipe out the stagger set below and
+ * bounce every letter in unison.
+ */
+:where(.wave-text:hover, .hub-item:hover, .hub-item:focus-visible) .wave-text-letter {
+    animation-name: wave-bounce;
+    animation-duration: .6s;
+    animation-timing-function: ease-in-out;
 }
 
 /*
@@ -1010,40 +1031,44 @@ a.enlarge-link {
  * once instead of waving. :nth-child() needs no markup and no custom
  * property, so it survives the policy. Letters past the 32nd all share the
  * last delay rather than falling back to 0s and breaking the wave again.
+ *
+ * These carry no trigger state: animation-delay on a letter with no
+ * animation-name does nothing, so the delays can sit here unconditionally
+ * and every trigger above inherits the same stagger.
  */
-.wave-text:hover .wave-text-letter:nth-child(1) { animation-delay: 0s; }
-.wave-text:hover .wave-text-letter:nth-child(2) { animation-delay: .04s; }
-.wave-text:hover .wave-text-letter:nth-child(3) { animation-delay: .08s; }
-.wave-text:hover .wave-text-letter:nth-child(4) { animation-delay: .12s; }
-.wave-text:hover .wave-text-letter:nth-child(5) { animation-delay: .16s; }
-.wave-text:hover .wave-text-letter:nth-child(6) { animation-delay: .2s; }
-.wave-text:hover .wave-text-letter:nth-child(7) { animation-delay: .24s; }
-.wave-text:hover .wave-text-letter:nth-child(8) { animation-delay: .28s; }
-.wave-text:hover .wave-text-letter:nth-child(9) { animation-delay: .32s; }
-.wave-text:hover .wave-text-letter:nth-child(10) { animation-delay: .36s; }
-.wave-text:hover .wave-text-letter:nth-child(11) { animation-delay: .4s; }
-.wave-text:hover .wave-text-letter:nth-child(12) { animation-delay: .44s; }
-.wave-text:hover .wave-text-letter:nth-child(13) { animation-delay: .48s; }
-.wave-text:hover .wave-text-letter:nth-child(14) { animation-delay: .52s; }
-.wave-text:hover .wave-text-letter:nth-child(15) { animation-delay: .56s; }
-.wave-text:hover .wave-text-letter:nth-child(16) { animation-delay: .6s; }
-.wave-text:hover .wave-text-letter:nth-child(17) { animation-delay: .64s; }
-.wave-text:hover .wave-text-letter:nth-child(18) { animation-delay: .68s; }
-.wave-text:hover .wave-text-letter:nth-child(19) { animation-delay: .72s; }
-.wave-text:hover .wave-text-letter:nth-child(20) { animation-delay: .76s; }
-.wave-text:hover .wave-text-letter:nth-child(21) { animation-delay: .8s; }
-.wave-text:hover .wave-text-letter:nth-child(22) { animation-delay: .84s; }
-.wave-text:hover .wave-text-letter:nth-child(23) { animation-delay: .88s; }
-.wave-text:hover .wave-text-letter:nth-child(24) { animation-delay: .92s; }
-.wave-text:hover .wave-text-letter:nth-child(25) { animation-delay: .96s; }
-.wave-text:hover .wave-text-letter:nth-child(26) { animation-delay: 1s; }
-.wave-text:hover .wave-text-letter:nth-child(27) { animation-delay: 1.04s; }
-.wave-text:hover .wave-text-letter:nth-child(28) { animation-delay: 1.08s; }
-.wave-text:hover .wave-text-letter:nth-child(29) { animation-delay: 1.12s; }
-.wave-text:hover .wave-text-letter:nth-child(30) { animation-delay: 1.16s; }
-.wave-text:hover .wave-text-letter:nth-child(31) { animation-delay: 1.2s; }
-.wave-text:hover .wave-text-letter:nth-child(32) { animation-delay: 1.24s; }
-.wave-text:hover .wave-text-letter:nth-child(n+33) { animation-delay: 1.28s; }
+.wave-text-letter:nth-child(1) { animation-delay: 0s; }
+.wave-text-letter:nth-child(2) { animation-delay: .04s; }
+.wave-text-letter:nth-child(3) { animation-delay: .08s; }
+.wave-text-letter:nth-child(4) { animation-delay: .12s; }
+.wave-text-letter:nth-child(5) { animation-delay: .16s; }
+.wave-text-letter:nth-child(6) { animation-delay: .2s; }
+.wave-text-letter:nth-child(7) { animation-delay: .24s; }
+.wave-text-letter:nth-child(8) { animation-delay: .28s; }
+.wave-text-letter:nth-child(9) { animation-delay: .32s; }
+.wave-text-letter:nth-child(10) { animation-delay: .36s; }
+.wave-text-letter:nth-child(11) { animation-delay: .4s; }
+.wave-text-letter:nth-child(12) { animation-delay: .44s; }
+.wave-text-letter:nth-child(13) { animation-delay: .48s; }
+.wave-text-letter:nth-child(14) { animation-delay: .52s; }
+.wave-text-letter:nth-child(15) { animation-delay: .56s; }
+.wave-text-letter:nth-child(16) { animation-delay: .6s; }
+.wave-text-letter:nth-child(17) { animation-delay: .64s; }
+.wave-text-letter:nth-child(18) { animation-delay: .68s; }
+.wave-text-letter:nth-child(19) { animation-delay: .72s; }
+.wave-text-letter:nth-child(20) { animation-delay: .76s; }
+.wave-text-letter:nth-child(21) { animation-delay: .8s; }
+.wave-text-letter:nth-child(22) { animation-delay: .84s; }
+.wave-text-letter:nth-child(23) { animation-delay: .88s; }
+.wave-text-letter:nth-child(24) { animation-delay: .92s; }
+.wave-text-letter:nth-child(25) { animation-delay: .96s; }
+.wave-text-letter:nth-child(26) { animation-delay: 1s; }
+.wave-text-letter:nth-child(27) { animation-delay: 1.04s; }
+.wave-text-letter:nth-child(28) { animation-delay: 1.08s; }
+.wave-text-letter:nth-child(29) { animation-delay: 1.12s; }
+.wave-text-letter:nth-child(30) { animation-delay: 1.16s; }
+.wave-text-letter:nth-child(31) { animation-delay: 1.2s; }
+.wave-text-letter:nth-child(32) { animation-delay: 1.24s; }
+.wave-text-letter:nth-child(n+33) { animation-delay: 1.28s; }
 
 @keyframes wave-bounce {
     0%, 100% { transform: translateY(0); }
@@ -1052,8 +1077,8 @@ a.enlarge-link {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .wave-text:hover .wave-text-letter {
-        animation: none;
+    .wave-text-letter {
+        animation-name: none;
     }
 }
 

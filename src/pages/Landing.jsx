@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BLOB_PATHS } from '../components/decor/blob-paths.js';
+import WaveText from '../components/WaveText.jsx';
 
 const ITEMS = [
     { key: 'gallery', label: 'Gallery', href: '/gallery/', external: false, blob: 1, tint: 'var(--slime-teal-light)', tintOpacity: '.34', flat: 'var(--slime-teal-light)', preview: 'gallery' },
@@ -104,7 +105,7 @@ export default function Landing({ previews }) {
                                 {images.length > 0
                                     ? <PreviewBlob item={item} images={images} />
                                     : <FlatBlob item={item} />}
-                                <span className="hub-word">{item.label}</span>
+                                <WaveText className="hub-word" text={item.label} />
                             </a>
                         );
                     })}
