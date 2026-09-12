@@ -69,6 +69,10 @@ test('does not intercept any of the hub social links', () => {
     }
 });
 
+test('does not intercept a cross-origin link even when the path is eligible', () => {
+    assert.equal(shouldIntercept(click({ href: 'https://evil.example/gallery/', isEligible: true })), false);
+});
+
 test('does not intercept an ineligible path such as /admin/ or /i/<id>', () => {
     assert.equal(shouldIntercept(click({ href: '/admin/', isEligible: false })), false);
     assert.equal(shouldIntercept(click({ href: '/i/abc123', isEligible: false })), false);
