@@ -1,18 +1,24 @@
 {
   "status": true,
   "intro": "If you Like what you see here, and want something of your own! Please reach out to me on discord or Insta! I check other socials but those will be the most reliable <3",
-  "specialOffer": "Currently offering PWYW (Pay What You Want) commissions.",
+  "specialOffer": "",
   "tiers": [
     {
-      "name": "Pay What you want!",
+      "name": "Lined Headshots",
       "price": "€10+",
-      "description": "I start these price at 10 euro for a simpler flat shading headshot! the more you pay the more detail you get, as well as I can work on half bodies / full bodies too!\nI am open to taking pretty much any request, besides humans or complex backgrounds.\nI take payment Through PayPal, or Revolut!",
+      "description": "A Simple Line-art Headshot of your character! Light shading can be added for +€5. This can often help define shapes and give more depth to simple line art. \nMost of my art has thin lines, but line art pieces will have thicker more defined lines, for a bold finished look. \nCan Either be in icon or full Headshot framing",
       "example": ""
     },
     {
-      "name": "Headshots",
+      "name": "Flat Colour Headshots",
+      "price": "€15+",
+      "description": "A flat coloured drawing of your character, simple as! simple shading can be added for +€5\nCan either be in icon or full Headshot framing",
+      "example": ""
+    },
+    {
+      "name": "Rendered Headshot",
       "price": "€30+",
-      "description": "Do not like the PWYW model? giving atleast 20 bones will help me buy dinner for the day! This tier can get you anything like any of my headshot examples, I will work with you to the best of my ability to make something you are happy with",
+      "description": "A full fledged artwork! how cool, you will get something like most of my finished pieces! Full rendering and simple background wowzers\nCan either be in icon or full headshot framing",
       "example": ""
     }
   ],
