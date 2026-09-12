@@ -6,7 +6,7 @@
       "bullets": [
         {
           "type": "plain",
-          "text": "Customer agrees to pay the due amount when the sketch is provided, at latest for any orders of value lower, or equal to €75"
+          "text": "Customer agrees to pay the due amount before work begins, at of value lower, or equal to €75"
         },
         {
           "type": "plain",
@@ -110,6 +110,11 @@
     {
       "title": "Watermark / Signature",
       "body": "My Watermark / Signature may not be removed, or covered by customer in any way, without purchase of commercial license.",
+      "bullets": []
+    },
+    {
+      "title": "Publicity",
+      "body": "I reserve the right to share finished works and WIP's on my social medias, and in social channels I frequent, IE discord or telegram. If you would not like your artworks or WIP's shared, please inform me of this prior to commissioning.",
       "bullets": []
     }
   ]
