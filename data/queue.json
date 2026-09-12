@@ -53,7 +53,7 @@
     },
     {
       "id": "fe65e5d3-a53b-493b-9758-1fc9d53ce3b7",
-      "columnId": "column-4",
+      "columnId": "column-5",
       "title": "Ratchet fox icon",
       "for": "Millum / nick",
       "targetDate": "",
@@ -82,6 +82,14 @@
       "for": "personal",
       "targetDate": "",
       "createdAt": "2026-08-31T01:06:35.226Z"
+    },
+    {
+      "id": "2a6bbb77-0b87-42af-9111-569f7f7b815e",
+      "columnId": "column-4",
+      "title": "Train art!",
+      "for": "evby",
+      "targetDate": "",
+      "createdAt": "2026-09-12T14:46:04.254Z"
     }
   ]
 }
