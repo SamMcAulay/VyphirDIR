@@ -1124,3 +1124,36 @@ a.enlarge-link {
         animation: none;
     }
 }
+
+/* ---------------------------------------------------------------------------
+ * Gravity-drop page transitions (spec sections 5, 6, 8).
+ *
+ * The overlay lives outside #root so React never reconciles it, and it is
+ * inert, aria-hidden and pointer-events:none -- nothing falling is
+ * focusable, clickable or reachable by a screen reader. The real content is
+ * underneath and readable from the moment the router commits.
+ *
+ * Every selector here is two classes deep so it beats the single-class rules
+ * a clone still carries (.hub-item, .panel, .decor-blob) without !important.
+ * ------------------------------------------------------------------------ */
+.gd-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    pointer-events: none;
+    overflow: hidden;
+    contain: layout paint;
+}
+
+.gd-overlay .gd-piece {
+    position: absolute;
+    margin: 0;
+    pointer-events: none;
+    transform-origin: 50% 50%;
+}
+
+.gd-overlay .gd-piece,
+.gd-overlay .gd-piece * {
+    animation: none;
+    transition: none;
+}
