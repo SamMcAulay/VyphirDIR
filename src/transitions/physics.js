@@ -63,6 +63,19 @@ export function step(state, dt) {
  * box of the rotated element, so the clone is sized from its untransformed
  * layout box, centred inside that rect, and re-rotated: exact for rotation
  * and scale about the default centre origin.
+ *
+ * This reads only the element's own `transform`; it says nothing about any
+ * ancestor's. getBoundingClientRect (and so a caller's measured rect) bakes
+ * in every ancestor transform between the element and the viewport -- the
+ * landing hub scales .hub-anchor per breakpoint while its .hub-item children
+ * are what gets cloned -- so matching the rendered *size*, not just
+ * position, needs the caller to compare this function's rotation/scale
+ * against the measured rect and fold in whatever residual scale that
+ * comparison reveals. Positioning is unaffected by this gap: for any
+ * rotated/scaled rectangle the bounding box's centroid always coincides with
+ * the rectangle's own centroid, regardless of which transform-origin or
+ * which ancestor produced the rotation/scale, so the centring step alone
+ * stays exact on its own.
  */
 export function decompose(matrix) {
     const identity = { rotation: 0, scaleX: 1, scaleY: 1 };

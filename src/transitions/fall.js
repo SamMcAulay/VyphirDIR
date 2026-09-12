@@ -82,6 +82,48 @@ function scrub(clone) {
     }
 }
 
+/*
+ * getComputedStyle(el).width/.height always report the content-box size,
+ * regardless of box-sizing -- but this site's `* { box-sizing: border-box }`
+ * means the clone (an ordinary border-box element) must be sized in
+ * border-box terms to match, or every padded/bordered piece clones smaller
+ * than the original. Built from computed padding/border rather than
+ * offsetWidth/offsetHeight so it also works for the SVG pieces the walk can
+ * emit (.hub-blob) -- offsetWidth is undefined on SVGElement.
+ */
+function borderBoxSize(computed) {
+    const width =
+        (parseFloat(computed.width) || 0) +
+        (parseFloat(computed.paddingLeft) || 0) +
+        (parseFloat(computed.paddingRight) || 0) +
+        (parseFloat(computed.borderLeftWidth) || 0) +
+        (parseFloat(computed.borderRightWidth) || 0);
+    const height =
+        (parseFloat(computed.height) || 0) +
+        (parseFloat(computed.paddingTop) || 0) +
+        (parseFloat(computed.paddingBottom) || 0) +
+        (parseFloat(computed.borderTopWidth) || 0) +
+        (parseFloat(computed.borderBottomWidth) || 0);
+    return { width, height };
+}
+
+/*
+ * The axis-aligned box that a `width` x `height` rectangle produces once
+ * rotated by `rotation` degrees and scaled by (scaleX, scaleY) about its own
+ * centre -- the standard rotated-bounding-box formula. Used to find how much
+ * of the measured rect's size is the element's own transform versus
+ * whatever its ancestors contributed.
+ */
+function ownAabbSize(width, height, rotation, scaleX, scaleY) {
+    const rad = (rotation * Math.PI) / 180;
+    const cos = Math.abs(Math.cos(rad));
+    const sin = Math.abs(Math.sin(rad));
+    return {
+        width: width * scaleX * cos + height * scaleY * sin,
+        height: width * scaleX * sin + height * scaleY * cos,
+    };
+}
+
 function prepare(piece, index) {
     const computed = window.getComputedStyle(piece.el);
     const clone = piece.el.cloneNode(true);
@@ -99,9 +141,31 @@ function prepare(piece, index) {
         if (value) clone.style.setProperty(property, value);
     }
 
-    const width = parseFloat(computed.width) || piece.rect.width;
-    const height = parseFloat(computed.height) || piece.rect.height;
+    const border = borderBoxSize(computed);
+    const width = border.width || piece.rect.width;
+    const height = border.height || piece.rect.height;
     const { rotation, scaleX, scaleY } = decompose(computed.transform);
+
+    /*
+     * decompose() reads only the element's own `transform`; it knows nothing
+     * of ancestor transforms. piece.rect, from getBoundingClientRect, bakes
+     * in every ancestor transform between this element and the viewport --
+     * the landing hub scales .hub-anchor per breakpoint while its .hub-item
+     * children are the pieces, so their measured rect is scaled well beyond
+     * what their own transform accounts for. ownAabb is the box the
+     * element's own rotation/scale alone would produce; the ratio of the
+     * measured rect to that box is the residual ancestor scale. This
+     * assumes ancestor scaling is uniform, the only kind this site uses --
+     * width and height would disagree under non-uniform ancestor scaling,
+     * and this does not attempt to detect that case.
+     */
+    const ownAabb = ownAabbSize(width, height, rotation, scaleX, scaleY);
+    const ancestorScale =
+        ownAabb.width > 0.01 && ownAabb.height > 0.01
+            ? (piece.rect.width / ownAabb.width + piece.rect.height / ownAabb.height) / 2
+            : 1;
+    const finalScaleX = scaleX * ancestorScale;
+    const finalScaleY = scaleY * ancestorScale;
 
     // Centre the untransformed box inside the measured bounding rect, then
     // put the original rotation and scale back (see physics.decompose).
@@ -116,7 +180,7 @@ function prepare(piece, index) {
     clone.style.height = `${height}px`;
     clone.style.willChange = 'transform';
 
-    const base = `rotate(${rotation}deg) scale(${scaleX}, ${scaleY})`;
+    const base = `rotate(${rotation}deg) scale(${finalScaleX}, ${finalScaleY})`;
     clone.style.transform = base;
 
     return { clone, base, rect: { top, height } };
