@@ -22,6 +22,7 @@ export const routes = [
         Page: Admin,
         title: 'Admin | Vyphir',
         robotsNoIndex: true,
+        noTransition: true,
         csp: "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; object-src 'none'; base-uri 'self';",
         extraStylesheets: ['/admin/admin.css'],
     },
