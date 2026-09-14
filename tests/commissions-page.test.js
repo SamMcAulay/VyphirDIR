@@ -19,8 +19,8 @@ test('renders the Commissions heading with WaveText letter-wave markup', () => {
 });
 
 test('renders the Queue and Terms of Service nav links', () => {
-    assert.match(html, /href="\/queue"[^>]*>.*Queue/);
-    assert.match(html, /href="\/tos"[^>]*>.*Terms of Service/);
+    assert.match(html, /href="\/queue\/"[^>]*>.*Queue/);
+    assert.match(html, /href="\/tos\/"[^>]*>.*Terms of Service/);
 });
 
 test('does not render the data-dependent sections server-side (populated client-side via fetch)', () => {

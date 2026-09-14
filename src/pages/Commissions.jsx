@@ -25,8 +25,8 @@ export default function Commissions() {
                 <a href="/" className="back-link">&larr; Back to directory</a>
                 <WaveText as="h1" text="Commissions" />
                 <div className="links-grid">
-                    <LinkButton href="/queue" icon="fa-solid fa-list-check">Queue</LinkButton>
-                    <LinkButton href="/tos" icon="fa-solid fa-file-contract">Terms of Service</LinkButton>
+                    <LinkButton href="/queue/" icon="fa-solid fa-list-check">Queue</LinkButton>
+                    <LinkButton href="/tos/" icon="fa-solid fa-file-contract">Terms of Service</LinkButton>
                 </div>
                 {error && <p className="feed-error">&gt; DATA UNAVAILABLE.</p>}
                 {data && (
