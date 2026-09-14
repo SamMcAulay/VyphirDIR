@@ -70,8 +70,14 @@ export default function PageTransitions() {
                         const pieces = collectPieces(root, domContext());
                         if (pieces.length > 0) runFall(pieces);
                     }
-                } catch {
-                    // Ignored -- the navigation below still happens.
+                } catch (error) {
+                    // The navigation below still happens: a measurement or
+                    // clone failure must never swallow the click. But it is
+                    // reported rather than dropped. A silent catch here hid
+                    // two total failures of this feature through nine tasks
+                    // of green unit tests, because neither threw where any
+                    // test could see it.
+                    console.error('[page-transitions] the fall failed; navigating without it', error);
                 }
             }
 
