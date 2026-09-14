@@ -91,9 +91,27 @@ export function collectPieces(root, ctx) {
     return pieces;
 }
 
+/*
+ * React 19 hoists resource elements into the tree it renders: an <img src>
+ * on the landing hub makes SSR emit a <link rel="preload" as="image"> as
+ * #root's first element child. None of these tags render, so a walk starting
+ * on one measures a zero-area node with no children and collects nothing --
+ * and because the caller swallows failures to keep the click working, the
+ * fall would simply never happen, silently. Skip past them to the page.
+ */
+const NEVER_RENDERS = new Set(['LINK', 'SCRIPT', 'STYLE', 'META', 'TITLE', 'NOSCRIPT', 'TEMPLATE']);
+
+export function firstRenderedChild(parent) {
+    for (const child of Array.from(parent?.children || [])) {
+        if (!NEVER_RENDERS.has(String(child.tagName).toUpperCase())) return child;
+    }
+    return null;
+}
+
 export function pageRoot() {
     if (typeof document === 'undefined') return null;
-    return document.getElementById('root')?.firstElementChild ?? null;
+    const root = document.getElementById('root');
+    return root ? firstRenderedChild(root) : null;
 }
 
 export function domContext() {

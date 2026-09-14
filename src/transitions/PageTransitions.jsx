@@ -83,9 +83,22 @@ export default function PageTransitions() {
         document.addEventListener('click', onClick, true);
         return () => {
             document.removeEventListener('click', onClick, true);
-            cancelFall();
         };
     }, [navigate]);
+
+    /*
+     * Cancelling the fall belongs to unmount, and only to unmount, so it has
+     * an effect of its own. React Router's useNavigate is memoised on the
+     * current location, so it returns a fresh function identity on every
+     * navigation and the listener effect above re-subscribes each time. When
+     * cancelFall() lived in that cleanup, React ran it in the same commit as
+     * the navigation the click had just started: the overlay was built,
+     * appended and removed again before the first animation frame, so the
+     * fall never drew anything. Keyed on [] it fires only when the component
+     * genuinely goes away, which is the case it was written for -- an inert
+     * overlay must never be left sitting on top of a live page.
+     */
+    useEffect(() => cancelFall, []);
 
     useEffect(() => {
         const title = titleForPath(location.pathname, routes);

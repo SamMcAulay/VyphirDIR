@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { paints, collectPieces } from '../src/transitions/collect-pieces.js';
+import { paints, collectPieces, firstRenderedChild } from '../src/transitions/collect-pieces.js';
 
 const BLANK = {
     backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -115,4 +115,27 @@ test('the shallowest walk still returns the top-level children when nothing fits
     const root = el('DIV', Array.from({ length: 20 }, () => el('SPAN')));
     const pieces = collectPieces(root, ctx({ maxPieces: 5 }));
     assert.equal(pieces.length, 20);
+});
+
+/*
+ * React 19 emits hoistable elements into the app's own subtree during SSR --
+ * an <img src> on the landing hub produces a <link rel="preload" as="image">
+ * as #root's first element child. Starting the walk there collects nothing,
+ * so the fall silently never runs.
+ */
+test('firstRenderedChild skips hoisted elements that never render', () => {
+    const page = { tagName: 'DIV', children: [] };
+    const parent = { children: [{ tagName: 'LINK', children: [] }, page] };
+    assert.equal(firstRenderedChild(parent), page);
+});
+
+test('firstRenderedChild returns the first child when it already renders', () => {
+    const page = { tagName: 'DIV', children: [] };
+    const parent = { children: [page, { tagName: 'SPAN', children: [] }] };
+    assert.equal(firstRenderedChild(parent), page);
+});
+
+test('firstRenderedChild returns null when no child renders', () => {
+    const parent = { children: [{ tagName: 'LINK', children: [] }, { tagName: 'SCRIPT', children: [] }] };
+    assert.equal(firstRenderedChild(parent), null);
 });
