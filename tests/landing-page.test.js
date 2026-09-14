@@ -111,3 +111,38 @@ test('no longer renders the Panel wrapper, the bluesky feed or the preview strip
     assert.doesNotMatch(html, /gallery-container/);
     assert.doesNotMatch(html, /commissions-preview-grid/);
 });
+
+/*
+ * The nav words go through WaveText so they hop letter-by-letter on hover,
+ * the same treatment the page headings get. Splitting a word into one span
+ * per letter throws away its text node, so the link's accessible name now
+ * rests entirely on the wrapper's aria-label -- WaveText marks every letter
+ * span aria-hidden. If that label ever stops being emitted, all six external
+ * links become unnamed to a screen reader and nothing else here would fail.
+ */
+test('renders every nav word as wave letters that keep the link its name', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    const labels = ['Gallery', 'Commissions', 'Instagram', 'Twitter', 'Bluesky', 'Telegram', 'Toyhouse', 'Steam'];
+
+    const words = [...html.matchAll(/<span class="wave-text hub-word" aria-label="([^"]+)">/g)].map((m) => m[1]);
+    assert.deepEqual(words, labels);
+
+    for (const label of labels) {
+        const word = html.match(new RegExp(`<span class="wave-text hub-word" aria-label="${label}">([\\s\\S]*?)</span></a>`));
+        assert.ok(word, `expected a wave-text wrapper for ${label}`);
+        const letters = word[1].match(/<span class="wave-text-letter" aria-hidden="true">/g) || [];
+        assert.equal(letters.length, label.length, `${label} should split into ${label.length} letters`);
+    }
+});
+
+/*
+ * The stagger and the hover trigger both live in public/styles.css, keyed by
+ * :nth-child() and .hub-item:hover. This site's CSP drops inline style
+ * attributes silently, so a style prop here would read as working code and
+ * do nothing in the browser -- which is exactly how the wave shipped broken
+ * once before.
+ */
+test('emits no inline style attribute on the hub, which the CSP would silently drop', () => {
+    const html = renderToStaticMarkup(<Landing previews={PREVIEWS} />);
+    assert.doesNotMatch(html, /style=/);
+});

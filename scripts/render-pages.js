@@ -128,11 +128,10 @@ async function main() {
          * data-previews, which Landing reads back once at hydration (see the
          * comment above readEmbeddedPreviews in src/pages/Landing.jsx).
          *
-         * Both halves are correct only while every navigation on this site is
-         * a full-page <a> that reloads the document. If in-app client-side
-         * routing to '/' is ever added, App would render Landing with no
-         * previews prop and no fresh #root read, and the hub would silently
-         * fall back to flat blobs.
+         * Client-side routing to '/' now exists (page-transitions spec
+         * section 3), so Landing carries a fetch fallback for the case where
+         * #root has no data-previews. This path stays as it is: it is the
+         * fast, no-request path for a full page load.
          */
         const { html } = isLanding ? renderLanding(landingPreviews) : render(route.path);
         await writeRoute({ route: routeWithData, html, script, css });

@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BLOB_PATHS } from '../components/decor/blob-paths.js';
+import WaveText from '../components/WaveText.jsx';
+import { selectLandingPreviews } from '../../shared/landing-previews.js';
 
 const ITEMS = [
     { key: 'gallery', label: 'Gallery', href: '/gallery/', external: false, blob: 1, tint: 'var(--slime-teal-light)', tintOpacity: '.34', flat: 'var(--slime-teal-light)', preview: 'gallery' },
@@ -15,21 +17,19 @@ const ITEMS = [
 const PHOTO_URL = 'https://f2.toyhou.se/file/f2-toyhou-se/images/113402324_irRXncxlu389pbc.png?1768418401';
 
 /*
- * Preview art is baked into the page at build time (spec section 4): the SSG
- * writes it onto #root as data-previews and this reads it back ONCE, at
- * hydration, via useState's lazy initialiser.
+ * Preview art is baked into the page at build time (landing-hub spec section
+ * 4): the SSG writes it onto #root as data-previews and this reads it back at
+ * hydration. `renderLanding` in scripts/render-pages.js bypasses the router
+ * for '/' for the same reason -- it renders <Landing> directly with the
+ * preview data instead of going through <App>.
  *
- * That is correct only while every route change on this site is a full-page
- * <a> navigation, which reloads the document and so re-runs this with the
- * new page's #root. `renderLanding` in scripts/render-pages.js deliberately
- * bypasses the router for '/' for the same reason -- it renders <Landing>
- * directly with the preview data instead of going through <App>.
- *
- * If in-app client-side routing to '/' is ever added, both halves break
- * together: no document reload means no fresh #root read, so Landing would
- * mount with empty preview sets and silently fall back to flat blobs. Fixing
- * that means threading the preview data through the router (a loader, or a
- * module-level cache captured on first load), not patching it here.
+ * That covers a full page load only. Since the gravity-drop transitions
+ * (page-transitions spec section 3) every internal link is a client-side
+ * navigation, so arriving at '/' from any other page leaves the document that
+ * was served for that page and #root carries no data-previews at all. The
+ * effect below is the fallback for exactly that case: it derives the same
+ * previews from the same two JSON files the build reads, using the same
+ * shared selector, so both paths always agree.
  */
 function readEmbeddedPreviews() {
     if (typeof document === 'undefined') return null;
@@ -77,7 +77,26 @@ function FlatBlob({ item }) {
 }
 
 export default function Landing({ previews }) {
-    const [embedded] = useState(readEmbeddedPreviews);
+    const [embedded, setEmbedded] = useState(readEmbeddedPreviews);
+
+    useEffect(() => {
+        if (previews || embedded) return undefined;
+        let cancelled = false;
+        Promise.all([
+            fetch('/data/characters.json').then((r) => r.json()),
+            fetch('/data/commissions.json').then((r) => r.json()),
+        ])
+            .then(([characters, commissions]) => {
+                if (!cancelled) setEmbedded(selectLandingPreviews(characters, commissions));
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [previews, embedded]);
+
     const data = previews || embedded || { gallery: [], commissions: [] };
 
     return (
@@ -104,7 +123,7 @@ export default function Landing({ previews }) {
                                 {images.length > 0
                                     ? <PreviewBlob item={item} images={images} />
                                     : <FlatBlob item={item} />}
-                                <span className="hub-word">{item.label}</span>
+                                <WaveText className="hub-word" text={item.label} />
                             </a>
                         );
                     })}
