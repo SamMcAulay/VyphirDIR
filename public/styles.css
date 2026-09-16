@@ -145,7 +145,7 @@ h1, h2, h3 {
 }
 
 
-.panel-wrapper, .datapad-wrapper {
+.datapad-wrapper {
     width: 100%;
     max-width: 460px;
     margin: 40px auto;
@@ -154,15 +154,7 @@ h1, h2, h3 {
     z-index: 10;
 }
 
-.panel-wrapper.panel--wide {
-    max-width: 700px;
-}
-
-.panel-wrapper.panel--xwide {
-    max-width: 1100px;
-}
-
-.panel, .datapad-screen {
+.datapad-screen {
     position: relative;
     background: var(--surface);
     border: var(--outline-w) solid var(--accent);
@@ -196,15 +188,6 @@ h1, h2, h3 {
 .page-honey { --accent: var(--slime-honey); --accent-light: var(--slime-honey-light); --accent-dark: var(--slime-honey-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
 .page-lavender { --accent: var(--slime-lavender); --accent-light: var(--slime-lavender-light); --accent-dark: var(--slime-lavender-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
 .page-tabby { --accent: var(--slime-tabby); --accent-light: var(--slime-tabby-light); --accent-dark: var(--slime-tabby-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
-
-.gallery-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: var(--text-muted);
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.95rem;
-    padding: 15px 0;
-}
 
 .feed-error {
     color: var(--slime-tabby-dark);
@@ -271,24 +254,6 @@ h1, h2, h3 {
 
 .char-image-wrap.nsfw-blur.revealed .nsfw-warning {
     display: none;
-}
-
-.tier-card, .past-work-card {
-    background: var(--surface);
-    border: var(--outline-w) solid var(--accent);
-    border-radius: 20px;
-    padding: 14px;
-    box-shadow: var(--shadow-pop);
-}
-
-.tier-card {
-    margin-bottom: 14px;
-}
-
-.tier-card img, .past-work-card img {
-    width: 100%;
-    border-radius: 12px;
-    margin-bottom: 8px;
 }
 
 .permalink-copy-btn {
@@ -837,7 +802,7 @@ a.enlarge-link {
  * underneath and readable from the moment the router commits.
  *
  * Every selector here is two classes deep so it beats the single-class rules
- * a clone still carries (.hub-item, .panel, .decor-blob) without !important.
+ * a clone still carries (.hub-item, .decor-blob) without !important.
  * ------------------------------------------------------------------------ */
 .gd-overlay {
     position: fixed;
