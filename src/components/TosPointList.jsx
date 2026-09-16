@@ -1,26 +1,64 @@
 import { useEffect, useState } from 'react';
+import { cx } from './cx.js';
+import { LOAD_ERROR } from './messages.js';
+import { splitTos } from './split-tos.js';
+import { useCurrentSection } from '../hooks/useCurrentSection.js';
 
-function Bullet({ bullet }) {
-    if (bullet.type === 'yesno') {
-        return (
-            <li className={bullet.value ? 'tos-bullet-yesno tos-bullet-yes' : 'tos-bullet-yesno tos-bullet-no'}>
-                <i className={bullet.value ? 'fa-solid fa-check' : 'fa-solid fa-xmark'} /> {bullet.text || ''}
-            </li>
-        );
-    }
-    return <li className="tos-bullet-plain">{bullet.text || ''}</li>;
+function DrawPanel({ variant, title, items }) {
+    if (items.length === 0) return null;
+    return (
+        <section className={`tos-draw__panel tos-draw__panel--${variant}`}>
+            <h2>{title}</h2>
+            <ul>{items.map((text, i) => <li key={i}>{text}</li>)}</ul>
+        </section>
+    );
 }
 
-function Point({ point, index }) {
+export function TosContent({ points: source }) {
+    const { will, wont, points } = splitTos(source);
+    const ids = points.map((_, i) => `tos-${i + 1}`);
+    const current = useCurrentSection(ids);
+
+    if (points.length === 0) return <p className="page-message">No terms published yet.</p>;
+
     return (
-        <div className="tos-point tier-card">
-            <h3><span className="tos-point-number">{index + 1}. </span>{point.title || ''}</h3>
-            {point.body && <p>{point.body}</p>}
-            {(point.bullets || []).length > 0 && (
-                <ul className="tos-bullets">
-                    {point.bullets.map((bullet, i) => <Bullet bullet={bullet} key={i} />)}
-                </ul>
-            )}
+        <div className="tos">
+            <nav className="tos-index" aria-label="Terms">
+                <ol className="tos-index__list">
+                    {points.map((point, i) => (
+                        <li key={ids[i]}>
+                            <a
+                                className={cx('tos-index__link', current === ids[i] && 'is-current')}
+                                href={`#${ids[i]}`}
+                                aria-current={current === ids[i] ? 'true' : undefined}
+                            >
+                                <span className="tos-num" aria-hidden="true">{i + 1}</span>{point.title || ''}
+                            </a>
+                        </li>
+                    ))}
+                </ol>
+            </nav>
+            <div className="tos-body">
+                {(will.length > 0 || wont.length > 0) && (
+                    <div className="tos-draw">
+                        <DrawPanel variant="will" title="Will draw" items={will} />
+                        <DrawPanel variant="wont" title="Won't draw" items={wont} />
+                    </div>
+                )}
+                {points.map((point, i) => (
+                    <section className="tos-point" id={ids[i]} key={ids[i]}>
+                        <h2 className="tos-point__title">
+                            <span className="tos-num" aria-hidden="true">{i + 1}</span>{point.title || ''}
+                        </h2>
+                        {point.body && <p className="tos-point__body">{point.body}</p>}
+                        {point.bullets.length > 0 && (
+                            <ul className="tos-point__bullets">
+                                {point.bullets.map((bullet, j) => <li key={j}>{bullet.text || ''}</li>)}
+                            </ul>
+                        )}
+                    </section>
+                ))}
+            </div>
         </div>
     );
 }
@@ -39,9 +77,7 @@ export default function TosPointList() {
             });
     }, []);
 
-    if (error) return <p className="feed-error">&gt; DATA UNAVAILABLE.</p>;
+    if (error) return <p className="page-message">{LOAD_ERROR}</p>;
     if (points === null) return null;
-    if (points.length === 0) return <p className="gallery-empty">&gt; NO TERMS PUBLISHED YET</p>;
-
-    return <>{points.map((point, i) => <Point point={point} index={i} key={i} />)}</>;
+    return <TosContent points={points} />;
 }
