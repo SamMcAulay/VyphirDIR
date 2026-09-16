@@ -8,7 +8,8 @@ import { currentSection } from '../components/current-section.js';
  * rather than the moment its top edge peeks in at the bottom -- which means
  * a short final point can never become the topmost-visible one. This hook
  * also tracks whether the page is scrolled to the bottom, and whether the
- * user just followed an index link, and hands all three to the pure
+ * user just followed an index link or arrived on a #tos-N deep link, and
+ * hands all three to the pure
  * currentSection() decision (src/components/current-section.js).
  *
  * Browser APIs only run inside the effect, guarded by typeof checks, so this
@@ -25,7 +26,6 @@ export function useCurrentSection(ids) {
         const visible = new Set();
         let atBottom = false;
         let hashTarget = null;
-        let hashLandingY = null;
 
         const isAtBottom = () => {
             const doc = document.documentElement;
@@ -42,12 +42,22 @@ export function useCurrentSection(ids) {
             return list.includes(id) ? id : null;
         };
 
+        /*
+         * A followed link keeps its point highlighted until that point has
+         * left the screen. Comparing scroll positions instead is fragile: late
+         * layout (fonts settling) shortens the page and the browser clamps the
+         * scroll, which would look like the user scrolling away.
+         */
+        const targetOnScreen = () => {
+            const el = document.getElementById(hashTarget);
+            if (!el) return false;
+            const rect = el.getBoundingClientRect();
+            return rect.bottom > 0 && rect.top < window.innerHeight;
+        };
+
         const onScroll = () => {
             atBottom = isAtBottom();
-            if (hashTarget !== null && window.scrollY !== hashLandingY) {
-                hashTarget = null;
-                hashLandingY = null;
-            }
+            if (hashTarget !== null && !targetOnScreen()) hashTarget = null;
             recompute();
         };
 
@@ -55,7 +65,6 @@ export function useCurrentSection(ids) {
             const id = readHash();
             if (id === null) return;
             hashTarget = id;
-            hashLandingY = window.scrollY;
             atBottom = isAtBottom();
             recompute();
         };
@@ -76,9 +85,17 @@ export function useCurrentSection(ids) {
             }
         }
 
-        atBottom = isAtBottom();
+        /*
+         * A direct load of /tos/#tos-3 doesn't land on the point on its own,
+         * because the points only exist once the fetch-driven content has
+         * rendered. Scroll the named point into view once.
+         */
         hashTarget = readHash();
-        if (hashTarget !== null) hashLandingY = window.scrollY;
+        if (hashTarget !== null) {
+            const el = document.getElementById(hashTarget);
+            if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'instant' });
+        }
+        atBottom = isAtBottom();
         recompute();
 
         window.addEventListener('scroll', onScroll, { passive: true });
