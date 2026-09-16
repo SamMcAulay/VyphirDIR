@@ -197,39 +197,6 @@ h1, h2, h3 {
 .page-lavender { --accent: var(--slime-lavender); --accent-light: var(--slime-lavender-light); --accent-dark: var(--slime-lavender-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
 .page-tabby { --accent: var(--slime-tabby); --accent-light: var(--slime-tabby-light); --accent-dark: var(--slime-tabby-dark); --shadow-pop: 6px 6px 0 var(--accent-dark); }
 
-.links-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.link-btn {
-    background: var(--accent-light);
-    border: var(--outline-w) solid var(--accent);
-    color: var(--text-ink);
-    text-decoration: none;
-    padding: 12px;
-    border-radius: var(--radius-button);
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: var(--shadow-pop);
-}
-
-.link-btn:hover {
-    background: var(--accent);
-}
-
-.link-btn i {
-    font-size: 1.1rem;
-    color: var(--accent-dark);
-}
-
 .gallery-empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -237,18 +204,6 @@ h1, h2, h3 {
     font-family: 'Nunito', sans-serif;
     font-size: 0.95rem;
     padding: 15px 0;
-}
-
-.section-title {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: var(--text-ink);
-    margin-bottom: 10px;
-}
-
-.section-title i {
-    color: var(--accent-dark);
 }
 
 .feed-error {
@@ -318,35 +273,6 @@ h1, h2, h3 {
     display: none;
 }
 
-.commission-status {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    padding: 8px 20px;
-    border-radius: var(--radius-button);
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-.commission-status.open {
-    background: var(--slime-teal-light);
-    color: var(--slime-teal-dark);
-}
-
-.commission-status.closed {
-    background: var(--bg-cream);
-    border: 2px solid var(--text-muted);
-    color: var(--text-muted);
-}
-
-.commission-special-offer {
-    background: var(--accent);
-    color: var(--surface);
-    border-radius: 16px;
-    padding: 12px 16px;
-    margin: 15px 0;
-    font-weight: 700;
-}
-
 .tier-card, .past-work-card {
     background: var(--surface);
     border: var(--outline-w) solid var(--accent);
@@ -359,29 +285,10 @@ h1, h2, h3 {
     margin-bottom: 14px;
 }
 
-.past-work-card {
-    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.past-work-card:hover {
-    transform: translateY(-4px) scale(1.03);
-}
-
 .tier-card img, .past-work-card img {
     width: 100%;
     border-radius: 12px;
     margin-bottom: 8px;
-}
-
-#commission-past-work {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-}
-
-#commission-past-work .past-work-card p {
-    font-size: 0.75rem;
-    margin: 0;
 }
 
 .tier-price {
@@ -1364,4 +1271,75 @@ a.enlarge-link {
     .character-top .character-hero { border-radius: 0; }
     .character-intro { padding: 0 14px 6px; }
     .character-name { font-size: 32px; }
+}
+
+/* ---------------------------------------------------------------------------
+ * Commissions top row and past work (page-layouts spec section 6.3).
+ * ------------------------------------------------------------------------ */
+.commissions-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 6px 14px 18px;
+}
+
+.status-sticker {
+    position: relative;
+    flex: 0 0 auto;
+    width: 150px;
+    height: 84px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+.status-sticker__blob {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+.status-sticker__blob path { stroke-width: 4px; vector-effect: non-scaling-stroke; }
+.status-sticker--open .status-sticker__blob path { fill: var(--slime-teal-light); stroke: var(--slime-teal-dark); }
+.status-sticker--closed .status-sticker__blob path { fill: var(--slime-pink-light); stroke: var(--slime-pink-dark); }
+.status-sticker__text {
+    position: relative;
+    padding: 0 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.05;
+}
+.status-sticker--open .status-sticker__text { color: var(--slime-teal-ink); }
+.status-sticker--closed .status-sticker__text { color: var(--slime-pink-ink); }
+
+.commissions-intro {
+    font-size: 15px;
+    line-height: 1.55;
+    max-width: 62ch;
+}
+.commissions-intro__text { white-space: pre-line; }
+
+.commissions-offer {
+    margin-top: 10px;
+    padding: 10px 16px;
+    background: var(--slime-honey-light);
+    color: var(--slime-honey-ink);
+    font-weight: 700;
+    white-space: pre-line;
+    border-radius: 22px 28px 20px 26px;
+}
+
+.past-work-title {
+    font-size: 22px;
+    color: var(--slime-honey-ink);
+    padding: 18px 14px 8px;
+}
+
+@media (max-width: 599px) {
+    .commissions-top { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .status-sticker { width: 132px; height: 70px; }
+    .status-sticker__text { font-size: 15px; }
+    .commissions-intro { font-size: 14px; }
+    .past-work-title { font-size: 19px; }
 }

@@ -1,9 +1,36 @@
 import { useEffect, useState } from 'react';
 import CommissionTierList from '../components/CommissionTierList.jsx';
-import LinkButton from '../components/LinkButton.jsx';
 import PastWorkGrid from '../components/PastWorkGrid.jsx';
-import Panel from '../components/Panel.jsx';
-import WaveText from '../components/WaveText.jsx';
+import { BLOB_PATHS } from '../components/decor/blob-paths.js';
+import { LOAD_ERROR } from '../components/messages.js';
+
+export function CommissionsContent({ data }) {
+    const open = Boolean(data.status);
+    const pastWork = data.pastWork || [];
+    return (
+        <>
+            <section className="commissions-top">
+                <p className={`status-sticker status-sticker--${open ? 'open' : 'closed'}`}>
+                    <svg className="status-sticker__blob" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                        <path d={BLOB_PATHS[2]} />
+                    </svg>
+                    <span className="status-sticker__text">{open ? 'Commissions open!' : 'Commissions closed'}</span>
+                </p>
+                <div className="commissions-intro">
+                    {data.intro && <p className="commissions-intro__text">{data.intro}</p>}
+                    {data.specialOffer && <p className="commissions-offer">{data.specialOffer}</p>}
+                </div>
+            </section>
+            <CommissionTierList tiers={data.tiers || []} />
+            {pastWork.length > 0 && (
+                <>
+                    <h2 className="past-work-title">Past work</h2>
+                    <PastWorkGrid items={pastWork} />
+                </>
+            )}
+        </>
+    );
+}
 
 export default function Commissions() {
     const [data, setData] = useState(null);
@@ -20,29 +47,10 @@ export default function Commissions() {
     }, []);
 
     return (
-        <div className="page-honey">
-            <Panel wide>
-                <a href="/" className="back-link">&larr; Back to directory</a>
-                <WaveText as="h1" text="Commissions" />
-                <div className="links-grid">
-                    <LinkButton href="/queue/" icon="fa-solid fa-list-check">Queue</LinkButton>
-                    <LinkButton href="/tos/" icon="fa-solid fa-file-contract">Terms of Service</LinkButton>
-                </div>
-                {error && <p className="feed-error">&gt; DATA UNAVAILABLE.</p>}
-                {data && (
-                    <>
-                        <div className={`commission-status ${data.status ? 'open' : 'closed'}`}>
-                            {data.status ? 'COMMISSIONS OPEN' : 'COMMISSIONS CLOSED'}
-                        </div>
-                        {data.specialOffer && <div className="commission-special-offer">{data.specialOffer}</div>}
-                        <p>{data.intro || ''}</p>
-                        <h2 className="section-title">Tiers</h2>
-                        <CommissionTierList tiers={data.tiers || []} />
-                        <h2 className="section-title">Past Work</h2>
-                        <PastWorkGrid items={data.pastWork || []} />
-                    </>
-                )}
-            </Panel>
+        <div className="page-honey page-frame">
+            <h1 className="sr-only">Commissions</h1>
+            {error && <p className="page-message">{LOAD_ERROR}</p>}
+            {data && <CommissionsContent data={data} />}
         </div>
     );
 }
