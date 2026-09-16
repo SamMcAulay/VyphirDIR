@@ -5,19 +5,10 @@ import Queue from '../src/pages/Queue.jsx';
 
 const html = renderToStaticMarkup(<Queue />);
 
-test('renders the Commission Queue heading with WaveText letter-wave markup', () => {
-    assert.match(html, /<h1 class="wave-text" aria-label="[^"]*">.*<span class="wave-text-letter"/s);
+test('wraps the page in the tabby page frame with a hidden heading', () => {
+    assert.match(html, /^<div class="page-tabby page-frame"><h1 class="sr-only">Commission Queue<\/h1>/);
 });
 
-test('renders the page-tabby with xwide panel', () => {
-    assert.match(html, /class="page-tabby"/);
-    assert.match(html, /class="panel-wrapper panel--xwide"/);
-});
-
-test('renders a back-link to the directory', () => {
-    assert.match(html, /<a href="\/" class="back-link">/);
-});
-
-test('renders the queue board mount point server-side (populated client-side via fetch)', () => {
-    assert.match(html, /id="queue-board"/);
+test('renders no panel, back link or visible title', () => {
+    assert.doesNotMatch(html, /panel-wrapper|back-link|wave-text/);
 });
