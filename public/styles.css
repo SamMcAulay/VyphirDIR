@@ -1496,7 +1496,7 @@ a.enlarge-link {
 .tos-point__bullets li::marker { color: var(--slime-lavender-dark); }
 
 @media (max-width: 899px) {
-    .tos { grid-template-columns: 1fr; gap: 14px; padding: 6px 14px 0; }
+    .tos { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 6px 14px 0; }
     .tos-index { position: static; margin: 0 -14px; }
     .tos-index__list {
         display: flex;
