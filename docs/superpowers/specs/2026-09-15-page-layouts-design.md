@@ -273,19 +273,28 @@ A new pure function, `transitionScope(fromPath, toPath)` in `src/transitions/sco
 
 ## 8. Tokens and styles
 
-**New tokens** in `public/styles.css`, one per slime colour: `--slime-teal-ink`, `--slime-honey-ink`, `--slime-tabby-ink`, `--slime-lavender-ink` and `--slime-pink-ink`. Each is the text colour used on that colour's base fill and on its light tint, and each must reach a contrast ratio of at least 4.5:1 against both, checked when the values are chosen. For reference, the mockup's teal label colour (`#0E5E56`) falls short on the teal base fill and must be darkened; the honey (`#5E4400`), tabby (`#6B3300`) and lavender (`#3E1F7A`) values met the ratio in the mockups.
+**New tokens** in `public/styles.css`, one per slime colour: `--slime-teal-ink`, `--slime-honey-ink`, `--slime-tabby-ink`, `--slime-lavender-ink` and `--slime-pink-ink`. Each is the text colour used on that colour's base fill and on its light tint, and each must reach a contrast ratio of at least 4.5:1 against both. The mockup's teal label colour (`#0E5E56`) falls short on the teal base fill, so teal uses `#0A4540` (5.2:1). Honey `#5E4400` (6.0:1), tabby `#6B3300` (4.8:1) and lavender `#3E1F7A` (4.9:1) keep their mockup values, and pink uses `#6A1234` (4.6:1 on the pink base).
+
+**Changed token:** `--text-muted` darkens from `#8A7368`, which measures 4.1:1 on cream, to `#735E53` (5.7:1).
+
+**Also new:** `--surface-muted: #F4EDE3`, `--bead-muted: #D9CBBB` and `--bead-muted-ring: #B8A594`, for finished queue cards.
+
+A unit test parses these tokens out of the stylesheet and asserts every text and fill pairing this spec uses reaches 4.5:1.
 
 **New class families,** one prefix per component: `site-bar`, `site-bead`, `site-page`, `gallery-tile`, `character-`, `tiers`, `past-work`, `queue-`, `tos-`.
 
 **Removed with their last users:**
 
 - `.panel-wrapper`, `.panel`, `.panel--wide`, `.panel--xwide`
-- `.back-link` and `.links-grid`
+- `.links-grid` and `.link-btn`
+- `.profile`, `.section-title`, `.char-species`, `.char-bio` and `.char-image-grid`
 - the `.gallery-index-*` rules
 - `.tier-card` and `.tier-price`
 - the old `.queue-*` board rules
 - the old `.tos-*` card rules
-- `.commission-status`, `.commission-special-offer`, `.feed-error` and `.gallery-empty`
+- `.commission-status`, `.commission-special-offer` and `.gallery-empty`
+
+**Kept, because `functions/i/[id].js` still uses them:** `.back-link`, `.feed-error`, `.datapad-wrapper`, `.datapad-screen`, `.char-image-wrap` and the `.nsfw-*` rules. The `/i/<id>` image page is server-rendered by that Cloudflare function from the same stylesheet. Where a rule shares a selector list with `.panel*` (for example `.panel-wrapper, .datapad-wrapper`), only the `.panel*` selector is removed.
 
 **Deleted files:** `src/components/Panel.jsx`, `tests/panel.test.js` and `src/components/LinkButton.jsx`. `usePopClick` loses its only user with `LinkButton` and gains the bar's beads, so it stays.
 
