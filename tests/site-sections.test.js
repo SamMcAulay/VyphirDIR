@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SECTIONS, sectionForPath, usesSiteLayout, sectionByKey } from '../src/site/sections.js';
+import { routes } from '../src/routes.js';
 
 test('lists the four sections in bar order with their colours and blobs', () => {
     assert.deepEqual(
@@ -51,4 +52,9 @@ test('usesSiteLayout is true for every section path and character pages', () => 
 test('sectionByKey returns null for an unknown or null key', () => {
     assert.equal(sectionByKey('nope'), null);
     assert.equal(sectionByKey(null), null);
+});
+
+test('the route table flags exactly the section paths for the site layout', () => {
+    const flagged = routes.filter((route) => route.siteLayout).map((route) => route.path).sort();
+    assert.deepEqual(flagged, SECTIONS.map((section) => section.href).sort());
 });

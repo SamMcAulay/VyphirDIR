@@ -26,14 +26,27 @@ test('App still server-renders every route with PageTransitions mounted', () => 
     }
 });
 
-test('the gallery page still server-renders its panel with PageTransitions mounted', () => {
-    const html = renderToStaticMarkup(
-        <StaticRouter location="/gallery/">
-            <App />
-        </StaticRouter>
-    );
-    assert.match(html, /<div class="page-teal">/);
-    assert.match(html, /<div class="panel-wrapper panel--wide"><div class="panel">/);
+test('inner pages render inside the site layout under the bar', () => {
+    for (const [path, colour] of [['/gallery/', 'teal'], ['/commissions/', 'honey'], ['/queue/', 'tabby'], ['/tos/', 'lavender']]) {
+        const html = renderToStaticMarkup(
+            <StaticRouter location={path}>
+                <App />
+            </StaticRouter>
+        );
+        assert.match(html, new RegExp(`<div class="site">.*<header class="site-bar site-bar--${colour}">`, 's'), path);
+        assert.match(html, /<main class="site-page"><div class="page-/, path);
+    }
+});
+
+test('the hub and admin render without the site bar', () => {
+    for (const path of ['/', '/admin/']) {
+        const html = renderToStaticMarkup(
+            <StaticRouter location={path}>
+                <App />
+            </StaticRouter>
+        );
+        assert.doesNotMatch(html, /site-bar/, path);
+    }
 });
 
 test('the admin route opts out of transitions', () => {

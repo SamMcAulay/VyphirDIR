@@ -25,12 +25,15 @@ test('build produces a static index.html that contains the hydrated root markup'
     // it no longer meant what it read as.
     assert.match(html, /<div id="root"[^>]*>.*<nav class="hub-nav">.*<\/div>/s);
     assert.match(html, /<a class="hub-photo" href="\/" aria-label="Home">/);
+    assert.doesNotMatch(html, /site-bar/);
     assert.match(html, /<script type="module" src="\/assets\/entry-client[^"]*\.js">/);
 });
 
 test('build renders a static page per character with escaped bio/species/name', () => {
     const html = readFileSync(join(projectRoot, 'dist/client/gallery/vyphir/index.html'), 'utf8');
     assert.match(html, /<div class="page-teal">/);
+    assert.match(html, /<header class="site-bar site-bar--teal">/);
+    assert.match(html, /href="\/gallery\/" aria-label="Gallery" aria-current="page"/);
     assert.match(html, /<div class="panel-wrapper"><div class="panel">/);
     // WaveText renders each character of the h1 as its own
     // <span class="wave-text-letter">, so strip tags to recover the plain text.
