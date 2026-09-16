@@ -1,36 +1,41 @@
 import { useEffect, useState } from 'react';
-import EnlargeableImage from './EnlargeableImage.jsx';
+import { cx } from './cx.js';
+import { selectCoverImage } from './cover-image.js';
+import { LOAD_ERROR } from './messages.js';
+import WaveText from './WaveText.jsx';
+import { usePopClick } from '../hooks/usePopClick.js';
 
-function truncateBio(bio, maxLength = 120) {
-    const firstLine = (bio || '').split('\n')[0].trim();
-    if (firstLine.length <= maxLength) return firstLine;
-    return `${firstLine.slice(0, maxLength - 1).trimEnd()}…`;
+function firstBioLine(bio) {
+    return (bio || '').split('\n')[0].trim();
 }
 
-function selectPreviewImages(images, iconUrl, maxCount = 3) {
-    return (images || []).filter((img) => !img.nsfw && img.url !== iconUrl).slice(0, maxCount);
-}
-
-function CharacterCard({ character }) {
-    const images = character.images || [];
-    const iconImage = images.find((img) => img.thumbnail && !img.nsfw) || images.find((img) => !img.nsfw);
-    const previewImages = selectPreviewImages(images, iconImage && iconImage.url);
-
+function GalleryTile({ character }) {
+    const pop = usePopClick();
+    const cover = selectCoverImage(character.images);
     return (
-        <div className="gallery-index-card">
-            <a className="gallery-index-card-main" href={`/gallery/${character.slug}/`}>
-                {iconImage && <img className="gallery-index-icon" src={iconImage.url} alt={character.name} loading="lazy" />}
-                <h3>{character.name}</h3>
-                <p className="gallery-index-bio">{truncateBio(character.bio)}</p>
-            </a>
-            {previewImages.length > 0 && (
-                <div className="gallery-index-art-row">
-                    {previewImages.map((img, i) => (
-                        <EnlargeableImage key={i} src={img.url} alt={character.name} className="gallery-index-thumb" />
-                    ))}
-                </div>
-            )}
-        </div>
+        <a
+            className={cx('gallery-tile', 'pop-clickable', pop.className)}
+            href={`/gallery/${character.slug}/`}
+            aria-label={character.name}
+            onPointerUp={pop.onPointerUp}
+        >
+            {cover && <img className="gallery-tile__image" src={cover.url} alt="" loading="lazy" />}
+            <span className="gallery-tile__label">
+                <WaveText className="gallery-tile__name" text={character.name} />
+                <span className="gallery-tile__bio">{firstBioLine(character.bio)}</span>
+            </span>
+        </a>
+    );
+}
+
+export function GalleryTiles({ characters }) {
+    if (characters.length === 0) return <p className="page-message">No characters here yet.</p>;
+    return (
+        <ul className="gallery-grid">
+            {characters.map((character) => (
+                <li key={character.slug}><GalleryTile character={character} /></li>
+            ))}
+        </ul>
     );
 }
 
@@ -48,12 +53,6 @@ export default function GalleryIndexGrid() {
     }, []);
 
     if (characters === null) return null;
-    if (characters === 'error') return <p className="feed-error">&gt; DATA UNAVAILABLE.</p>;
-    if (characters.length === 0) return <p className="gallery-empty">&gt; NO CHARACTERS ARCHIVED YET</p>;
-
-    return (
-        <div className="gallery-index-grid">
-            {characters.map((char) => <CharacterCard character={char} key={char.slug} />)}
-        </div>
-    );
+    if (characters === 'error') return <p className="page-message">{LOAD_ERROR}</p>;
+    return <GalleryTiles characters={characters} />;
 }
