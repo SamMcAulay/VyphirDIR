@@ -58,8 +58,10 @@ function walk(el, ctx, depth, out) {
     const emit = hasArea && onscreen;
 
     const children = Array.from(el.children || []);
+    // An <svg>'s children only draw inside it, so it always falls whole.
+    const drawsAsOne = String(el.tagName).toUpperCase() === 'SVG';
 
-    if (depth <= 0 || children.length === 0) {
+    if (depth <= 0 || children.length === 0 || drawsAsOne) {
         if (emit) out.push({ el, rect, mode: 'whole' });
         return;
     }

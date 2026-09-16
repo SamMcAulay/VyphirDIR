@@ -69,6 +69,23 @@ test('a painting container yields a shell and its children separately', () => {
     ]);
 });
 
+/*
+ * An <svg>'s children (<path>, <clipPath>, <image>) only draw inside their
+ * <svg>. Split into a shell plus loose children, the shell is empty and every
+ * child clones into the overlay with no <svg> around it, so the drawing
+ * vanishes the moment the fall starts -- which is how the hub's word backings
+ * and the site bar's bead blobs used to disappear on click.
+ */
+test('an svg falls whole with its drawing, never as a shell with loose children', () => {
+    const path = el('path');
+    const svg = el('svg', [el('defs', [el('clipPath', [el('path')])]), path]);
+    const pieces = collectPieces(el('DIV', [el('A', [svg, el('SPAN')])]), ctx());
+    assert.deepEqual(pieces.map((p) => [p.el.tagName, p.mode]), [
+        ['svg', 'whole'],
+        ['SPAN', 'whole'],
+    ]);
+});
+
 test('a non-painting wrapper contributes nothing and lets its children fall separately', () => {
     const wrapper = el('DIV', [el('A'), el('A'), el('A')]);
     const pieces = collectPieces(el('DIV', [wrapper]), ctx());

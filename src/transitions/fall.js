@@ -124,6 +124,42 @@ function ownAabbSize(width, height, rotation, scaleX, scaleY) {
     };
 }
 
+/*
+ * An <svg> falls whole (collect-pieces.js), but the paint of its shapes often
+ * comes from rules keyed on the svg's ancestors (.site-bead__blob path) or
+ * from custom properties those ancestors define (--bead-light). Neither
+ * reaches the clone in the overlay, so every shape would fill black. Copy the
+ * computed paint onto each descendant, walking original and clone in step.
+ */
+const SVG_PAINT = ['fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity', 'opacity'];
+
+function copySvgPaint(original, clone) {
+    const originals = original.querySelectorAll('*');
+    const clones = clone.querySelectorAll('*');
+    for (let i = 0; i < originals.length && i < clones.length; i++) {
+        const computed = window.getComputedStyle(originals[i]);
+        for (const property of SVG_PAINT) {
+            const value = computed.getPropertyValue(property);
+            if (value) clones[i].style.setProperty(property, value);
+        }
+    }
+}
+
+/*
+ * The rotation an element inherits from its ancestors. A long piece inside a
+ * rotated parent -- the hub's word backings sit inside rotated .hub-item
+ * links -- would otherwise clone upright, and its axis-aligned bounding rect
+ * would read as a huge scale-up. Rotations add under the uniform scaling this
+ * site uses.
+ */
+function ancestorRotation(el) {
+    let total = 0;
+    for (let node = el.parentElement; node && node !== document.documentElement; node = node.parentElement) {
+        total += decompose(window.getComputedStyle(node).transform).rotation;
+    }
+    return total;
+}
+
 function prepare(piece, index) {
     const computed = window.getComputedStyle(piece.el);
     const clone = piece.el.cloneNode(true);
@@ -140,11 +176,23 @@ function prepare(piece, index) {
         const value = computed.getPropertyValue(property);
         if (value) clone.style.setProperty(property, value);
     }
+    if (piece.mode === 'whole' && String(piece.el.tagName).toUpperCase() === 'SVG') {
+        copySvgPaint(piece.el, clone);
+    }
+    /*
+     * A clone keeps its classes, so a negative z-index meant to tuck it under
+     * its own word or card (.hub-back, .hub-blob) would sink it below every
+     * other piece in the overlay instead. Pieces are appended in document
+     * order, which already stacks them the way the page did.
+     */
+    if ((parseInt(computed.zIndex, 10) || 0) < 0) clone.style.zIndex = 'auto';
 
     const border = borderBoxSize(computed);
     const width = border.width || piece.rect.width;
     const height = border.height || piece.rect.height;
-    const { rotation, scaleX, scaleY } = decompose(computed.transform);
+    const own = decompose(computed.transform);
+    const { scaleX, scaleY } = own;
+    const rotation = own.rotation + ancestorRotation(piece.el);
 
     /*
      * decompose() reads only the element's own `transform`; it knows nothing
