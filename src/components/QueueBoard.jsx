@@ -34,7 +34,7 @@ function QueueCard({ entry, finished }) {
     const meta = metaLine(entry);
     return (
         <li className={cx('queue-card', finished && 'queue-card--finished')}>
-            <h2 className="queue-card__title">{entry.title || ''}</h2>
+            <h2 className="queue-card__title">{entry.title || 'Untitled'}</h2>
             {meta && <p className="queue-card__meta">{meta}</p>}
             <span className="queue-track" aria-hidden="true">
                 {Array.from({ length: entry.stageCount }, (_, i) => (

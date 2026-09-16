@@ -53,6 +53,13 @@ test('omits the finished label when nothing is finished', () => {
     assert.doesNotMatch(none, /queue-finished-label/);
 });
 
+test('falls back to "Untitled" for a card with no title', () => {
+    const untitled = renderToStaticMarkup(
+        <QueueCards data={{ ...DATA, cards: [{ ...DATA.cards[0], title: '' }] }} />
+    );
+    assert.match(untitled, /<h2 class="queue-card__title">Untitled<\/h2>/);
+});
+
 test('shows a plain message when the queue is empty', () => {
     assert.equal(
         renderToStaticMarkup(<QueueCards data={{ ...DATA, cards: [] }} />),
