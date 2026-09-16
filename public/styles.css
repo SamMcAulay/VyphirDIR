@@ -1023,7 +1023,7 @@ a.enlarge-link {
  * animation-delay to 0s, which would wipe out the stagger set below and
  * bounce every letter in unison.
  */
-:where(.wave-text:hover, .hub-item:hover, .hub-item:focus-visible) .wave-text-letter {
+:where(.wave-text:hover, .hub-item:hover, .hub-item:focus-visible, .site-bead:hover, .site-bead:focus-visible) .wave-text-letter {
     animation-name: wave-bounce;
     animation-duration: .6s;
     animation-timing-function: ease-in-out;
@@ -1164,4 +1164,131 @@ a.enlarge-link {
 .gd-overlay .gd-piece * {
     animation: none;
     transition: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Site layout and bar (page-layouts spec sections 2-4).
+ *
+ * The bar sits outside each page's .page-* colour wrapper, so it carries its
+ * own colour modifier. Blob fills and strokes are CSS, not SVG attributes, so
+ * a change of section transitions instead of snapping.
+ * ------------------------------------------------------------------------ */
+.site-bar {
+    --bar-base: var(--slime-teal);
+    --bar-light: var(--slime-teal-light);
+    --bar-dark: var(--slime-teal-dark);
+    position: relative;
+}
+.site-bar--teal { --bar-base: var(--slime-teal); --bar-light: var(--slime-teal-light); --bar-dark: var(--slime-teal-dark); }
+.site-bar--honey { --bar-base: var(--slime-honey); --bar-light: var(--slime-honey-light); --bar-dark: var(--slime-honey-dark); }
+.site-bar--tabby { --bar-base: var(--slime-tabby); --bar-light: var(--slime-tabby-light); --bar-dark: var(--slime-tabby-dark); }
+.site-bar--lavender { --bar-base: var(--slime-lavender); --bar-light: var(--slime-lavender-light); --bar-dark: var(--slime-lavender-dark); }
+
+.site-bar__ribbon {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+.site-bar__ribbon path {
+    fill: var(--bar-light);
+    transition: fill .2s ease;
+}
+
+.site-bar__inner {
+    position: relative;
+    max-width: 1280px;
+    height: 96px;
+    margin: 0 auto;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.site-bar__photo {
+    flex: 0 0 auto;
+    display: block;
+    width: 70px;
+    height: 70px;
+    margin-right: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--bar-base);
+    background: var(--slime-pink-light);
+    transition: border-color .2s ease;
+}
+.site-bar__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.site-bar__photo:focus-visible { outline: 3px solid var(--bar-dark); outline-offset: 3px; }
+
+.site-bar__nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.site-bead {
+    --bead-base: var(--slime-teal);
+    --bead-light: var(--slime-teal-light);
+    --bead-dark: var(--slime-teal-dark);
+    --bead-ink: var(--slime-teal-ink);
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 128px;
+    height: 64px;
+    color: var(--text-ink);
+    text-decoration: none;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: .02em;
+}
+.site-bead--teal { --bead-base: var(--slime-teal); --bead-light: var(--slime-teal-light); --bead-dark: var(--slime-teal-dark); --bead-ink: var(--slime-teal-ink); }
+.site-bead--honey { --bead-base: var(--slime-honey); --bead-light: var(--slime-honey-light); --bead-dark: var(--slime-honey-dark); --bead-ink: var(--slime-honey-ink); }
+.site-bead--tabby { --bead-base: var(--slime-tabby); --bead-light: var(--slime-tabby-light); --bead-dark: var(--slime-tabby-dark); --bead-ink: var(--slime-tabby-ink); }
+.site-bead--lavender { --bead-base: var(--slime-lavender); --bead-light: var(--slime-lavender-light); --bead-dark: var(--slime-lavender-dark); --bead-ink: var(--slime-lavender-ink); }
+
+.site-bead__blob {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+.site-bead__blob path {
+    fill: var(--bead-light);
+    stroke: transparent;
+    stroke-width: 5px;
+    vector-effect: non-scaling-stroke;
+    transition: fill .2s ease, stroke .2s ease;
+}
+.site-bead.is-active .site-bead__blob path {
+    fill: var(--bead-base);
+    stroke: var(--bead-dark);
+}
+.site-bead__label { position: relative; }
+.site-bead.is-active .site-bead__label { color: var(--bead-ink); }
+.site-bead__label--short { display: none; }
+.site-bead:focus-visible {
+    outline: 3px solid var(--bead-dark);
+    outline-offset: 2px;
+    border-radius: 24px;
+}
+
+@media (max-width: 599px) {
+    .site-bar__inner { height: 72px; padding: 0 8px; gap: 0; }
+    .site-bar__photo { width: 50px; height: 50px; margin-right: 2px; border-width: 3px; }
+    .site-bar__nav { flex: 1 1 auto; gap: 0; justify-content: space-between; }
+    .site-bead { flex: 1 1 0; width: auto; min-width: 0; max-width: 78px; height: 46px; font-size: 12.5px; }
+    .site-bead__blob path { stroke-width: 4px; }
+    .site-bead__label--long { display: none; }
+    .site-bead__label--short { display: inline; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-bar__ribbon path,
+    .site-bar__photo,
+    .site-bead__blob path { transition: none; }
 }

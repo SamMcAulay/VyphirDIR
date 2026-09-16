@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BLOB_PATHS } from '../components/decor/blob-paths.js';
 import WaveText from '../components/WaveText.jsx';
 import { selectLandingPreviews } from '../../shared/landing-previews.js';
+import { PHOTO_URL } from '../site/photo.js';
 
 const ITEMS = [
     { key: 'gallery', label: 'Gallery', href: '/gallery/', external: false, blob: 1, tint: 'var(--slime-teal-light)', tintOpacity: '.34', flat: 'var(--slime-teal-light)', preview: 'gallery' },
@@ -13,8 +14,6 @@ const ITEMS = [
     { key: 'toyhouse', label: 'Toyhouse', href: 'https://toyhou.se/samisaderp/characters', external: true, blob: 3, flat: 'var(--slime-pink-light)' },
     { key: 'steam', label: 'Steam', href: 'https://steamcommunity.com/profiles/76561199191219060/', external: true, blob: 4, flat: 'var(--slime-lavender-light)' },
 ];
-
-const PHOTO_URL = 'https://f2.toyhou.se/file/f2-toyhou-se/images/113402324_irRXncxlu389pbc.png?1768418401';
 
 /*
  * Preview art is baked into the page at build time (landing-hub spec section
