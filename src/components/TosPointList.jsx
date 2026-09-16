@@ -19,6 +19,21 @@ export function TosContent({ points: source }) {
     const ids = points.map((_, i) => `tos-${i + 1}`);
     const current = useCurrentSection(ids);
 
+    /*
+     * Finding F5: a direct load of /tos/#tos-3 doesn't land on the point,
+     * because the points only exist once this fetch-driven content has
+     * rendered. Once it has, scroll the named point into view a single time
+     * (instant, not smooth). Browser-only, so guarded and effect-scoped.
+     */
+    useEffect(() => {
+        if (typeof window === 'undefined' || typeof document === 'undefined') return;
+        const id = window.location.hash.slice(1);
+        if (!ids.includes(id)) return;
+        const el = document.getElementById(id);
+        if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'instant' });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     if (points.length === 0) return <p className="page-message">No terms published yet.</p>;
 
     return (
