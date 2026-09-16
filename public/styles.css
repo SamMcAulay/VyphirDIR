@@ -2,7 +2,10 @@
     --bg-cream: #FFF6E9;
     --surface: #FFFFFF;
     --text-ink: #3A2A24;
-    --text-muted: #8A7368;
+    --text-muted: #735E53;
+    --surface-muted: #F4EDE3;
+    --bead-muted: #D9CBBB;
+    --bead-muted-ring: #B8A594;
     --outline-w: 3px;
     --radius-panel: 32px;
     --radius-button: 999px;
@@ -10,22 +13,27 @@
     --slime-pink: #FF6FA0;
     --slime-pink-light: #FFD3E4;
     --slime-pink-dark: #E14C82;
+    --slime-pink-ink: #6A1234;
 
     --slime-teal: #23C9B7;
     --slime-teal-light: #C6F5EF;
     --slime-teal-dark: #189E90;
+    --slime-teal-ink: #0A4540;
 
     --slime-honey: #FFC93C;
     --slime-honey-light: #FFEDB0;
     --slime-honey-dark: #E0A800;
+    --slime-honey-ink: #5E4400;
 
     --slime-lavender: #B98CFF;
     --slime-lavender-light: #E7D8FF;
     --slime-lavender-dark: #8F5FE0;
+    --slime-lavender-ink: #3E1F7A;
 
     --slime-tabby: #FF9A44;
     --slime-tabby-light: #FFE0BE;
     --slime-tabby-dark: #E07A1F;
+    --slime-tabby-ink: #6B3300;
 
     --accent: var(--slime-pink);
     --accent-light: var(--slime-pink-light);
