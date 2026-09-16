@@ -6,6 +6,7 @@ import { describeClick, shouldIntercept } from './should-intercept.js';
 import { collectPieces, domContext, pageRoot } from './collect-pieces.js';
 import { runFall, cancelFall } from './fall.js';
 import { settle } from './settle.js';
+import { transitionScope } from './scope.js';
 
 const ELIGIBLE = buildEligiblePaths(routes);
 
@@ -42,6 +43,9 @@ export default function PageTransitions() {
     // not reduced (controller ruling: settle is skipped entirely, not
     // shortened, under prefers-reduced-motion).
     const pendingScroll = useRef(false);
+    // Which part of the tree the next arrival settles: the same scope the
+    // fall used, so a bar that stayed put is not animated in again.
+    const pendingSettleScope = useRef('document');
 
     useEffect(() => {
         function onClick(event) {
@@ -59,13 +63,15 @@ export default function PageTransitions() {
 
             event.preventDefault();
 
+            const scope = transitionScope(described.currentPathname, targetPath);
+
             // Read at transition time, never cached at load.
             const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (!reduced) {
                 // A measurement or clone failure must not swallow the click:
                 // fall through to a plain navigation instead.
                 try {
-                    const root = pageRoot();
+                    const root = pageRoot(scope);
                     if (root) {
                         const pieces = collectPieces(root, domContext());
                         if (pieces.length > 0) runFall(pieces);
@@ -83,6 +89,7 @@ export default function PageTransitions() {
 
             pendingScroll.current = true;
             pendingSettleFor.current = reduced ? null : targetPath;
+            pendingSettleScope.current = scope;
             navigate(`${described.url.pathname}${described.url.search}${described.url.hash}`);
         }
 
@@ -128,7 +135,7 @@ export default function PageTransitions() {
         const expected = pendingSettleFor.current;
         pendingSettleFor.current = null;
         if (expected !== null && normalizePath(location.pathname) === expected) {
-            const root = pageRoot();
+            const root = pageRoot(pendingSettleScope.current);
             if (root) settle(collectPieces(root, domContext()));
         }
     }, [location.pathname]);

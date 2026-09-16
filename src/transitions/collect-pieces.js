@@ -108,8 +108,12 @@ export function firstRenderedChild(parent) {
     return null;
 }
 
-export function pageRoot() {
+export function pageRoot(scope = 'document') {
     if (typeof document === 'undefined') return null;
+    if (scope === 'page') {
+        const main = document.querySelector('main.site-page');
+        if (main) return firstRenderedChild(main);
+    }
     const root = document.getElementById('root');
     return root ? firstRenderedChild(root) : null;
 }
