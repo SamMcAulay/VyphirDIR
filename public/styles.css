@@ -133,6 +133,16 @@ input[type="file"]::-webkit-file-upload-button:hover {
     background: var(--accent-dark);
 }
 
+/*
+ * Finding F1: reserve the scrollbar gutter on every page that has the site
+ * bar, so a client navigation that briefly removes the scrollbar (while the
+ * new page's content is still loading) doesn't shift .site-bar__inner
+ * sideways. Scoped off the hub, which has no .site-bar and must not change.
+ */
+html:has(.site-bar) {
+    scrollbar-gutter: stable;
+}
+
 body {
     font-family: 'Nunito', sans-serif;
     background: var(--bg-cream);
@@ -1056,6 +1066,12 @@ a.enlarge-link {
 .square-grid .enlarge-link { height: 100%; }
 .square-grid .char-image-wrap img { height: 100%; object-fit: cover; }
 .square-grid .nsfw-warning { background: var(--text-muted); }
+/*
+ * Finding F6: give the grid's enlarge links a visible focus ring in the
+ * page's own dark shade, without touching the global .enlarge-link rule
+ * that functions/i/[id].js also renders with.
+ */
+.square-grid .enlarge-link:focus-visible { outline: 3px solid var(--accent-dark); outline-offset: 3px; }
 
 @media (max-width: 899px) {
     .square-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1081,6 +1097,8 @@ a.enlarge-link {
 .character-top .character-hero { border-radius: 22px; }
 .character-top .character-hero:hover { transform: none; }
 .character-top .character-hero img { aspect-ratio: 1; object-fit: cover; }
+/* Finding F6: same scoped focus ring as .square-grid, for the hero's own enlarge link. */
+.character-hero .enlarge-link:focus-visible { outline: 3px solid var(--accent-dark); outline-offset: 3px; }
 
 .character-intro { padding: 0 6px 12px; }
 
@@ -1456,7 +1474,7 @@ a.enlarge-link {
 
 .tos-draw {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
 }
 .tos-draw__panel {
@@ -1465,6 +1483,7 @@ a.enlarge-link {
 }
 .tos-draw__panel h2 { font-size: 17px; margin-bottom: 6px; }
 .tos-draw__panel ul { list-style: none; font-size: 14px; line-height: 1.7; }
+.tos-draw__panel li { overflow-wrap: anywhere; }
 .tos-draw__panel--will { background: var(--slime-teal-light); color: var(--slime-teal-ink); }
 .tos-draw__panel--wont { background: var(--slime-pink-light); color: var(--slime-pink-ink); }
 .tos-draw__panel--will li::before { content: '\2713\00a0\00a0'; font-weight: 700; }
