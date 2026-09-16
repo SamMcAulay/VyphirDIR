@@ -37,12 +37,25 @@ test('fetches preview art when there is no prop and no embedded data', async () 
     });
 });
 
-test('does not fetch when previews were passed as a prop', async () => {
+test('does not fetch when pools were passed as a prop', async () => {
     await withFetch(async (calls) => {
         act(() => {
-            create(<Landing previews={{ gallery: ['https://img/p.png'], commissions: [] }} />);
+            create(<Landing pools={{ gallery: ['https://img/p.png'], commissions: [] }} />);
         });
         await act(async () => {});
         assert.deepEqual(calls, []);
+    });
+});
+
+test('draws the preview art from the pools once mounted, not during render', async () => {
+    await withFetch(async () => {
+        const pools = { gallery: ['https://img/g1.png', 'https://img/g2.png'], commissions: ['https://img/c1.png'] };
+        let tree;
+        act(() => {
+            tree = create(<Landing pools={pools} />);
+        });
+        await act(async () => {});
+        const json = JSON.stringify(tree.toJSON());
+        for (const url of [...pools.gallery, ...pools.commissions]) assert.match(json, new RegExp(url.replaceAll('.', '\\.')));
     });
 });

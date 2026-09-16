@@ -27,7 +27,7 @@ export function renderCharacter(character) {
     return { html };
 }
 
-export function renderLanding(previews) {
-    const html = renderToString(<Landing previews={previews} />);
+export function renderLanding(pools) {
+    const html = renderToString(<Landing pools={pools} />);
     return { html };
 }

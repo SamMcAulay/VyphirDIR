@@ -444,6 +444,30 @@ a.enlarge-link {
     filter: drop-shadow(3px 3px 0 rgba(58, 42, 36, .20));
 }
 
+/*
+ * The always-shown backing behind each word, for readability against the
+ * slabs and neighbouring words. .hub-label is exactly the word's box, and its
+ * font size matches the word at each breakpoint, so the backing hugs the word
+ * and scales with it on hover. .hub-label comes after .hub-blob in the markup
+ * and has no z-index of its own, so the backing paints over the hover art and
+ * the word stays legible there too.
+ */
+.hub-label {
+    position: relative;
+    display: inline-block;
+    font-size: var(--fs);
+    line-height: 1;
+}
+.hub-back {
+    position: absolute;
+    top: -.16em; left: -.3em;
+    width: calc(100% + .6em);
+    height: calc(100% + .3em);
+    z-index: -1;
+    pointer-events: none;
+    overflow: visible;
+}
+
 .hub-blob {
     position: absolute;
     top: 50%; left: var(--blobx, 50%);
@@ -614,60 +638,15 @@ a.enlarge-link {
     .hub-item--gallery .hub-word,
     .hub-item--commissions .hub-word { font-size: 34px; }
     .hub-word { font-size: 22px; }
+    .hub-label { font-size: 22px; }
+    .hub-item--gallery .hub-label,
+    .hub-item--commissions .hub-label { font-size: 34px; }
 
     /*
-     * Fix round 1, Finding 2 (spec section 3): there is no hover on touch, so
-     * Gallery and Commissions keep a static, non-pulsing flat blob behind
-     * their word as decoration; the other six items stay hidden above.
-     * The component itself renders whichever SVG variant the build data
-     * picked (PreviewBlob with real art, or FlatBlob) -- CSS can't swap
-     * that at a breakpoint. So on this width, force PreviewBlob to read as
-     * "flat": hide its <image> tiles and take its tint rect to full
-     * opacity. FlatBlob is untouched by this (it has no <image>/no rect
-     * to hide) and renders as designed either way. The one visible
-     * difference from a true FlatBlob is PreviewBlob's sticker outline
-     * stroke, which stays -- accepted as a minor, invisible-at-a-glance
-     * approximation rather than a JSX change outside this round's
-     * authorised scope.
-     *
-     * Fix round 2: the blob was centred at top:50%/left:50% of
-     * .hub-item's own box, but that box has no explicit height -- it
-     * collapses to its only in-flow child, the word (~34px). Centring a
-     * 100px blob on a 34px box overflowed ~33px above and below,
-     * colliding with the photo's margin above Gallery and with
-     * Commissions' row below, and the two blobs overlapped each other.
-     * Fixing the box, not the blob: these two items get an explicit
-     * min-height matching the blob's own height, so the blob's 50%/50%
-     * centre resolves against a box exactly as tall as the blob, and
-     * `display:flex; align-items:center` centres the word inside that
-     * same box so word and blob share one visual centre. Blob and box
-     * height are both 100px, so the blob's edges land exactly on the
-     * item's own box edges -- no overflow into the 18px row gap above or
-     * below, at any width in this branch (this is a box-height fix, not a
-     * viewport-width one).
+     * There is no hover on touch, so the preview blobs stay hidden (above) and
+     * each word's always-shown .hub-back is its decoration. It replaces the
+     * flat 100px blob Gallery and Commissions used to keep here.
      */
-    .hub-item--gallery,
-    .hub-item--commissions {
-        display: flex;
-        align-items: center;
-        min-height: 100px;
-    }
-    .hub-item--gallery .hub-blob,
-    .hub-item--commissions .hub-blob {
-        display: block;
-        position: absolute;
-        top: 50%; left: 50%;
-        width: 100px; height: 100px;
-        transform: translate(-50%, -50%);
-        opacity: 1;
-        animation: none;
-        transition: none;
-        z-index: -1;
-    }
-    .hub-item--gallery .hub-blob image,
-    .hub-item--commissions .hub-blob image { display: none; }
-    .hub-item--gallery .hub-blob rect,
-    .hub-item--commissions .hub-blob rect { opacity: 1; }
 }
 
 .wave-text-letter {

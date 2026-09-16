@@ -3,7 +3,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { escapeHtml } from '../shared/escape-html.js';
 import { generateCommissionsPreviewImage } from './generate-commissions-preview-image.js';
-import { selectLandingPreviews } from '../shared/landing-previews.js';
+import { selectLandingPools } from '../shared/landing-previews.js';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CLIENT_OUT = join(projectRoot, 'dist', 'client');
@@ -105,7 +105,7 @@ async function main() {
     const { render, routes, renderLanding } = await import(join(projectRoot, 'dist-server', 'entry-server.js'));
     const charactersRaw = await readFile(join(projectRoot, 'data', 'characters.json'), 'utf8');
     const commissionsRaw = await readFile(join(projectRoot, 'data', 'commissions.json'), 'utf8');
-    const landingPreviews = selectLandingPreviews(JSON.parse(charactersRaw), JSON.parse(commissionsRaw));
+    const landingPreviews = selectLandingPools(JSON.parse(charactersRaw), JSON.parse(commissionsRaw));
 
     await mkdir(join(CLIENT_OUT, 'commissions'), { recursive: true });
     const { ogImage } = await generateCommissionsPreviewImage({

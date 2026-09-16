@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BLOB_PATHS } from '../components/decor/blob-paths.js';
 import WaveText from '../components/WaveText.jsx';
-import { selectLandingPreviews } from '../../shared/landing-previews.js';
+import { pickPreviews, selectLandingPools } from '../../shared/landing-previews.js';
 import { PHOTO_URL } from '../site/photo.js';
 
 const ITEMS = [
@@ -16,21 +16,26 @@ const ITEMS = [
 ];
 
 /*
- * Preview art is baked into the page at build time (landing-hub spec section
- * 4): the SSG writes it onto #root as data-previews and this reads it back at
- * hydration. `renderLanding` in scripts/render-pages.js bypasses the router
+ * The pools of preview art are baked into the page at build time (landing-hub
+ * spec section 4): the SSG writes them onto #root as data-previews and this
+ * reads them back at hydration. `renderLanding` in scripts/render-pages.js bypasses the router
  * for '/' for the same reason -- it renders <Landing> directly with the
- * preview data instead of going through <App>.
+ * pool data instead of going through <App>.
  *
  * That covers a full page load only. Since the gravity-drop transitions
  * (page-transitions spec section 3) every internal link is a client-side
  * navigation, so arriving at '/' from any other page leaves the document that
  * was served for that page and #root carries no data-previews at all. The
  * effect below is the fallback for exactly that case: it derives the same
- * previews from the same two JSON files the build reads, using the same
- * shared selector, so both paths always agree.
+ * pools from the same two JSON files the build reads, using the same shared
+ * selector, so both paths always agree.
+ *
+ * Which four images each blob shows is drawn at random from its pool on every
+ * visit, after mount. Drawing during render would give the server and the
+ * client different markup and break hydration; until the draw the blob keeps
+ * its tint and outline and shows no art.
  */
-function readEmbeddedPreviews() {
+function readEmbeddedPools() {
     if (typeof document === 'undefined') return null;
     const raw = document.getElementById('root')?.dataset.previews;
     if (!raw) return null;
@@ -41,7 +46,7 @@ function readEmbeddedPreviews() {
     }
 }
 
-function PreviewBlob({ item, images }) {
+export function PreviewBlob({ item, images }) {
     const path = BLOB_PATHS[item.blob];
     const clipId = `hub-clip-${item.key}`;
     const cells = [[0, 0], [100, 0], [0, 100], [100, 100]];
@@ -67,6 +72,22 @@ function PreviewBlob({ item, images }) {
     );
 }
 
+/*
+ * The resting backing behind every word, always shown so the words read
+ * clearly against the slabs and each other. It is the item's blob outline
+ * stretched to the word's own box (preserveAspectRatio="none"), unlike the
+ * square .hub-blob that only grows in on hover and focus. It shares a
+ * .hub-label wrapper with the word so it is sized from the word alone, not
+ * from the link, whose box is taller on mobile.
+ */
+function WordBacking({ item }) {
+    return (
+        <svg className="hub-back" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path d={BLOB_PATHS[item.blob]} fill={item.flat} stroke="var(--text-ink)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+        </svg>
+    );
+}
+
 function FlatBlob({ item }) {
     return (
         <svg className="hub-blob" viewBox="0 0 200 200" aria-hidden="true">
@@ -75,18 +96,24 @@ function FlatBlob({ item }) {
     );
 }
 
-export default function Landing({ previews }) {
-    const [embedded, setEmbedded] = useState(readEmbeddedPreviews);
+export default function Landing({ pools: givenPools }) {
+    const [embedded, setEmbedded] = useState(readEmbeddedPools);
+    const [picked, setPicked] = useState(null);
+    const pools = givenPools || embedded;
 
     useEffect(() => {
-        if (previews || embedded) return undefined;
+        if (pools) setPicked(pickPreviews(pools));
+    }, [pools]);
+
+    useEffect(() => {
+        if (pools) return undefined;
         let cancelled = false;
         Promise.all([
             fetch('/data/characters.json').then((r) => r.json()),
             fetch('/data/commissions.json').then((r) => r.json()),
         ])
             .then(([characters, commissions]) => {
-                if (!cancelled) setEmbedded(selectLandingPreviews(characters, commissions));
+                if (!cancelled) setEmbedded(selectLandingPools(characters, commissions));
             })
             .catch((error) => {
                 console.error(error);
@@ -94,9 +121,7 @@ export default function Landing({ previews }) {
         return () => {
             cancelled = true;
         };
-    }, [previews, embedded]);
-
-    const data = previews || embedded || { gallery: [], commissions: [] };
+    }, [pools]);
 
     return (
         <div className="hub">
@@ -113,16 +138,20 @@ export default function Landing({ previews }) {
 
                 <nav className="hub-nav">
                     {ITEMS.map((item) => {
-                        const images = item.preview ? (data[item.preview] || []) : [];
+                        const pool = item.preview ? (pools?.[item.preview] || []) : [];
+                        const images = item.preview ? (picked?.[item.preview] || []) : [];
                         const external = item.external
                             ? { target: '_blank', rel: 'noopener noreferrer' }
                             : {};
                         return (
                             <a className={`hub-item hub-item--${item.key}`} key={item.key} href={item.href} {...external}>
-                                {images.length > 0
+                                {pool.length > 0
                                     ? <PreviewBlob item={item} images={images} />
                                     : <FlatBlob item={item} />}
-                                <WaveText className="hub-word" text={item.label} />
+                                <span className="hub-label">
+                                    <WordBacking item={item} />
+                                    <WaveText className="hub-word" text={item.label} />
+                                </span>
                             </a>
                         );
                     })}
