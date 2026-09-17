@@ -100,24 +100,12 @@ test('falls back to a flat blob when a pool is empty', () => {
     assert.doesNotMatch(html, /hub-clip-/);
 });
 
-test('every word sits on its own always-shown backing blob', () => {
-    const html = renderToStaticMarkup(<Landing pools={POOLS} />);
-    const items = [...html.matchAll(/<a class="hub-item [^"]*"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => m[1]);
-    assert.equal(items.length, 8);
-    for (const inner of items) {
-        const backing = inner.indexOf('<svg class="hub-back"');
-        assert.ok(backing > -1, 'expected a hub-back svg');
-        assert.ok(backing < inner.indexOf('hub-word'), 'the backing must come before the word so the word paints on top');
-        assert.match(inner, /<svg class="hub-back"[^>]*aria-hidden="true"/);
-    }
-});
-
 test('decorative slabs and blobs are hidden from assistive tech', () => {
     const html = renderToStaticMarkup(<Landing pools={POOLS} />);
     const slabs = html.match(/<div class="hub-slab[^"]*"[^>]*>/g) || [];
     assert.equal(slabs.length, 3);
     for (const tag of slabs) assert.match(tag, /aria-hidden="true"/);
-    for (const tag of html.match(/<svg class="hub-(blob|back)"[^>]*>/g) || []) {
+    for (const tag of html.match(/<svg class="hub-blob"[^>]*>/g) || []) {
         assert.match(tag, /aria-hidden="true"/);
     }
 });

@@ -72,22 +72,6 @@ export function PreviewBlob({ item, images }) {
     );
 }
 
-/*
- * The resting backing behind every word, always shown so the words read
- * clearly against the slabs and each other. It is the item's blob outline
- * stretched to the word's own box (preserveAspectRatio="none"), unlike the
- * square .hub-blob that only grows in on hover and focus. It shares a
- * .hub-label wrapper with the word so it is sized from the word alone, not
- * from the link, whose box is taller on mobile.
- */
-function WordBacking({ item }) {
-    return (
-        <svg className="hub-back" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-            <path d={BLOB_PATHS[item.blob]} fill={item.flat} stroke="var(--text-ink)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-        </svg>
-    );
-}
-
 function FlatBlob({ item }) {
     return (
         <svg className="hub-blob" viewBox="0 0 200 200" aria-hidden="true">
@@ -148,10 +132,7 @@ export default function Landing({ pools: givenPools }) {
                                 {pool.length > 0
                                     ? <PreviewBlob item={item} images={images} />
                                     : <FlatBlob item={item} />}
-                                <span className="hub-label">
-                                    <WordBacking item={item} />
-                                    <WaveText className="hub-word" text={item.label} />
-                                </span>
+                                <WaveText className="hub-word" text={item.label} />
                             </a>
                         );
                     })}
