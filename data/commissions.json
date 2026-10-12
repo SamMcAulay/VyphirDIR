@@ -24,6 +24,12 @@
   ],
   "pastWork": [
     {
+      "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1791836489/vyphir/commissions/33111717-0e37-4826-a008-1e8ac122f16d.png",
+      "caption": "Apple Buggo",
+      "nsfw": false,
+      "giftArt": true
+    },
+    {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1791231344/vyphir/commissions/57fb5204-3b36-40be-8a4b-9eb959bc289c.png",
       "caption": "Wowzers!",
       "nsfw": false,
@@ -66,16 +72,16 @@
       "giftArt": true
     },
     {
-      "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1786727524/vyphir/commissions/fa47d78f-1e54-44f8-863e-37e40634ddc9.png",
-      "caption": "Cat Shark adoptable! First ever fully body drawing",
-      "nsfw": false,
-      "giftArt": false
-    },
-    {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422154/vyphir/commissions/923181eb-81c1-4a51-881f-5fff3c926245.png",
       "caption": "Fanart for cambee!",
       "nsfw": false,
       "giftArt": true
+    },
+    {
+      "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1786727524/vyphir/commissions/fa47d78f-1e54-44f8-863e-37e40634ddc9.png",
+      "caption": "Cat Shark adoptable! First ever fully body drawing",
+      "nsfw": false,
+      "giftArt": false
     },
     {
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1786156427/vyphir/commissions/6c0ae09d-107f-463c-9a5e-c6d74256de81.png",
@@ -145,12 +151,6 @@
       "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1785422126/vyphir/commissions/77d8e5be-f670-49da-b251-48458aec592e.png",
       "caption": "Dont worry about this one",
       "nsfw": true
-    },
-    {
-      "url": "https://res.cloudinary.com/l89vlr4i/image/upload/v1791836489/vyphir/commissions/33111717-0e37-4826-a008-1e8ac122f16d.png",
-      "caption": "Apple Buggo",
-      "nsfw": false,
-      "giftArt": true
     }
   ]
 }
